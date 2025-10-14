@@ -1,9 +1,13 @@
-FROM public.ecr.aws/lambda/nodejs:14
+FROM public.ecr.aws/lambda/nodejs:22
+
+# Need full dnf to do groupinstall
+RUN dnf remove -y microdnf-dnf && \
+  microdnf install -y dnf
 
 # Libraries needed for sharp
-RUN yum -y update \
-&& yum -y groupinstall "Development Tools" \
-&& yum install -y nodejs gcc-c++ cairo-devel libjpeg-turbo-devel pango-devel giflib-devel zlib-devel librsvg2-devel
+RUN dnf -y update \
+&& dnf -y groupinstall "Development Tools" \
+&& dnf install -y nodejs gcc-c++ cairo-devel libjpeg-turbo-devel pango-devel giflib-devel zlib-devel librsvg2-devel
 
 # File structure to run build within docker image
 RUN mkdir ${LAMBDA_TASK_ROOT}/fonts

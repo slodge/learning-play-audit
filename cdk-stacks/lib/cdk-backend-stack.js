@@ -60,6 +60,7 @@ class CdkBackendStack extends cdk.Stack {
     const surveyResponsesTable = new dynamodb.Table(this, "SurveyResponses", {
       tableName: SURVEY_RESPONSES_TABLE_NAME,
       partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST
     });
     new cdk.CfnOutput(this, "SurveyResponses table", {
       value: surveyResponsesTable.tableName,
@@ -76,8 +77,12 @@ class CdkBackendStack extends cdk.Stack {
         "uploadState",
         "responderEmail",
       ],
+
+      
+      // Stuart removed the readCapicty - we want on demand? 
+      //,
       // Only increase RTU for live site
-      readCapacity: environment === "live" ? 10 : 5,
+      //readCapacity: environment === "live" ? 10 : 5,
     });
     new cdk.CfnOutput(this, "SurveyResponseSummaries index", {
       value: "SummaryIndex",
@@ -154,7 +159,7 @@ class CdkBackendStack extends cdk.Stack {
     );
 
     const addSurveyLambda = new NodejsFunction(this, "AddSurveyLambda", {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_22_X,
       entry: "resources/addSurveyLambda/index.js",
       handler: "handler",
       environment: {
@@ -215,7 +220,7 @@ class CdkBackendStack extends cdk.Stack {
       this,
       "ConfirmSurveyLambda",
       {
-        runtime: lambda.Runtime.NODEJS_14_X,
+        runtime: lambda.Runtime.NODEJS_22_X,
         entry: "resources/confirmSurveyLambda/index.js",
         handler: "handler",
         environment: {
