@@ -8,6 +8,7 @@ import {
   USER_TYPE_WITH_COMMENT,
   Question,
   Section,
+  PERCENTAGE_TYPE_WITH_COMMENT,
 } from "learning-play-audit-survey";
 import { saveAs } from "file-saver";
 import {
@@ -64,6 +65,9 @@ function renderSectionHeader(data: string[][], section: Section) {
     } else if (USER_TYPE_WITH_COMMENT === type) {
       questionData[0].push(id, "");
       questionData[1].push("role", "details");
+    } else if (PERCENTAGE_TYPE_WITH_COMMENT === type) {
+      questionData[0].push(id, "");
+      questionData[1].push("answer", "comment");
     } else if (TEXT_AREA === type || TEXT_FIELD === type) {
       questionData[0].push(id);
       questionData[1].push("answer");
@@ -100,7 +104,7 @@ function renderSectionAnswers(
   function addQuestion({ type, id }: Question) {
     const response = sectionResponse[id] || { answer: "", comments: "" };
 
-    if (SCALE_WITH_COMMENT === type || USER_TYPE_WITH_COMMENT === type) {
+    if (SCALE_WITH_COMMENT === type || USER_TYPE_WITH_COMMENT === type || PERCENTAGE_TYPE_WITH_COMMENT === type) {
       const simpleResponse = response as QuestionAnswer;
       addAnswers(rowData, simpleResponse.answer, simpleResponse.comments);
     } else if (TEXT_AREA === type || TEXT_FIELD === type) {

@@ -6,6 +6,7 @@ import {
   TEXT_FIELD,
   TEXT_WITH_YEAR,
   USER_TYPE_WITH_COMMENT,
+  PERCENTAGE_TYPE_WITH_COMMENT,
   Question,
   Section,
   Markup,
@@ -191,6 +192,48 @@ function tableCell(content: string) {
     margins: { bottom: 100, top: 100, left: 100, right: 100 },
     borders: GREY_BORDER,
   });
+}
+
+function renderQuestionTypePercentageSelect(
+  question: Question,
+  questionNumber: number,
+  responses: QuestionAnswer[]
+) {
+    function getAnswer(response: QuestionAnswer) {
+      switch (response.answer) {
+        case "a":
+          return "none";
+        case "b":
+          return "a little (<5%)";
+        case "c":
+          return "some (5% to 20%)";
+        case "d":
+          return "lots (20% to 50%)";
+        case "e":
+          return "most (>50%)";
+        case null:
+        case "":
+          return "";
+        default:
+          return "unknown: " + response.answer;
+    }
+  }
+
+  return [
+    renderQuestionText(questionNumber, question.text),
+    new Table({
+      layout: TableLayoutType.FIXED,
+      columnWidths: [300, 1600, 7000],
+      borders: GREY_BORDER,
+      rows: responses.map((response, i) => {
+        return tableRow(
+          "" + (i + 1),
+          response ? getAnswer(response) : "",
+          response ? response.comments : ""
+        );
+      }),
+    }),
+  ];
 }
 
 function renderQuestionTypeSelectWithComment(
@@ -395,6 +438,16 @@ function renderSection(section: Section, sectionResponses: SectionAnswers[]) {
         docQuestions.length,
         0,
         ...renderQuestionTypeUserSelect(
+          question,
+          questionIndex,
+          responses as QuestionAnswer[]
+        )
+      );
+    } else if (PERCENTAGE_TYPE_WITH_COMMENT === type) {
+      docQuestions.splice(
+        docQuestions.length,
+        0,
+        ...renderQuestionTypePercentageSelect(
           question,
           questionIndex,
           responses as QuestionAnswer[]

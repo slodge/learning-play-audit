@@ -18,7 +18,7 @@
     "docx": "^7.3.0",
     "file-saver": "^2.0.5",
     "learning-play-audit-shared": "file:../sharedcode/learning-play-audit-shared-0.1.0.tgz",
-    "learning-play-audit-survey": "file:../survey/learning-play-audit-survey-0.1.0.tgz",
+    "learning-play-audit-survey": "file:../survey/learning-play-audit-survey-0.10.0.tgz",
     "react": "^17.0.1",
     "react-app-polyfill": "^3.0.0",
     "react-dom": "^17.0.1",

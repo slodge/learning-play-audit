@@ -8,6 +8,7 @@ import {
   TEXT_FIELD,
   TEXT_WITH_YEAR,
   USER_TYPE_WITH_COMMENT,
+  PERCENTAGE_TYPE_WITH_COMMENT,
   Section as SurveySection,
   Question,
 } from "learning-play-audit-survey";
@@ -129,6 +130,71 @@ function QuestionSelectWithComment({
         return "tend to disagree";
       case "d":
         return "strongly disagree";
+      default:
+        return "unknown: " + response.answer;
+    }
+  }
+
+  return (
+    <div className={classes.question}>
+      <Box flexDirection="row">
+        <div className={classes.questionText}>
+          {questionNumber}: {renderMarkup(question.text)}
+        </div>
+      </Box>
+      <table className={classes.responsesGrid}>
+        <tbody>
+          {responses.map((response, i) => {
+            return (
+              <tr key={"" + i}>
+                {getResponseNumberCell(responses, i + 1)}
+                <td className="scale-value">
+                  {response ? getAnswer(response) : <></>}
+                </td>
+                <td>
+                  {response && hasComment(response) ? response.comments : <></>}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+interface QuestionPercentageWithCommentProps {
+  question: Question;
+  questionNumber: number;
+  responses: QuestionAnswer[];
+}
+
+function QuestionPercentageWithComment({
+  question,
+  questionNumber,
+  responses,
+}: QuestionPercentageWithCommentProps) {
+  const classes = useStyles();
+
+  function hasComment(response: QuestionAnswer) {
+    return response.comments !== null && response.comments.length > 0;
+  }
+
+  function getAnswer(response: QuestionAnswer) {
+    switch (response.answer) {
+      case null:
+      case "":
+        return "";
+      case "a":
+        return "none";
+      case "b":
+        return "a little (<5%)";
+      case "c":
+        return "some (5% to 20%)";
+      case "d":
+        return "lots (20% to 50%)";
+      case "e":
+        return "most (>50%)";
       default:
         return "unknown: " + response.answer;
     }
@@ -361,7 +427,7 @@ function Section({ section, sectionResponses }: SectionProps) {
 
     if (PERCENTAGE_TYPE_WITH_COMMENT === type) {
       return (
-        <PercentageSelect
+        <QuestionPercentageWithComment
           key={key}
           question={question}
           questionNumber={questionIndex}
