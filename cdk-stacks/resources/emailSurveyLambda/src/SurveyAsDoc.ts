@@ -539,6 +539,16 @@ function renderQuestion(
         response as QuestionAnswer
       )
     );
+  } else if (PERCENTAGE_TYPE_WITH_COMMENT === type) {
+    paragraphs.splice(
+      paragraphs.length,
+      0,
+      ...renderQuestionTypePercentageSelect(
+        question,
+        questionIndex,
+        response as QuestionAnswer
+      )
+    );
   } else if (TEXT_AREA === type || TEXT_FIELD === type) {
     paragraphs.splice(
       paragraphs.length,

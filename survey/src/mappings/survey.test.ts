@@ -1,0 +1,38 @@
+import { sectionQuestions, sectionsContent } from "./survey";
+
+describe("sectionQuestions", () => {
+  it("should return list of section questions", () => {
+    const questions = sectionQuestions(
+      sectionsContent.find((section) => section.id === "temperature")!
+    );
+    expect(questions.map((question) => question.id)).toEqual([
+      "T01",
+      "T02",
+      "T03",
+      "T04",
+      "T05",
+      "T06",
+      "T07",
+      "T08",
+      "T09",
+      "T10",
+      "T11",
+      "T12",
+      "T13",
+      "T14",
+      "T15",
+      // T16 missing on purpose
+      //"T16",
+      "T17",
+      "T18",
+      "T19",
+      "T20",
+      "T21",
+      "T22",
+      "T23",
+      "T24",
+      "T25",
+      
+    ]);
+  });
+});

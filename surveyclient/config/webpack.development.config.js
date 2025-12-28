@@ -100,9 +100,10 @@ module.exports = function () {
             },
             // Process application JS with Babel.
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
+            // Need to understand the exclusion here - ran into lots of import/export problems without
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              exclude: /node_modules\/(?!(learning-play-audit-shared)).*/,
+              exclude: /node_modules\/(?!(learning-play-audit-*)).*/,
               loader: require.resolve("babel-loader"),
               options: {
                 customize: require.resolve(

@@ -80,20 +80,21 @@ describe("main App", () => {
         hasSeenSplashPage: true,
       },
     });
+    
     const { user } = renderWithStore(<App />);
     checkSelectedSection(INTRODUCTION);
 
     await user.click(fixedMenuItem(RESULTS));
     checkSelectedSection(RESULTS);
 
-    await user.click(fixedMenuItem(GALLERY));
-    checkSelectedSection(GALLERY);
+    //await user.click(fixedMenuItem(GALLERY));
+    //checkSelectedSection(GALLERY);
 
     await user.click(fixedMenuItem(SUBMIT));
     checkSelectedSection(SUBMIT);
 
-    await user.click(fixedMenuItem("community"));
-    checkSelectedSection("community");
+    await user.click(fixedMenuItem("nature"));
+    checkSelectedSection("nature");
   });
 
   function checkSelectedSection(expectedSectionId: string) {
@@ -113,7 +114,9 @@ describe("main App", () => {
       if (menuItem.getAttribute("id") === expectedSectionId) {
         expect(menuItem).toHaveClass("selected");
       } else {
+        console.debug("Checking menu item " + menuItem.getAttribute("id") + " expected " + expectedSectionId);
         expect(menuItem).not.toHaveClass("selected");
+        console.debug("Checked menu item " + menuItem.getAttribute("id"));
       }
     });
   }

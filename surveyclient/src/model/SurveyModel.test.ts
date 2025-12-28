@@ -139,14 +139,14 @@ describe("surveyReducer", () => {
 
   it("action SET_ANSWER set answer", () => {
     const expectedState = clone(INPUT_STATE);
-    (expectedState.answers.wellbeing.outdoorart as QuestionAnswer).answer =
+    (expectedState.answers.pandp.P01 as QuestionAnswer).answer =
       "new answer";
 
     expect(
       surveyReducer(INPUT_STATE, {
         type: SET_ANSWER,
-        sectionId: "wellbeing",
-        questionId: "outdoorart",
+        sectionId: "pandp",
+        questionId: "P01",
         field: "answer",
         value: "new answer",
       })
@@ -166,14 +166,14 @@ describe("surveyReducer", () => {
 
   it("action SET_ANSWER set comment", () => {
     const expectedState = clone(INPUT_STATE);
-    (expectedState.answers.wellbeing.outdoorart as QuestionAnswer).comments =
+    (expectedState.answers.pandp.P01 as QuestionAnswer).comments =
       "new comment";
 
     expect(
       surveyReducer(INPUT_STATE, {
         type: SET_ANSWER,
-        sectionId: "wellbeing",
-        questionId: "outdoorart",
+        sectionId: "pandp",
+        questionId: "P01",
         field: "comments",
         value: "new comment",
       })
@@ -193,15 +193,15 @@ describe("surveyReducer", () => {
 
   it("action SET_ANSWER clear answer", () => {
     const expectedState = clone(INPUT_STATE);
-    (expectedState.answers.wellbeing.outdoorart as QuestionAnswer).answer = "";
-    expectedState.answerCounts.wellbeing.answer =
-      expectedState.answerCounts.wellbeing.answer - 1;
+    (expectedState.answers.pandp.P01 as QuestionAnswer).answer = "";
+    expectedState.answerCounts.pandp.answer =
+      expectedState.answerCounts.pandp.answer - 1;
 
     expect(
       surveyReducer(INPUT_STATE, {
         type: SET_ANSWER,
-        sectionId: "wellbeing",
-        questionId: "outdoorart",
+        sectionId: "pandp",
+        questionId: "P01",
         field: "answer",
         value: "",
       })
@@ -221,16 +221,16 @@ describe("surveyReducer", () => {
 
   it("action SET_ANSWER clear comment", () => {
     const expectedState = clone(INPUT_STATE);
-    (expectedState.answers.wellbeing.outdoorart as QuestionAnswer).comments =
+    (expectedState.answers.pandp.P01 as QuestionAnswer).comments =
       "";
-    expectedState.answerCounts.wellbeing.comments =
-      expectedState.answerCounts.wellbeing.comments - 1;
+    expectedState.answerCounts.pandp.comments =
+      expectedState.answerCounts.pandp.comments - 1;
 
     expect(
       surveyReducer(INPUT_STATE, {
         type: SET_ANSWER,
-        sectionId: "wellbeing",
-        questionId: "outdoorart",
+        sectionId: "pandp",
+        questionId: "P01",
         field: "comments",
         value: "",
       })
@@ -250,16 +250,16 @@ describe("surveyReducer", () => {
 
   it("action SET_ANSWER add answer", () => {
     const expectedState = clone(INITIALISED_EMPTY_STATE);
-    (expectedState.answers.wellbeing.outdoorart as QuestionAnswer).answer =
+    (expectedState.answers.pandp.P01 as QuestionAnswer).answer =
       "added answer";
-    expectedState.answerCounts.wellbeing.answer =
-      expectedState.answerCounts.wellbeing.answer + 1;
+    expectedState.answerCounts.pandp.answer =
+      expectedState.answerCounts.pandp.answer + 1;
 
     expect(
       surveyReducer(clone(INITIALISED_EMPTY_STATE), {
         type: SET_ANSWER,
-        sectionId: "wellbeing",
-        questionId: "outdoorart",
+        sectionId: "pandp",
+        questionId: "P01",
         field: "answer",
         value: "added answer",
       })
@@ -279,16 +279,16 @@ describe("surveyReducer", () => {
 
   it("action SET_ANSWER add comment", () => {
     const expectedState = clone(INITIALISED_EMPTY_STATE);
-    (expectedState.answers.wellbeing.outdoorart as QuestionAnswer).comments =
+    (expectedState.answers.pandp.P01 as QuestionAnswer).comments =
       "added comment";
-    expectedState.answerCounts.wellbeing.comments =
-      expectedState.answerCounts.wellbeing.comments + 1;
+    expectedState.answerCounts.pandp.comments =
+      expectedState.answerCounts.pandp.comments + 1;
 
     expect(
       surveyReducer(clone(INITIALISED_EMPTY_STATE), {
         type: SET_ANSWER,
-        sectionId: "wellbeing",
-        questionId: "outdoorart",
+        sectionId: "pandp",
+        questionId: "P01",
         field: "comments",
         value: "added comment",
       })
@@ -306,6 +306,8 @@ describe("surveyReducer", () => {
     });
   });
 
+  /*
+  dated tests removed as we don't have dated questions any more
   it("action SET_ANSWER set datedImprovements answer", () => {
     const expectedState = clone(INPUT_STATE);
     (
@@ -431,6 +433,7 @@ describe("surveyReducer", () => {
       surveyVersion: expectedState.surveyVersion,
     });
   });
+  */
 
   it("action ADD_PHOTO", () => {
     (getPhotoUuid as jest.Mock).mockImplementation(() => FIXED_UUID_1);

@@ -1,3 +1,4 @@
 cdk-stacks/resources/emailSurveyLambda/test.docx
 **.tgz
 cdk-stacks/resources/emailSurveyLambda/dist/*
+.DS_Store

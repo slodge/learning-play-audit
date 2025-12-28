@@ -18,7 +18,7 @@ import {
   SUBMIT_FAILED,
 } from "../model/SubmitStates";
 import { renderWithStore } from "./ReactTestUtils";
-import { GALLERY, SUBMIT } from "../model/SurveySections";
+import { GALLERY, RESULTS, SUBMIT } from "../model/SurveySections";
 import { waitFor } from "@testing-library/dom";
 
 const TEST_ENDPOINT = "http://localhost:9999/testEndpoint";
@@ -74,7 +74,8 @@ describe("component SubmitSection", () => {
     );
 
     await user.click(getByRole("button", { name: "previous section" }));
-    expect(surveyStore.getState().currentSectionId).toBe(GALLERY);
+    //expect(surveyStore.getState().currentSectionId).toBe(GALLERY);
+    expect(surveyStore.getState().currentSectionId).toBe(RESULTS);
   });
 
   it("confirm dialog appears", async () => {

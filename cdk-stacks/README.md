@@ -11,7 +11,7 @@ See the [monorepo build and deploy instructions](../README.md)
 The LtL Survey consists of:
 
 - Backend
-  - A DominoDB table of survey responses. Each item contains some indexing fields, the survey response in JSON format, and keys to photos submitted as part of the survey response
+  - A DynamoDB table of survey responses. Each item contains some indexing fields, the survey response in JSON format, and keys to photos submitted as part of the survey response
   - An S3 bucket containing the uploaded photos undexed above. The objects have keys `/surveys/[SURVEY UUID]/photos/[PHOTO UUID]`
   - Lambda functions for the survey client to [add](resources/addSurveyLambda) and [confirm](resources/confirmSurveyLambda) survey upload.
   - API Gateway wrapper for these lambda functions.

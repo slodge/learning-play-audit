@@ -14,10 +14,11 @@
     "buffer": "^6.0.3",
     "camelcase": "^6.3.0",
     "chart.js": "^3.7.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "fs-extra": "^10.0.0",
     "identity-obj-proxy": "3.0.0",
     "learning-play-audit-shared": "file:../sharedcode/learning-play-audit-shared-0.1.0.tgz",
-    "learning-play-audit-survey": "file:../survey/learning-play-audit-survey-0.1.0.tgz",
+    "learning-play-audit-survey": "file:../survey/learning-play-audit-survey-0.10.0.tgz",
     "localforage": "^1.9.0",
     "react": "^17.0.1",
     "react-app-polyfill": "^3.0.0",
@@ -80,7 +81,8 @@
       "!src/**/*.d.ts"
     ],
     "setupFiles": [
-      "react-app-polyfill/jsdom"
+      "react-app-polyfill/jsdom",
+      "jest-canvas-mock"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/src/setupTests.ts"
@@ -199,7 +201,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-webpack-plugin": "^3.1.1",
     "html-webpack-plugin": "^5.5.0",
-    "jest": "^27.4.7",
+    "jest": "^27.5.1",
     "jest-canvas-mock": "^2.3.1",
     "jest-resolve": "^27.4.6",
     "jest-watch-typeahead": "^1.0.0",

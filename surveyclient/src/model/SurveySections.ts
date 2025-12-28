@@ -15,6 +15,6 @@ export const SURVEY_SECTIONS: SurveySectionSummary[] = [
   { title: "Introduction", id: INTRODUCTION },
   ...sectionsContent.map(({title, id}) => ({title, id})),
   { title: "Results", id: RESULTS },
-  { title: "Photos", id: GALLERY },
+  //{ title: "Photos", id: GALLERY },
   { title: "Submit survey", id: SUBMIT },
 ];

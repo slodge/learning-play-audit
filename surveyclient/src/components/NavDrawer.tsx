@@ -47,7 +47,7 @@ export default function NavDrawer({
       {createMenuItem("Introduction", INTRODUCTION)}
       {sectionsContent.map(createSectionMenuItem)}
       {createMenuItem("Results", RESULTS)}
-      {createMenuItem("Photos", GALLERY)}
+      {/*createMenuItem("Photos", GALLERY)*/}
       {createMenuItem("Submit survey", SUBMIT)}
     </div>
   );

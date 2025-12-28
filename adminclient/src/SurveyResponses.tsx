@@ -359,6 +359,17 @@ function Section({ section, sectionResponses }: SectionProps) {
       );
     }
 
+    if (PERCENTAGE_TYPE_WITH_COMMENT === type) {
+      return (
+        <PercentageSelect
+          key={key}
+          question={question}
+          questionNumber={questionIndex}
+          responses={responses as QuestionAnswer[]}
+        />
+      );
+    }
+
     if (TEXT_AREA === type || TEXT_FIELD === type) {
       return (
         <QuestionText
