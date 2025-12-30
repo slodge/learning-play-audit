@@ -135,6 +135,10 @@ export async function exportSurveyAsDocx(
         })
       );
 
+      if (!chart.explodeResults) {
+        return;
+      }
+
       chart.labels.forEach((label, index) => {
         chartsParagraphs.push(
           new Paragraph({

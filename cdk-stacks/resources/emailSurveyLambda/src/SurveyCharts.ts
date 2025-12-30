@@ -143,14 +143,15 @@ const groupedResults = all_results.reduce((acc: Record<string, Result[]>, result
   return acc;
 }, {});   
 
-const gcQuestionsArray = sectionsContent.find(s => s.id == "nature")?.subsections.flatMap(ss => ss.questions.filter(q => q.id.startsWith("GC"))) || [];
-const gcQuestions: Map<string, Question> = gcQuestionsArray.reduce((acc: Map<string, Question>, question:Question) => {
-  acc.set(question.id, question);
-  return acc;
-}, new Map());
+const gcQuestionsArray: Question[] = sectionsContent.find(s => s.id == "nature")?.subsections.flatMap(ss => ss.questions.filter(q => q.id.startsWith("GC"))) || [];
+// const gcQuestions: Map<string, Question> = gcQuestionsArray.reduce((acc: Map<string, Question>, question:Question) => {
+//   acc.set(question.id, question);
+//   return acc;
+// }, new Map());
 
 export interface SurveyChart {
   title: string;
+  explodeResults: boolean;
   labels: string[];
   results: number[];
   resultColours: string[];
@@ -158,8 +159,65 @@ export interface SurveyChart {
   chart: Buffer;
 }
 
+
+function getGeoPieChart(answers: SurveyAnswers) {
+
+  const geo_answer_keys = Object.keys(answers.nature).filter(key => key.startsWith("GC"));
+  const results: number[] = [];
+  const labels: string[] = [];
+
+  gcQuestionsArray.forEach(question => {
+    const { value } = getSingleAnswer(answers, "nature", question.id, GEO_ANSWER_VALUES);
+    const modifiedText = question.text.toString()
+                              .replace("What area of grounds is ", "")
+                              .replace("covered by ", "")
+                              .replace("?", "");
+    results.push(value);
+    labels.push(modifiedText);
+  });
+
+  const data = {
+        datasets: [{
+            data: results,
+            // not sure about this being fixed size of 8...
+            backgroundColor: [
+              '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+              '#9966FF', '#FF9F40', '#C9CBCF', '#1A6C9C'
+            ],
+        }],
+        labels: labels
+    };
+
+    const config: ChartConfiguration = {
+        type: 'pie',
+        data: data,
+        options: {
+          plugins: {
+            legend: {
+              display: true,
+              position: 'right' as const,
+              labels: {
+                font: { size: 14 }
+              }
+            }
+          }
+        }
+    };
+
+    const buffer = largeChartJSNodeCanvas.renderToBuffer(config);
+
+    return {
+      title: "Grounds Coverage",
+      labels: labels,
+      results: results,
+      chart: buffer,
+      explodeResults: false,
+    }
+}
+
 export async function getCharts(answers: SurveyAnswers): Promise<SurveyChart[]> {
   const toReturn: SurveyChart[] = [];
+
 
   for (var key in Object.keys(groupedResults)) {
     const groupName = Object.keys(groupedResults)[key];
@@ -205,6 +263,7 @@ export async function getCharts(answers: SurveyAnswers): Promise<SurveyChart[]> 
       resultColours: resultColours,
       statements: statements,
       chart: chart,
+      explodeResults: true,
     });
   }
 
