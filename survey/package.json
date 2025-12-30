@@ -22,7 +22,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc && babel --extensions .ts src --out-dir dist",
-    "postpack": "cp ./learning-play-audit-survey-0.1.0.tgz ../cdk-stacks/resources/emailSurveyLambda/survey/learning-play-audit-survey-0.1.0.tgz"
+    "postpack": "cp ./learning-play-audit-survey-0.10.0.tgz ../cdk-stacks/resources/emailSurveyLambda/survey/learning-play-audit-survey-0.10.0.tgz"
   },
   "babel": {
     "presets": [

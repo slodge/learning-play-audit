@@ -8,6 +8,7 @@ import {
   Section,
   Markup,
   Question,
+  PERCENTAGE_TYPE_WITH_COMMENT,
 } from "learning-play-audit-survey";
 import {
   Document,
@@ -34,7 +35,7 @@ import {
   REPORT_FOOTER_BASE64,
   REPORT_HEADER_BASE64,
 } from "./reportImagesBase64";
-import { getCharts } from "./SurveyCharts";
+import { getCharts, SurveyChart } from "./SurveyCharts";
 import {
   DatedQuestionAnswer,
   PhotoDetails,
@@ -100,45 +101,57 @@ export async function exportSurveyAsDocx(
   }
 
   const charts = await getCharts(surveyResponse);
-  const chartsParagraphs = [
-    new Paragraph({
-      text: "How Good Is Our Outdoor Space?",
-      heading: HeadingLevel.HEADING_2,
-      pageBreakBefore: true,
-    }),
-    new Paragraph({
-      children: [
-        new ImageRun({
-          data: charts.learningChart,
-          transformation: { height: 300, width: 600 },
-        }),
-      ],
-    }),
-    new Paragraph({
-      text: "How Good Is Our Local Greenspace?",
-      heading: HeadingLevel.HEADING_2,
-    }),
-    new Paragraph({
-      children: [
-        new ImageRun({
-          data: charts.greenspaceChart,
-          transformation: { height: 300, width: 600 },
-        }),
-      ],
-    }),
-    new Paragraph({
-      text: "How Good Is Our Outdoor Practice?",
-      heading: HeadingLevel.HEADING_2,
-    }),
-    new Paragraph({
-      children: [
-        new ImageRun({
-          data: charts.practiceChart,
-          transformation: { height: 150, width: 600 },
-        }),
-      ],
-    }),
-  ];
+
+  // group charts by title for easy access
+  const chartsByTitle: { [key: string]: SurveyChart[] } = {};
+  charts.forEach((chart) => {
+    if (!chartsByTitle[chart.title]) {
+      chartsByTitle[chart.title] = [];
+    }
+    chartsByTitle[chart.title].push(chart);
+  });
+
+  const chartsParagraphs = [];
+  
+  // iterate over chartsByTitle
+  for (const title in chartsByTitle) {
+    chartsParagraphs.push(
+      new Paragraph({
+        text: title,
+        heading: HeadingLevel.HEADING_2,
+        pageBreakBefore: true,
+      })
+    );
+
+    chartsByTitle[title].forEach((chart) => { 
+      chartsParagraphs.push(
+        new Paragraph({
+          children: [
+            new ImageRun({
+              data: chart.chart,
+              transformation: { height: 300, width: 600 },
+            }),
+          ],
+        })
+      );
+
+      chart.labels.forEach((label, index) => {
+        chartsParagraphs.push(
+          new Paragraph({
+            // color from resultColours
+            style: "Normal",
+            children: [
+              new TextRun({
+                // round result to nearest integer
+                text: `${label}: ${Math.round(chart.results[index])}% - ${chart.statements[index]}`,
+                color: chart.resultColours[index].replace("#", ""),
+              }),
+            ],
+          })
+        );
+      });
+    })
+  }
 
   const headers = {
     default: new Header({
@@ -398,6 +411,37 @@ function renderQuestionTypeSelectWithComment(
         return "Tend to disagree";
       case "d":
         return "Strongly disagree";
+      default:
+        return "Unknown: " + value;
+    }
+  }
+
+  const answer = response?.answer ? getAnswer(response.answer) : "";
+  const comment = response?.comments || "";
+
+  return [
+    renderQuestionText(questionNumber, question.text),
+    renderAnswerWithComment(answer, comment),
+  ];
+}
+
+function renderQuestionTypePercentageSelect(
+  question: Question,
+  questionNumber: number,
+  response: QuestionAnswer
+) {
+  function getAnswer(value: string) {
+    switch (value) {
+      case "a":
+        return "none";
+      case "b":
+        return "a little (<5%)";
+      case "c":
+        return "some (5% to 20%)";
+      case "d":
+        return "lots (20% to 50%)";
+      case "e":
+        return "most (>50%)";
       default:
         return "Unknown: " + value;
     }

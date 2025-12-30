@@ -98,18 +98,6 @@ function ResultsSection() {
     return acc;
   }, new Map());
 
-/*  
-all_results.forEach((key) => {
-  chartWrappers.set(key.section, {
-    chartInstance: useRef<Chart | null>(null),
-      chartContainer: useRef<HTMLCanvasElement | null>(null),
-      smallInstance: useRef<Chart | null>(null),
-      smallContainer: useRef<HTMLCanvasElement | null>(null),
-      textOutput: useRef<HTMLDivElement | null>(null),
-    });
-  });
-  */
-
   useEffect(() => {
     function getSingleAnswer(sectionId: string, questionId: string, answerValues: Record<string, number>) {
       const answer = answers[sectionId][questionId] as QuestionAnswer;
@@ -122,18 +110,6 @@ all_results.forEach((key) => {
       }
       return { value: answerValue, maxValue: answerValues.max };
     }
-
-    /*
-    function chartsFrom(results: AllResultMappings) {
-      let charts: Map<string, number> = new Map();
-      for(let t in results) {
-        let thing: ResultMapping = results[t]; 
-        let chart = chartFrom(thing);
-        charts.set(t, chart);
-      }
-      return charts;
-    }
-    */
 
     function chartFrom(resultMapping: ResultMapping) {
       var totalValue = 0;

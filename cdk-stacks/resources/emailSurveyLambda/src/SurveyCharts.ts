@@ -6,33 +6,40 @@ import {
   Chart,
   ChartConfiguration,
   ScaleOptions,
+  PieController,
+  ArcElement,
+  Legend,
 } from "chart.js";
 import {
   sectionsContent,
   SCALE_WITH_COMMENT,
+  PERCENTAGE_TYPE_WITH_COMMENT,
+  ResultMapping,
+  all_results,
+  Result,
+  Question,
+  result_mappings
 } from "learning-play-audit-survey";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { AnswerWeights, QuestionAnswer, SurveyAnswers } from "./SurveyModel";
+import { group } from "console";
 
 // eslint-disable-next-line jest/require-hook
 Chart.register(BarController, BarElement, CategoryScale, LinearScale);
 
-function createAnswerWeights() {
-  return sectionsContent.reduce((sections, section) => {
-    var questions: Record<string, number> = {};
-    sections[section.id] = questions;
-    section.subsections.forEach((subsection) =>
-      subsection.questions.forEach(
-        ({ type, id, weight = 1 }) =>
-          (questions[id] = type === SCALE_WITH_COMMENT ? weight : 0)
-      )
-    );
-    return sections;
-  }, {} as AnswerWeights);
-}
-const answerWeights = createAnswerWeights();
 
-const ANSWER_VALUES: Record<string, number> = { a: 1, b: 0.7, c: 0.3, d: 0 };
+Chart.register(
+  BarController, BarElement, CategoryScale, LinearScale, 
+  PieController, ArcElement, 
+  //ChartDataLabels,
+  Legend
+);
+
+const A_ANSWER_VALUES = { a: 3, b: 2, c: 1, d: 0, max: 3 };
+const B_ANSWER_VALUES = { a: 0, b: 1, c: 2, d: 3, max: 3 };
+const GEO_ANSWER_VALUES = { a: 0, b: 3, c: 12, d: 30, e: 60, "": 0 };
+type A_ANSWER_VALUE_KEY = keyof typeof A_ANSWER_VALUES;
+type B_ANSWER_VALUE_KEY = keyof typeof B_ANSWER_VALUES;
 
 const width = 600; //px
 const backgroundColour = "white";
@@ -50,100 +57,40 @@ const smallChartJSNodeCanvas = new ChartJSNodeCanvas({
 function getSingleAnswer(
   answers: SurveyAnswers,
   sectionId: string,
-  questionId: string
+  questionId: string,
+  answerValues: Record<string, number>
 ) {
+  const answer = answers[sectionId][questionId] as QuestionAnswer;
   var answerValue = 0;
-  if (!answers[sectionId][questionId]) {
+  if (!answer) {
     throw new Error("Unknown question: " + sectionId + ":" + questionId);
   }
-  const answer = answers[sectionId][questionId] as QuestionAnswer;
-  const answerWeight = answerWeights[sectionId][questionId];
-  if (
-    answer.answer !== undefined &&
-    ANSWER_VALUES[answer.answer] !== undefined
-  ) {
-    answerValue = ANSWER_VALUES[answer.answer];
+  if (answer.answer && answerValues.hasOwnProperty(answer.answer)) {
+    answerValue = answerValues[answer.answer];
   }
-  return { value: answerValue * answerWeight, maxValue: answerWeight };
+  return { value: answerValue, maxValue: answerValues.max };
 }
 
-function calcMultipleAnswers(
-  answers: SurveyAnswers,
-  sectionId: string,
-  questionIds: string[]
-) {
+function calcResultAnswers(answers: SurveyAnswers, resultMapping: ResultMapping) {
   var totalValue = 0;
   var totalMaxValue = 0;
-  questionIds.forEach((questionId) => {
-    const { value, maxValue } = getSingleAnswer(answers, sectionId, questionId);
+  resultMapping.A.forEach((pair) => {
+    const { value, maxValue } = getSingleAnswer(answers, pair.section, pair.question, A_ANSWER_VALUES);
+    totalValue += value;
+    totalMaxValue += maxValue;
+  });
+  resultMapping.B.forEach((pair) => {
+    const { value, maxValue } = getSingleAnswer(answers, pair.section, pair.question, B_ANSWER_VALUES);
     totalValue += value;
     totalMaxValue += maxValue;
   });
   return (totalValue * 100) / totalMaxValue;
 }
 
-function calcSectionAnswers(answers: SurveyAnswers, sectionId: string) {
-  const questionIds = Object.keys(answers[sectionId]);
-  return calcMultipleAnswers(answers, sectionId, questionIds);
-}
-
-function calcAnswer(
-  answers: SurveyAnswers,
-  sectionId: string,
-  questionId: string
-) {
-  const { value, maxValue } = getSingleAnswer(answers, sectionId, questionId);
-  return (value * 100) / maxValue;
-}
-
-function chartDataGreenspaceAnswers(answers: SurveyAnswers) {
-  return [
-    calcAnswer(answers, "greenspace", "accessible"),
-    calcAnswer(answers, "greenspace", "frequentuse"),
-    calcAnswer(answers, "greenspace", "wildlife"),
-    calcAnswer(answers, "greenspace", "teaching"),
-    calcAnswer(answers, "greenspace", "changes"),
-  ];
-}
-
-function chartDataAnswers(answers: SurveyAnswers) {
-  return [
-    calcSectionAnswers(answers, "learning"),
-    calcSectionAnswers(answers, "play"),
-    calcSectionAnswers(answers, "wellbeing"),
-    calcSectionAnswers(answers, "sustainability"),
-    calcSectionAnswers(answers, "community"),
-  ];
-}
-
-function chartDataPracticeAnswers(answers: SurveyAnswers) {
-  return [
-    calcMultipleAnswers(answers, "practice", [
-      "developingcurriculum",
-      "curriculumtopic",
-      "resources",
-      "outcomes",
-      "principles",
-      "growfood",
-    ]),
-    calcMultipleAnswers(answers, "practice", [
-      "playpolicy",
-      "playrain",
-      "playsnow",
-      "allages",
-      "outofsight",
-      "typesofplay",
-      "monitoring",
-      "skillstraining",
-      "oldersupervising",
-    ]),
-  ];
-}
-
 function getChartConfiguration(
   labels: (string | string[])[],
   data: number[],
-  barColour: string
+  barColour: string[]
 ): ChartConfiguration {
   const valueAxis: ScaleOptions = {
     type: "linear",
@@ -185,42 +132,81 @@ function getChartConfiguration(
   };
 }
 
-export async function getCharts(answers: SurveyAnswers) {
-  const learningChart = await largeChartJSNodeCanvas.renderToBuffer(
-    getChartConfiguration(
-      [
-        "For Learning",
-        "For Play",
-        "For Wellbeing",
-        "For Sustainability",
-        ["For Community", "& Participation"],
-      ],
-      chartDataAnswers(answers),
-      "#2d6a89"
-    )
-  );
+// for all the results, which have sections names like "Foo: Bar" group them by Foo
+const groupedResults = all_results.reduce((acc: Record<string, Result[]>, result) => {
+  const sectionParts = result.section.split(":");
+  const groupName = sectionParts[0].trim();
+  if (!acc[groupName]) {
+    acc[groupName] = [];
+  }
+  acc[groupName].push(result);
+  return acc;
+}, {});   
 
-  const greenspaceChart = await largeChartJSNodeCanvas.renderToBuffer(
-    getChartConfiguration(
-      [
-        "For Accessibility",
-        "For Frequent Use",
-        "For Wildlife",
-        ["For Learning", "& Play"],
-        ["For Ease of", "Change"],
-      ],
-      chartDataGreenspaceAnswers(answers),
-      "#2d6a89"
-    )
-  );
+const gcQuestionsArray = sectionsContent.find(s => s.id == "nature")?.subsections.flatMap(ss => ss.questions.filter(q => q.id.startsWith("GC"))) || [];
+const gcQuestions: Map<string, Question> = gcQuestionsArray.reduce((acc: Map<string, Question>, question:Question) => {
+  acc.set(question.id, question);
+  return acc;
+}, new Map());
 
-  const practiceChart = await smallChartJSNodeCanvas.renderToBuffer(
-    getChartConfiguration(
-      ["Learning", "Play"],
-      chartDataPracticeAnswers(answers),
-      "#2d6a89"
-    )
-  );
+export interface SurveyChart {
+  title: string;
+  labels: string[];
+  results: number[];
+  resultColours: string[];
+  statements: string[];
+  chart: Buffer;
+}
 
-  return { learningChart, greenspaceChart, practiceChart };
+export async function getCharts(answers: SurveyAnswers): Promise<SurveyChart[]> {
+  const toReturn: SurveyChart[] = [];
+
+  for (var key in Object.keys(groupedResults)) {
+    const groupName = Object.keys(groupedResults)[key];
+    const group = groupedResults[groupName];
+    const mappings = group.map(result => result_mappings[result.section]);
+  
+    const results = mappings.map(mapping => calcResultAnswers(answers, mapping));
+    const resultColours = results.map(result => {
+      if (result >= 67) {
+        return "#4caf50"; // green
+      } else if (result >= 34) {
+        return "#ff9800"; // orange
+      } else {
+        return "#f44336"; // red
+      }
+    });
+
+    let labels = group.map(result => result.section.split(":")[1].trim());
+    
+    const chartConfiguration = getChartConfiguration(
+      labels, 
+      results,
+      resultColours
+    );
+
+    const chart = await largeChartJSNodeCanvas.renderToBuffer(chartConfiguration);
+
+    const statements = results.map((result, index) => {
+      const spec = group[index];
+      if (result >= 67) {
+        return spec.good;
+      } else if (result >= 34) {
+        return spec.ok
+      } else {
+        return spec.bad;
+      }
+    });
+
+    toReturn.push({ 
+      title: groupName, 
+      labels: labels,
+      results: results,
+      resultColours: resultColours,
+      statements: statements,
+      chart: chart,
+    });
+  }
+
+  return toReturn;
 }

@@ -88,9 +88,7 @@ export const sectionsContent: Section[] = [
           {
             type: SCALE_WITH_COMMENT,
             id: "P02",
-            text: [
-              "We have a member of staff or external supplier to deliver all or most of our outdoor learning themselves.",
-            ],
+            text: "We have a member of staff or external supplier to deliver all or most of our outdoor learning themselves.",
           },
           {
             type: SCALE_WITH_COMMENT,
@@ -125,11 +123,7 @@ export const sectionsContent: Section[] = [
           {
             type: SCALE_WITH_COMMENT,
             id: "P09",
-            text: [
-              "We have",
-              { tag: "b", content: "appointed a lead or co-ordinator" },
-              "in areas around climate change and sustainability in the curriculum, outdoor learning, and play.",
-            ],
+            text: "We have appointed a lead or co-ordinator in areas around climate change and sustainability in the curriculum, outdoor learning, and play.",
           },
           { type: SCALE_WITH_COMMENT, id: "P10", text: "All our pupils are actively involved in designing and creating school grounds improvements." },
           { type: SCALE_WITH_COMMENT, id: "P11", text: "A range of staff members, both teaching and non-teaching, are actively involved in designing and creating school grounds improvements." },
