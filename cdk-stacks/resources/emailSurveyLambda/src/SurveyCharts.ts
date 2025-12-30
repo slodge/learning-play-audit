@@ -160,7 +160,7 @@ export interface SurveyChart {
 }
 
 
-function getGeoPieChart(answers: SurveyAnswers) {
+function getGeoPieChart(answers: SurveyAnswers) : SurveyChart {
 
   const geo_answer_keys = Object.keys(answers.nature).filter(key => key.startsWith("GC"));
   const results: number[] = [];
@@ -218,6 +218,7 @@ function getGeoPieChart(answers: SurveyAnswers) {
 export async function getCharts(answers: SurveyAnswers): Promise<SurveyChart[]> {
   const toReturn: SurveyChart[] = [];
 
+  toReturn.push(getGeoPieChart(answers));
 
   for (var key in Object.keys(groupedResults)) {
     const groupName = Object.keys(groupedResults)[key];
