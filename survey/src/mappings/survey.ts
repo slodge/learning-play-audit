@@ -299,7 +299,7 @@ export const sectionsContent: Section[] = [
           },
           {
             tag: "p",
-            content: "TUse this section to consider both how much wind you have on your site and how much your site shelters you from the winds. You should consider the average wind on your site and extreme wind events due to storms.", 
+            content: "Use this section to consider both how much wind you have on your site and how much your site shelters you from the winds. You should consider the average wind on your site and extreme wind events due to storms.", 
           },
           {
             tag: "p",
@@ -331,7 +331,7 @@ export const sectionsContent: Section[] = [
         ],
         questions: [
           { type: SCALE_WITH_COMMENT, id: "WA01", text: "We have a stream or river, or have natural running water on site or on a boundary." },
-          { type: SCALE_WITH_COMMENT, id: "WA02", text: "We have area(s) on which water puddles or pools (including a pond) when it rains, but it disappears slowly afterwards, aAnd the water does not cause a problem for us." },
+          { type: SCALE_WITH_COMMENT, id: "WA02", text: "We have area(s) on which water puddles or pools (including a pond) when it rains, but it disappears slowly afterwards, and the water does not cause a problem for us." },
           { type: SCALE_WITH_COMMENT, id: "WA03", text: "We have areas of the school grounds which remain wet or muddy after rain, hindering use of some spaces." },
           { type: SCALE_WITH_COMMENT, id: "WA04", text: "Water floods or flows ONTO our site during rainfall from surrounding areas." },
           { type: SCALE_WITH_COMMENT, id: "WA05", text: "Water floods or flows OFF our site during rainfall into surrounding areas." },

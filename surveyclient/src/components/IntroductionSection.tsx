@@ -39,38 +39,43 @@ function IntroductionSection() {
       <div className="section introduction">
         <h1 className="title">Introduction</h1>
         <p>
-          This audit tool was developed by Learning through Landscapes (LtL) to
-          help you reflect on your current outdoor spaces and practice. You can
-          then identify priorities for development that might be supported by
-          the School Development Plan, colleagues and yourself.
-        </p>
-
-        <p>
-          You should be able to complete most of the audit in around an hour -
-          using your existing knowledge and without the need to collect any
-          additional information. In a large school you may not yet be aware of
-          all the uses of the outdoor space for learning, and so we suggest you
-          ask for input from all teachers into this. A simple way is to ask
-          everyone to write on a flip chart or 'stickies' what lesson(s) they
-          lead outdoors each academic year.
-        </p>
-
-        <p>
-          If you don't currently make good use of local greenspace for outdoor
-          learning then we suggest that before completing section 7 you should
-          visit your nearest area that has potential for learning and play to
-          get a better feel for the space. Again, you should check with all
-          colleagues in case you are not aware of all the local trips that are
-          happening.
-        </p>
-
-        <p>
-          The results of this audit are for you to then use - we hope it sparks
-          thoughts and visits themes you are not aware of.
+          This audit is intended to assist in understanding the risks that our changing climate brings to your school
+          grounds, and the nature-based adaptations you can make. It is not intended to be exhaustive or dictate your
+          priorities. The intention is to provide an opportunity to reflect on your education practice and how well
+          adapted your spaces are to our changing climate.This audit is intended to assist in understanding the risks
+          that our changing climate brings to your school grounds, and the nature-based adaptations you can make. It
+          is not intended to be exhaustive or dictate your priorities. The intention is to provide an opportunity to
+          reflect on your education practice and how well adapted your spaces are to our changing climate.
         </p>
         <p>
-          LtL will use anonymised mass data from this survey tool to inform our
-          work. Your data is secure and will not be shared with a third party.
+          How to use the audit: this audit is best undertaken with a group of learners and adults from the school - 
+          different views and experiences are important. Do also undertake the audit with a map in hand and while
+          moving around the school grounds. Pupils often know 'secret' areas, and it can also jog memories around
+          what happens on a windy, wet, or hot day in the grounds.
+        </p>
+        <p>
+          To complete the audit, select the closest matching statement. You can enter your results directly in the
+          digital version of the audit or complete the audit on paper before entering the results back in the classroom.
+          Please note that an incomplete audit will create incomplete results, as the questions interlink with each other.
+        </p>
+        <p>
+          On the 'Results' tab you will find a graph of where you are currently with regards to having climate ready
+          school grounds.
+        </p>
+        <p>
+          After completing this audit and gathering the results, do engage with the pupils and other staff about what
+          you have learned, and agree what your priorities and plans are. This audit is as much about your practice as
+          an educator and the learning experience your pupils have as it is about adapting our schools' outdoor spaces
+          to better prepare for a changing climate.
+        </p>
+        <p>
+          <b>
+            <a href='https://www.ltl.org.uk' target="_blank">www.ltl.org.uk</a> | 
+            <a href='tel:+441786465934'>01786 465 934</a>
+          </b>
+        </p>
+        <p>
+          This audit is for non-commercial use only, Copywright Learning through Landscapes 2024
         </p>
       </div>
       <div className="section introduction">
@@ -90,14 +95,49 @@ function IntroductionSection() {
             Use the note icon to add any notes or comments that you want to
             make.
           </div>
-          <div className="icon-description">
-            {addPhotoSvg()}
-            Use the camera icon to attach any photos you would like to add.
-          </div>
+          {
+            /*
+              <div className="icon-description">
+                  {addPhotoSvg()}
+                  Use the camera icon to attach any photos you would like to add.
+              </div>
+            */
+          }
         </div>
         <p>
           It is helpful if you answer as many questions as you are able to,
           however it is not compulsory to complete all questions.
+        </p>
+      </div>
+      <div className="section introduction">
+        <h1 className="title">Unitied Nations Sustainable Development Goals</h1>
+        <p>
+            This School Ground Climate Audit framework aligns with several United Nations Sustainable Development Goals (UNSDGs),
+            demonstrating how school grounds and outdoor learning practices contribute to global sustainability targets. 
+            The framework particularly supports:
+        </p>
+        <ul>
+          <li>
+            <b>Goal 3:</b> <i>Good Health and Well-being</i> through promoting outdoor play and physical activity
+          </li>
+          <li>
+            <b>Goal 4:</b> <i>Quality Education</i> via curriculum integration and outdoor learning opportunities
+          </li>
+          <li>
+            <b>Goal 11:</b> <i>Sustainable Cities and Communities</i> by creating inclusive, safe, and resilient school environments
+          </li>
+          <li>
+            <b>Goal 13:</b> <i>Climate Action</i> through carbon sequestration, climate adaptation features, and climate change education
+          </li>
+          <li>
+            <b>Goal 15:</b> <i>Life on Land</i> by creating and maintaining features for nature, biodiversity, and ecosystem health
+          </li>
+          <li>
+            <b>Goal 17:</b> <i>Partnerships for the Goals</i> by encouraging collaboration with communities and specialist partners
+          </li>
+        </ul>
+        <p>
+          These interconnected goals underscore the holistic approach needed to transform school grounds into educational and sustainable spaces.
         </p>
         <SectionBottomNavigation />
       </div>

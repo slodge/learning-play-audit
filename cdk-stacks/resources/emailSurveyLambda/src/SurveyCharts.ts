@@ -197,7 +197,7 @@ function getGeoPieChart(answers: SurveyAnswers) : SurveyChart {
               display: true,
               position: 'right' as const,
               labels: {
-                font: { size: 14 }
+                font: { size: 10 }
               }
             }
           }
