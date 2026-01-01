@@ -98,13 +98,13 @@ function getChartConfiguration(
     min: 0,
     max: 100,
     beginAtZero: true,
-    ticks: { font: { size: 14 } },
+    ticks: { font: { size: 12 } },
   };
 
   const categoryAxis: ScaleOptions = {
     type: "category",
     grid: { color: "#807d7d", z: 1 },
-    ticks: { font: { size: 16, weight: "bold" } },
+    ticks: { font: { size: 12, weight: "bold" } },
   };
 
   return {

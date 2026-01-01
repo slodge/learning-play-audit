@@ -14,7 +14,7 @@ export type FixedCognitoUser = CognitoUser & {
 };
 
 export interface SurveyUser {
-  // Stuart: this comment is wrong!!!!
+  // Stuart says: this comment is wrong!!!!
   // WRONG: cognitoUser.username is the same as email - we keep both as no cognito user prior to login
   cognitoUser?: FixedCognitoUser;
   email: string;

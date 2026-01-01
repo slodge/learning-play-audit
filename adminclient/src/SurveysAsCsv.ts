@@ -18,7 +18,7 @@ import {
   SurveyResponse,
 } from "./model/SurveyModel";
 
-const headerRows = [[""], [""], ["Id"]];
+const headerRows = [["", "", ""], ["", "", ""], ["Id", "Name", "Email"]];
 
 export function exportSurveysAsCsv(surveys: SurveyResponse[] = []) {
   if (surveys.length === 0) {
@@ -35,7 +35,7 @@ export function exportSurveysAsCsv(surveys: SurveyResponse[] = []) {
   surveys.forEach((survey) => {
     const response = survey.surveyResponse;
     console.debug(survey);
-    const rowData = [survey.id];
+    const rowData = [survey.id, survey.responderName, survey.responderEmail];
 
     sectionsContent.forEach((section) => {
       renderSectionAnswers(rowData, section, response[section.id]);
