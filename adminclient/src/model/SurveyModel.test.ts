@@ -322,7 +322,7 @@ describe("retrieveSummaryResponses", () => {
         responderEmail: "email1",
         responderName: "user1",
         schoolName: "school1",
-        timestampString: "12/01/2021, 10:32:03",
+        timestampString: "2021-01-12, 10:32:03 a.m.",
       },
       {
         createdAt: "2021-02-12T10:32:03.162Z",
@@ -330,7 +330,7 @@ describe("retrieveSummaryResponses", () => {
         responderEmail: "email2",
         responderName: "user2",
         schoolName: "school2",
-        timestampString: "12/02/2021, 10:32:03",
+        timestampString: "2021-02-12, 10:32:03 a.m.",
       },
     ]);
   });
