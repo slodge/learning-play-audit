@@ -377,6 +377,7 @@ export function renderQuestionText(
     //indent: { start: 500, hanging: 500 },
     shading: { type: ShadingType.CLEAR, fill: "D0D0D0" },
     spacing: { before: 200, after: 50 },
+    keepNext: true
   });
 }
 
