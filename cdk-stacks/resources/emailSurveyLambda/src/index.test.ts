@@ -3,6 +3,8 @@ import { dynamodbClient } from "./aws";
 
 jest.mock("./aws");
 
+// SORRY ... these tests require a lot of work to get them working... so left for now
+
 describe("handler", () => {
   const EMPTY_SCALE_AND_COMMENT = {
     M: { answer: { S: "" }, comments: { S: "" } },

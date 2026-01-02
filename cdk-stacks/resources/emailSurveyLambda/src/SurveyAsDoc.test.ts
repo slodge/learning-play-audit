@@ -15,6 +15,8 @@ import fs from "fs";
 import { PhotosData } from "./SurveyModel";
 import { OutputInfo } from "sharp";
 
+// SORRY ... these tests require a lot of work to get them working... so left for now
+
 describe("exportSurveyAsDocx", () => {
   const SURVEY = {
     responderName: "",
