@@ -71,6 +71,8 @@ Use `--profile AWS_PROFILE` if necessary to choose the correct [AWS CLI access k
 Example as executed by Stuart in his account:
 
 ```
+aws sso login --profile Slodge-Admin
+
 cdk bootstrap aws://983641940485/eu-west-1 --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
 
 cdk deploy TESTING-Backend-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
@@ -229,7 +231,15 @@ Stack ARN:
 arn:aws:cloudformation:eu-west-2:ACCOUNT_NUMBER:stack/LTLSurvey2-Frontend-dev/00000000-0000-0000-0000-000000000000
 ```
 
+For example, Stuart ran:
+
+```
+cdk deploy TESTING-Frontend-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
+```
+
 The web client URLs are the endpoints of the two web clients in cloudfront. These can then be set up with DNS, Route53, etc.
+
+If this fails, then one option Stuart found was that the size of the build folders (at `surveyclient/build` and `adminclient/build`) could be too large - causing timeouts - so delete those folders and rebuild.
 
 ### or deploy the frontend components - hosted elsewhere
 
