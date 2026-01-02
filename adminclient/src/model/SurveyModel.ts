@@ -192,9 +192,10 @@ export function retrieveSummaryResponses(): AppThunk {
           responses: result.Items!.map((item) => {
             const unmarshalledResult = unmarshall(item) as SurveySummary;
             // Add localised timestamp
+            // format string as yyyy/mm/dd HH:MM:SS in order to make the text sortable
             unmarshalledResult.timestampString = new Date(
               unmarshalledResult.createdAt
-            ).toLocaleString();
+            ).toLocaleString("en-CA", { timeZone: "UTC" });
             return unmarshalledResult;
           }),
         });
