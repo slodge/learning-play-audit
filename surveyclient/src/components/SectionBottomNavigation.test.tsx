@@ -2,7 +2,7 @@ import { BACKGROUND } from "learning-play-audit-survey";
 import React from "react";
 import { SET_CURRENT_SECTION } from "../model/ActionTypes";
 import { surveyStore } from "../model/SurveyModel";
-import { GALLERY, INTRODUCTION, SUBMIT } from "../model/SurveySections";
+import { GALLERY, INTRODUCTION, RESULTS, SUBMIT } from "../model/SurveySections";
 import { renderWithStore } from "./ReactTestUtils";
 import SectionBottomNavigation from "./SectionBottomNavigation";
 
@@ -26,7 +26,7 @@ describe("component SectionBottomNavigation", () => {
   });
 
   it("middle section", async () => {
-    surveyStore.dispatch({ type: SET_CURRENT_SECTION, sectionId: "learning" });
+    surveyStore.dispatch({ type: SET_CURRENT_SECTION, sectionId: "nature" });
     const { getByRole, user } = renderWithStore(<SectionBottomNavigation />);
 
     const previousButton = getByRole("button", { name: "previous section" });
@@ -37,9 +37,9 @@ describe("component SectionBottomNavigation", () => {
     expect(nextButton).not.toHaveClass("hidden");
 
     await user.click(nextButton);
-    expect(surveyStore.getState().currentSectionId).toBe("play");
+    expect(surveyStore.getState().currentSectionId).toBe("temperature");
     await user.click(previousButton);
-    expect(surveyStore.getState().currentSectionId).toBe("learning");
+    expect(surveyStore.getState().currentSectionId).toBe("nature");
   });
 
   it("last section", async () => {
@@ -54,6 +54,6 @@ describe("component SectionBottomNavigation", () => {
     expect(nextButton).toHaveClass("hidden");
 
     await user.click(previousButton);
-    expect(surveyStore.getState().currentSectionId).toBe(GALLERY);
+    expect(surveyStore.getState().currentSectionId).toBe(RESULTS);
   });
 });

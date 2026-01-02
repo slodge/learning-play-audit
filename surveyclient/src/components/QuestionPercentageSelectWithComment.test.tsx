@@ -7,8 +7,8 @@ import { renderWithStore } from "./ReactTestUtils";
 import { Question, PERCENTAGE_TYPE_WITH_COMMENT } from "learning-play-audit-survey";
 
 describe("component QuestionPercentageSelectWithComment", () => {
-  const SECTION_ID = "learning";
-  const QUESTION_ID = "classroom";
+  const SECTION_ID = "pandp";
+  const QUESTION_ID = "P01";
   const QUESTION_NUMBER = 17;
   const QUESTION_TEXT = "test question text";
   const QUESTION: Question = {
@@ -74,7 +74,7 @@ describe("component QuestionPercentageSelectWithComment", () => {
   function checkSelectedOption(expectedOption: string | null) {
     // Check visible selection
     const buttons = toggleButtons();
-    expect(buttons).toHaveLength(4);
+    expect(buttons).toHaveLength(5);
     buttons.forEach((button) => {
       if (button.getAttribute("id") === expectedOption) {
         expect(button).toHaveClass("selected");

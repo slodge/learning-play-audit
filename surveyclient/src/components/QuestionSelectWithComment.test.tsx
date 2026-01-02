@@ -7,8 +7,8 @@ import { renderWithStore } from "./ReactTestUtils";
 import { Question, SCALE_WITH_COMMENT } from "learning-play-audit-survey";
 
 describe("component QuestionSelectWithComment", () => {
-  const SECTION_ID = "learning";
-  const QUESTION_ID = "classroom";
+  const SECTION_ID = "pandp";
+  const QUESTION_ID = "P01";
   const QUESTION_NUMBER = 17;
   const QUESTION_TEXT = "test question text";
   const QUESTION: Question = {
