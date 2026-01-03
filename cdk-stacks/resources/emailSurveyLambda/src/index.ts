@@ -16,6 +16,7 @@ import { s3Client, dynamodbClient, emailClient } from "./aws";
 import { exportSurveyAsDocx } from "./SurveyAsDoc";
 import sharp from "sharp";
 import { Readable } from "stream";
+import { get_survey_version } from "learning-play-audit-survey";
 
 //console.log("three");
 
@@ -96,7 +97,11 @@ async function getPhotos(survey: SurveyResponse) {
 
 async function sendSurveyConfirmationEmail(survey: SurveyResponse) {
   const photosData = await getPhotos(survey);
+  
+  const surveyVersion = get_survey_version(survey.surveyVersion);
+
   let surveyResultsDoc = await exportSurveyAsDocx(
+    surveyVersion,
     survey.surveyResponse,
     survey.photos,
     photosData
@@ -105,7 +110,7 @@ async function sendSurveyConfirmationEmail(survey: SurveyResponse) {
 
   if (surveyResultsDocBase64.length > MAX_DOCUMENT_SIZE) {
     // Report including photos is too large to email - create one without photos
-    surveyResultsDoc = await exportSurveyAsDocx(survey.surveyResponse, [], {});
+    surveyResultsDoc = await exportSurveyAsDocx(surveyVersion, survey.surveyResponse, [], {});
     surveyResultsDocBase64 = await Packer.toBase64String(surveyResultsDoc);
   }
 

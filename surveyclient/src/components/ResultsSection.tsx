@@ -20,11 +20,10 @@ import {
 import {
   SCALE_WITH_COMMENT,
   sectionQuestions,
-  sectionsContent,
-  all_results,
+  SurveyVersion,
+  current_survey_version,
   ResultMapping,
   AllResultMappings,
-  result_mappings,
   Result,
   Question
 } from "learning-play-audit-survey";
@@ -63,7 +62,7 @@ function ResultsSection() {
   const GEO_CHART:string = "Geographical Diversity";
 
   // for all the results, which have sections names like "Foo: Bar" group them by Foo
-  const groupedResults = all_results.reduce((acc: Record<string, Result[]>, result) => {
+  const groupedResults = current_survey_version().results.reduce((acc: Record<string, Result[]>, result) => {
     const sectionParts = result.section.split(":");
     const groupName = sectionParts[0].trim();
     if (!acc[groupName]) {
@@ -92,7 +91,7 @@ function ResultsSection() {
     textOutput: useRef<HTMLDivElement | null>(null),
   });
 
-  const gcQuestionsArray = sectionsContent.find(s => s.id == "nature")?.subsections.flatMap(ss => ss.questions.filter(q => q.id.startsWith("GC"))) || [];
+  const gcQuestionsArray = current_survey_version().sections.find(s => s.id == "nature")?.subsections.flatMap(ss => ss.questions.filter(q => q.id.startsWith("GC"))) || [];
   const gcQuestions: Map<string, Question> = gcQuestionsArray.reduce((acc: Map<string, Question>, question:Question) => {
     acc.set(question.id, question);
     return acc;
@@ -299,7 +298,7 @@ function ResultsSection() {
         throw new Error("No chart wrapper for key: " + groupName);
       }
 
-      let results = group.map(result => chartFrom(result_mappings[result.section]));
+      let results = group.map(result => chartFrom(current_survey_version().result_mappings[result.section]));
       let resultColours = results.map(result => {
         if (result >= 67) {
           return "#4caf50"; // green

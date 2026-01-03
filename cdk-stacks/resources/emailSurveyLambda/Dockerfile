@@ -21,6 +21,7 @@ COPY survey ${LAMBDA_TASK_ROOT}/survey
 # Install NPM dependencies for function - will also create correct binaries for canvas and sharp
 RUN npm install
 
+# TODO - this LD_PRELOAD line fails in the logs - but doesn't seem to have any noticeable effect
 ENV LD_PRELOAD='/var/task/node_modules/canvas/build/Release/libz.so.1'
 ENV FONTCONFIG_PATH='/var/task/fonts'
 

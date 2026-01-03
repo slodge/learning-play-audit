@@ -1,4 +1,5 @@
-import { sectionQuestions, sectionsContent } from "./survey";
+import { sectionsContent } from "../v_0_1_10/survey";
+import { sectionQuestions } from "./types"
 
 describe("sectionQuestions", () => {
   it("should return list of section questions", () => {

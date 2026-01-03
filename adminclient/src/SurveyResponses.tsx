@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  sectionsContent,
+  get_survey_version,
   SCALE_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
@@ -21,6 +21,8 @@ import {
   SectionAnswers,
   SurveyResponse,
 } from "./model/SurveyModel";
+import { I18n } from "@aws-amplify/core";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -492,22 +494,42 @@ function SurveyResponses({ id, surveys = [] }: SurveyResponsesProps) {
     });
   }
 
-  function renderSurveys() {
-    const responses = surveys.map((item) => item.surveyResponse);
-    return sectionsContent.map((section) => {
-      return (
-        <Section
-          key={section.id}
-          section={section}
-          sectionResponses={responses.map((response) => response[section.id])}
-        />
-      );
+  function renderSurveys(displaySurveys: SurveyResponse[]) {
+    
+    // group the responses by their version
+    const grouped = displaySurveys.reduce((accumulator, current) => {
+      if (!accumulator[current.surveyVersion]) {
+        accumulator[current.surveyVersion] = [ current ];
+      } else {
+        accumulator[current.surveyVersion].push(current);
+      }
+      return accumulator;
+    }, {} as Record<string, SurveyResponse[]>);
+
+    return Object.values(grouped).map((group) => {
+
+      const survey_template = get_survey_version(group[0].surveyVersion)
+
+      return <div>
+              <h1>Survey version {group[0].surveyVersion}</h1> 
+              {
+                survey_template.sections.map((section) => {
+                  return (
+                    <Section
+                      key={section.id}
+                      section={section}
+                      sectionResponses={group.map((response) => response.surveyResponse[section.id])}
+                    />
+                  );
+                })
+              }
+            </div>
     });
   }
 
   return (
     <div className={classes.paper} id={id}>
-      {surveys.length > 0 ? renderSurveys() : <></>}
+      {surveys.length > 0 ? renderSurveys(surveys) : <></>}
     </div>
   );
 }

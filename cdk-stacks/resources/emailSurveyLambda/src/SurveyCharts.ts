@@ -11,14 +11,12 @@ import {
   Legend,
 } from "chart.js";
 import {
-  sectionsContent,
   SCALE_WITH_COMMENT,
   PERCENTAGE_TYPE_WITH_COMMENT,
   ResultMapping,
-  all_results,
   Result,
   Question,
-  result_mappings
+  SurveyVersion
 } from "learning-play-audit-survey";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { AnswerWeights, QuestionAnswer, SurveyAnswers } from "./SurveyModel";
@@ -132,23 +130,6 @@ function getChartConfiguration(
   };
 }
 
-// for all the results, which have sections names like "Foo: Bar" group them by Foo
-const groupedResults = all_results.reduce((acc: Record<string, Result[]>, result) => {
-  const sectionParts = result.section.split(":");
-  const groupName = sectionParts[0].trim();
-  if (!acc[groupName]) {
-    acc[groupName] = [];
-  }
-  acc[groupName].push(result);
-  return acc;
-}, {});   
-
-const gcQuestionsArray: Question[] = sectionsContent.find(s => s.id == "nature")?.subsections.flatMap(ss => ss.questions.filter(q => q.id.startsWith("GC"))) || [];
-// const gcQuestions: Map<string, Question> = gcQuestionsArray.reduce((acc: Map<string, Question>, question:Question) => {
-//   acc.set(question.id, question);
-//   return acc;
-// }, new Map());
-
 export interface SurveyChart {
   title: string;
   explodeResults: boolean;
@@ -160,9 +141,10 @@ export interface SurveyChart {
 }
 
 
-function getGeoPieChart(answers: SurveyAnswers) : SurveyChart {
+async function getGeoPieChart(surveyVersion: SurveyVersion, answers: SurveyAnswers) : Promise<SurveyChart> {
 
-  const geo_answer_keys = Object.keys(answers.nature).filter(key => key.startsWith("GC"));
+  const gcQuestionsArray: Question[] = surveyVersion.sections.find(s => s.id == "nature")?.subsections.flatMap(ss => ss.questions.filter(q => q.id.startsWith("GC"))) || [];
+
   const results: number[] = [];
   const labels: string[] = [];
 
@@ -204,7 +186,7 @@ function getGeoPieChart(answers: SurveyAnswers) : SurveyChart {
         }
     };
 
-    const buffer = largeChartJSNodeCanvas.renderToBuffer(config);
+    const buffer = await largeChartJSNodeCanvas.renderToBuffer(config);
 
     return {
       title: "Grounds Coverage",
@@ -212,18 +194,35 @@ function getGeoPieChart(answers: SurveyAnswers) : SurveyChart {
       results: results,
       chart: buffer,
       explodeResults: false,
+      resultColours: [], // unused
+      statements: [], // unused
     }
 }
 
-export async function getCharts(answers: SurveyAnswers): Promise<SurveyChart[]> {
+export async function getCharts(
+    surveyVersion: SurveyVersion,
+    answers: SurveyAnswers
+  ): Promise<SurveyChart[]> {
+
+  // for all the results, which have sections names like "Foo: Bar" group them by Foo
+  const groupedResults = surveyVersion.results.reduce((acc: Record<string, Result[]>, result) => {
+    const sectionParts = result.section.split(":");
+    const groupName = sectionParts[0].trim();
+    if (!acc[groupName]) {
+      acc[groupName] = [];
+    }
+    acc[groupName].push(result);
+    return acc;
+  }, {});   
+    
   const toReturn: SurveyChart[] = [];
 
-  toReturn.push(getGeoPieChart(answers));
+  toReturn.push(await getGeoPieChart(surveyVersion, answers));
 
   for (var key in Object.keys(groupedResults)) {
     const groupName = Object.keys(groupedResults)[key];
     const group = groupedResults[groupName];
-    const mappings = group.map(result => result_mappings[result.section]);
+    const mappings = group.map(result => surveyVersion.result_mappings[result.section]);
   
     const results = mappings.map(mapping => calcResultAnswers(answers, mapping));
     const resultColours = results.map(result => {

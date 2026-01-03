@@ -9,7 +9,7 @@ import {
 import GalleryPhoto from "./GalleryPhoto";
 import SectionBottomNavigation from "./SectionBottomNavigation";
 import { addPhotoSvg } from "./SvgUtils";
-import { sectionQuestions, sectionsContent } from "learning-play-audit-survey";
+import { sectionQuestions, current_survey_version } from "learning-play-audit-survey";
 import Modal from "@material-ui/core/Modal";
 
 function GallerySection() {
@@ -69,7 +69,7 @@ function GallerySection() {
 
     const questionPhotoIds = getSectionQuestionPhotoIdMap();
 
-    sectionsContent.forEach((section) => {
+    current_survey_version().sections.forEach((section) => {
       const sectionId = section.id;
       const sectionTitle = section.title;
 

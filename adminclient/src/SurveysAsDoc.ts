@@ -1,6 +1,6 @@
 import {
   sectionQuestions,
-  sectionsContent,
+  get_survey_version,
   SCALE_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
@@ -24,6 +24,7 @@ import {
   TableCell,
   TableLayoutType,
   BorderStyle,
+  ISectionOptions,
 } from "docx";
 import {
   DatedQuestionAnswer,
@@ -33,8 +34,67 @@ import {
   SectionAnswers,
   SurveyResponse,
 } from "./model/SurveyModel";
+import { Children } from "react";
 
 const IMAGE_NOT_FOUND = "[Image not found]";
+
+function renderPhoto(
+  photos: Record<string, Photo>,
+  photoKey: string,
+  description: string,
+  height: number,
+  width: number
+) {
+  const photoData = photos[photoKey];
+  if (photoData.data !== undefined) {
+    const scaledWidth = (width * 200) / height;
+    return [
+      new Paragraph({
+        children: [
+          new ImageRun({
+            data: photoData.data,
+            transformation: { height: 200, width: scaledWidth },
+          }),
+        ],
+      }),
+      new Paragraph({ children: [new TextRun({ text: description })] }),
+    ];
+  }
+
+  return [
+    new Paragraph({ children: [new TextRun({ text: IMAGE_NOT_FOUND })] }),
+    new Paragraph({ children: [new TextRun({ text: description })] }),
+  ];
+}
+
+function renderSurveyPhotos(
+  photos: Record<string, Photo>,
+  survey: SurveyResponse) {
+  const response = survey.surveyResponse;
+
+  return [
+    new Paragraph({
+      children: [
+        new TextRun({
+          text:
+            "Images from " +
+            (response.background.contactname as QuestionAnswer).answer,
+        }),
+      ],
+    }),
+    ...survey.photos
+      .map((photoRef) =>
+        renderPhoto(
+          photos,
+          photoRef.fullsize.key,
+          photoRef.description,
+          photoRef.fullsize.height,
+          photoRef.fullsize.width
+        )
+      )
+      .flat(),
+  ];
+}
 
 export function exportSurveysAsDocx(
   surveys: SurveyResponse[],
@@ -45,96 +105,58 @@ export function exportSurveysAsDocx(
   }
 
   console.log("exportSurveysAsDocx", surveys, photos);
-  const responses = surveys.map((survey) => survey.surveyResponse);
 
-  const paragraphs = sectionsContent
-    .map((section) => {
-      const sectionResponses = responses.map(
-        (response) => response[section.id]
-      );
-      return renderSection(section, sectionResponses);
-    })
-    .flat();
-
-  const sections = [];
-
-  sections.push({
-    properties: {},
-    children: [
-      new Paragraph({
-        text: "Survey Responses",
-        heading: HeadingLevel.HEADING_1,
-      }),
-      ...paragraphs,
-    ],
-  });
-
-  function renderPhoto(
-    photoKey: string,
-    description: string,
-    height: number,
-    width: number
-  ) {
-    const photoData = photos[photoKey];
-    if (photoData.data !== undefined) {
-      const scaledWidth = (width * 200) / height;
-      return [
-        new Paragraph({
-          children: [
-            new ImageRun({
-              data: photoData.data,
-              transformation: { height: 200, width: scaledWidth },
-            }),
-          ],
-        }),
-        new Paragraph({ children: [new TextRun({ text: description })] }),
-      ];
+  // group the responses by their version
+  const grouped = surveys.reduce((accumulator, current) => {
+    if (!accumulator[current.surveyVersion]) {
+      accumulator[current.surveyVersion] = [ current ];
+    } else {
+      accumulator[current.surveyVersion].push(current);
     }
+    return accumulator;
+  }, {} as Record<string, SurveyResponse[]>);  
 
-    return [
-      new Paragraph({ children: [new TextRun({ text: IMAGE_NOT_FOUND })] }),
-      new Paragraph({ children: [new TextRun({ text: description })] }),
-    ];
-  }
+  const sections: any[] = [];
 
-  function renderSurveyPhotos(survey: SurveyResponse) {
-    const response = survey.surveyResponse;
+  Object.values(grouped).forEach((surveys) => {
+    const responses = surveys.map((survey) => survey.surveyResponse);
 
-    return [
-      new Paragraph({
-        children: [
-          new TextRun({
-            text:
-              "Images from " +
-              (response.background.contactname as QuestionAnswer).answer,
-          }),
-        ],
-      }),
-      ...survey.photos
-        .map((photoRef) =>
-          renderPhoto(
-            photoRef.fullsize.key,
-            photoRef.description,
-            photoRef.fullsize.height,
-            photoRef.fullsize.width
-          )
-        )
-        .flat(),
-    ];
-  }
+    const survey_template = get_survey_version(surveys[0].surveyVersion);
 
-  const photoSections = surveys
-    .filter((survey) => survey.photos.length > 0)
-    .map(renderSurveyPhotos);
+    const paragraphs = survey_template.sections
+      .map((section) => {
+        const sectionResponses = responses.map(
+          (response) => response[section.id]
+        );
+        return renderSection(section, sectionResponses);
+      })
+      .flat();
 
-  sections.push({
-    children: [
-      new Paragraph({
-        text: "Survey Photos",
-        heading: HeadingLevel.HEADING_1,
-      }),
-      ...photoSections.flat(),
-    ],
+    sections.push({
+      properties: {},
+      children: [
+        new Paragraph({
+          text: `Survey Responses for ${surveys[0].surveyVersion}`,
+          heading: HeadingLevel.HEADING_1,
+        }),
+        ...paragraphs,
+      ],
+    });
+
+    const photoSections = surveys
+      .filter((survey) => survey.photos.length > 0)
+      .map(p => renderSurveyPhotos(photos, p));
+
+    sections.push({
+      children: [
+        new Paragraph({
+          text: "Survey Photos",
+          heading: HeadingLevel.HEADING_1,
+        }),
+        ...photoSections.flat(),
+      ],
+    });
+
   });
 
   const doc = new Document({ sections });

@@ -1,3 +1,2 @@
-export * from "./mappings/result_mappings";
-export * from "./mappings/results";
-export * from "./mappings/survey";
+export * from "./mappings/types/types";
+export { current_survey_version, get_survey_version, survey_versions } from "./mappings/survey";

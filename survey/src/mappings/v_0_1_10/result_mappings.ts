@@ -1,16 +1,4 @@
-export type SectionAndQuestionPair = {
-  section: string,
-  question: string,
-}
-
-export type ResultMapping = {
-  A: SectionAndQuestionPair[],
-  B: SectionAndQuestionPair[],
-}
-
-export type AllResultMappings = {
-  [key: string]: ResultMapping,
-}
+import { AllResultMappings  } from "../types/types"
 
 export const result_mappings: AllResultMappings = {
   "Culture: Vision & Values": {

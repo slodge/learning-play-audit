@@ -1,6 +1,6 @@
 import {
   sectionQuestions,
-  sectionsContent,
+  get_survey_version,
   SCALE_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
@@ -25,26 +25,47 @@ export function exportSurveysAsCsv(surveys: SurveyResponse[] = []) {
     console.log("No surveys to export");
   }
 
-  // Clone the header rows
-  const data = headerRows.map((row) => [...row]);
+  // group the responses by their version
+  const grouped = surveys.reduce((accumulator, current) => {
+    if (!accumulator[current.surveyVersion]) {
+      accumulator[current.surveyVersion] = [ current ];
+    } else {
+      accumulator[current.surveyVersion].push(current);
+    }
+    return accumulator;
+  }, {} as Record<string, SurveyResponse[]>);  
 
-  sectionsContent.forEach((section) => {
-    renderSectionHeader(data, section);
-  });
+  const masterData: string[][] = [];
 
-  surveys.forEach((survey) => {
-    const response = survey.surveyResponse;
-    console.debug(survey);
-    const rowData = [survey.id, survey.responderName, survey.responderEmail];
+  Object.values(grouped).forEach((surveys) => {
+    // Clone the header rows
+    const data = headerRows.map((row) => [...row]);
+    data[0][0] = surveys[0].surveyVersion;
 
-    sectionsContent.forEach((section) => {
-      renderSectionAnswers(rowData, section, response[section.id]);
+    const responses = surveys.map((survey) => survey.surveyResponse);
+
+    const survey_template = get_survey_version(surveys[0].surveyVersion);
+    survey_template.sections.forEach((section) => {
+      renderSectionHeader(data, section);
     });
 
-    data.push(rowData);
+    surveys.forEach((survey) => {
+      const response = survey.surveyResponse;
+      console.debug(survey);
+      const rowData = [survey.id, survey.responderName, survey.responderEmail];
+
+      survey_template.sections.forEach((section) => {
+        renderSectionAnswers(rowData, section, response[section.id]);
+      });
+
+      data.push(rowData);
+    });
+
+    data.push([]);
+    data.forEach(d => masterData.push(d));
   });
 
-  var csvData = data.map((row) => row.join(",")).join("\n");
+  var csvData = masterData.map((row) => row.join(",")).join("\n");
   console.debug(csvData);
 
   var blob = new Blob([csvData], {

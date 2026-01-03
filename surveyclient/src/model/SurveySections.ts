@@ -1,4 +1,4 @@
-import { sectionsContent } from "learning-play-audit-survey";
+import { current_survey_version } from "learning-play-audit-survey";
 
 // Fixed section ids
 export const INTRODUCTION = "introduction";
@@ -13,7 +13,7 @@ export interface SurveySectionSummary {
 
 export const SURVEY_SECTIONS: SurveySectionSummary[] = [
   { title: "Introduction", id: INTRODUCTION },
-  ...sectionsContent.map(({title, id}) => ({title, id})),
+  ...current_survey_version().sections.map(({title, id}) => ({title, id})),
   { title: "Results", id: RESULTS },
   //{ title: "Photos", id: GALLERY },
   { title: "Submit survey", id: SUBMIT },

@@ -1,11 +1,4 @@
-export type Result = {
-    section: string;
-    statement: string;
-    bad: string;
-    ok: string;
-    good: string;
-    considerations: string[];
-}
+import { Result } from "../types/types"
 
 export const all_results: Result[] =
 [

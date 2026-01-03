@@ -5,7 +5,7 @@ import {
   getAuthState,
   isAuthenticating,
 } from "learning-play-audit-shared";
-import { sectionsContent } from "learning-play-audit-survey";
+import { current_survey_version } from "learning-play-audit-survey";
 import IntroductionSection from "./components/IntroductionSection";
 import ResultsSection from "./components/ResultsSection";
 import GallerySection from "./components/GallerySection";
@@ -56,6 +56,7 @@ function App() {
   useEffect(() => {
     dispatch(refreshState());
   }, [dispatch]);
+
 
   const [deferredInstallEvent, setDeferredInstallEvent] =
     useState<Event | null>(null);
@@ -193,11 +194,17 @@ function App() {
       return <SubmitSection endpoint={AWS_CLIENT_API_ENDPOINT} />;
     }
 
-    const section = sectionsContent.find(
+    const section = current_survey_version().sections.find(
       (item) => currentSectionId === item.id
     )!;
 
-    return <Section key={section.id} section={section} />;
+    if (section) {
+      return <Section key={section.id} section={section} />;
+    }
+
+    // can't set currentSectionId, but show the intro anyway...
+    // currentSectionId = INTRODUCTION;
+    return <IntroductionSection />;    
   }
 
   function titleText() {

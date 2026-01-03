@@ -103,7 +103,7 @@ class CdkFrontendStack extends cdk.Stack {
         destinationBucket: bucket,
         destinationKeyPrefix: destinationKeyPrefix,
         distribution: distribution,
-        distributionPaths: [ `${destinationKeyPrefix}/*`], // Invalidates cache on deploy
+        distributionPaths: [ `${destinationKeyPrefix == "/" ? "" : destinationKeyPrefix}/*`], // Invalidates cache on deploy
       });
 
       new cdk.CfnOutput(scope, name + " URL", {

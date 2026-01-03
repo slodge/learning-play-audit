@@ -1,5 +1,5 @@
 import {
-  sectionsContent,
+  get_survey_version,
   SCALE_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
@@ -9,6 +9,7 @@ import {
   Markup,
   Question,
   PERCENTAGE_TYPE_WITH_COMMENT,
+  SurveyVersion,
 } from "learning-play-audit-survey";
 import {
   Document,
@@ -31,6 +32,7 @@ import {
   WidthType,
   BorderStyle,
   HorizontalPositionAlign,
+  PageBreakBefore,
 } from "docx";
 import {
   REPORT_FOOTER_BASE64,
@@ -72,11 +74,12 @@ const PHOTO_TABLE_CELL_OPTIONS = {
 };
 
 export async function exportSurveyAsDocx(
+  surveyVersion: SurveyVersion,
   surveyResponse: SurveyAnswers,
   photosDetails: PhotoDetails[],
   photosData: PhotosData
 ) {
-  const surveyQuestionParagraphs = sectionsContent
+  const surveyQuestionParagraphs = surveyVersion.sections
     .map((section) => {
       return renderSection(section, surveyResponse[section.id]);
     })
@@ -101,7 +104,7 @@ export async function exportSurveyAsDocx(
     ];
   }
 
-  const charts = await getCharts(surveyResponse);
+  const charts = await getCharts(surveyVersion, surveyResponse);
 
   // group charts by title for easy access
   const chartsByTitle: { [key: string]: SurveyChart[] } = {};
@@ -672,9 +675,9 @@ function renderSection(section: Section, sectionResponses: SectionAnswers) {
   var questionIndex = 0;
 
   section.subsections.forEach((subsection, index) => {
-    const addPageBreak = index > 0;
+    const addPageBreak: boolean = index > 0;
     subsection.title &&
-      renderSubsectionTitle(subsection.title, addPageBreak).forEach(
+      renderSubsectionTitle(subsection.title, addPageBreak)?.forEach(
         (paragraph) => paragraph && docQuestions.push(paragraph)
       );
     subsection.questions.forEach((question) => {
