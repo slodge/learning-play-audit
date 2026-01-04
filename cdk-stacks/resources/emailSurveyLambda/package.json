@@ -21,7 +21,7 @@
     "docx": "^7.3.0",
     "es6-promise": "^4.2.8",
     "isomorphic-fetch": "^3.0.0",
-    "learning-play-audit-survey": "file:./survey/learning-play-audit-survey-0.1.0.tgz",
+    "learning-play-audit-survey": "file:survey/learning-play-audit-survey-0.10.0.tgz",
     "mimemessage": "^1.0.5",
     "sharp": "^0.30.3"
   },

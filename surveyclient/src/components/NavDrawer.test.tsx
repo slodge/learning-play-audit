@@ -23,16 +23,13 @@ describe("component NavDrawer", () => {
     const expectedItemContent = [
       "Introduction",
       "1Background Information5 questions remaining0/5",
-      "2Learning in Your Grounds8 questions remaining3/11",
-      "3Play in Your Grounds17 questions remaining4/21",
-      "4Wellbeing5 questions remaining8/13",
-      "5Sustainability11 questions remaining7/18",
-      "6Community and Participation10 questions remaining1/11",
-      "7Local Greenspace8 questions remaining2/10",
-      "8Your Practice10 questions remaining5/15",
-      "9Your Reflection and Feedback-1 questions remaining6/5",
+      "2Policy and Practice30 questions remaining1/31",
+      "3Nature and Sustainability24 questions remaining2/26",
+      "4Temperature Management19 questions remaining5/24",
+      "5Water Management11 questions remaining4/15",
+      "6Carbon Management1 question remaining6/7",
+      "7Air Quality3 questions remaining3/6",
       "Results",
-      "Photos",
       "Submit survey",
     ];
 
@@ -54,16 +51,13 @@ describe("component NavDrawer", () => {
     const expectedItemContent = [
       "Introduction",
       "1Background Information5 questions remaining0/5",
-      "2Learning in Your Grounds11 questions remaining0/11",
-      "3Play in Your Grounds21 questions remaining0/21",
-      "4Wellbeing13 questions remaining0/13",
-      "5Sustainability18 questions remaining0/18",
-      "6Community and Participation11 questions remaining0/11",
-      "7Local Greenspace10 questions remaining0/10",
-      "8Your Practice15 questions remaining0/15",
-      "9Your Reflection and Feedback5 questions remaining0/5",
+      "2Policy and Practice31 questions remaining0/31",
+      "3Nature and Sustainability26 questions remaining0/26",
+      "4Temperature Management24 questions remaining0/24",
+      "5Water Management15 questions remaining0/15",
+      "6Carbon Management7 questions remaining0/7",
+      "7Air Quality6 questions remaining0/6",
       "Results",
-      "Photos",
       "Submit survey",
     ];
 
@@ -85,16 +79,13 @@ describe("component NavDrawer", () => {
     const expectedItemContent = [
       "Introduction",
       "1Background Information5 questions remaining0/5",
-      "2Learning in Your Grounds11 questions remaining0/11",
-      "3Play in Your Grounds21 questions remaining0/21",
-      "4Wellbeing13 questions remaining0/13",
-      "5Sustainability18 questions remaining0/18",
-      "6Community and Participation11 questions remaining0/11",
-      "7Local Greenspace10 questions remaining0/10",
-      "8Your Practice15 questions remaining0/15",
-      "9Your Reflection and Feedback5 questions remaining0/5",
+      "2Policy and Practice31 questions remaining0/31",
+      "3Nature and Sustainability26 questions remaining0/26",
+      "4Temperature Management24 questions remaining0/24",
+      "5Water Management15 questions remaining0/15",
+      "6Carbon Management7 questions remaining0/7",
+      "7Air Quality6 questions remaining0/6",
       "Results",
-      "Photos",
       "Submit survey",
     ];
 
@@ -116,14 +107,14 @@ describe("component NavDrawer", () => {
     await user.click(fixedMenuItem(RESULTS));
     checkSelectedSection(RESULTS);
 
-    await user.click(fixedMenuItem("community"));
-    checkSelectedSection("community");
+    await user.click(fixedMenuItem("pandp"));
+    checkSelectedSection("pandp");
 
     await user.click(popupMenuItem(RESULTS));
     checkSelectedSection(RESULTS);
 
-    await user.click(popupMenuItem("community"));
-    checkSelectedSection("community");
+    await user.click(popupMenuItem("pandp"));
+    checkSelectedSection("pandp");
   });
 
   it("close drawer", async () => {

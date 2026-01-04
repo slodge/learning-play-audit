@@ -1,25 +1,25 @@
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "checkSelectedOption"] }] */
 
 import React from "react";
-import QuestionSelectWithComment from "./QuestionSelectWithComment";
+import QuestionPercentageSelectWithComment from "./QuestionPercentageSelectWithComment";
 import { QuestionAnswer, surveyStore } from "../model/SurveyModel";
 import { renderWithStore } from "./ReactTestUtils";
-import { Question, SCALE_WITH_COMMENT } from "learning-play-audit-survey";
+import { Question, PERCENTAGE_TYPE_WITH_COMMENT } from "learning-play-audit-survey";
 
-describe("component QuestionSelectWithComment", () => {
+describe("component QuestionPercentageSelectWithComment", () => {
   const SECTION_ID = "pandp";
   const QUESTION_ID = "P01";
   const QUESTION_NUMBER = 17;
   const QUESTION_TEXT = "test question text";
   const QUESTION: Question = {
-    type: SCALE_WITH_COMMENT,
+    type: PERCENTAGE_TYPE_WITH_COMMENT,
     id: QUESTION_ID,
     text: QUESTION_TEXT,
   };
 
   it("initial empty state", () => {
     renderWithStore(
-      <QuestionSelectWithComment
+      <QuestionPercentageSelectWithComment
         sectionId={SECTION_ID}
         question={QUESTION}
         questionNumber={QUESTION_NUMBER}
@@ -34,7 +34,7 @@ describe("component QuestionSelectWithComment", () => {
 
   it("selection options", async () => {
     const { user } = renderWithStore(
-      <QuestionSelectWithComment
+      <QuestionPercentageSelectWithComment
         sectionId={SECTION_ID}
         question={QUESTION}
         questionNumber={QUESTION_NUMBER}
@@ -54,6 +54,9 @@ describe("component QuestionSelectWithComment", () => {
     await user.click(toggleButton("d"));
     checkSelectedOption("d");
 
+    await user.click(toggleButton("e"));
+    checkSelectedOption("e");
+
     await user.click(toggleButton("a"));
     checkSelectedOption("a");
 
@@ -71,7 +74,7 @@ describe("component QuestionSelectWithComment", () => {
   function checkSelectedOption(expectedOption: string | null) {
     // Check visible selection
     const buttons = toggleButtons();
-    expect(buttons).toHaveLength(4);
+    expect(buttons).toHaveLength(5);
     buttons.forEach((button) => {
       if (button.getAttribute("id") === expectedOption) {
         expect(button).toHaveClass("selected");

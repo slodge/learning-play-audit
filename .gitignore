@@ -1,3 +1,4 @@
 cdk-stacks/resources/emailSurveyLambda/test.docx
-cdk-stacks/resources/emailSurveyLambda/survey/learning-play-audit-survey-0.1.0.tgz
+**.tgz
 cdk-stacks/resources/emailSurveyLambda/dist/*
+.DS_Store

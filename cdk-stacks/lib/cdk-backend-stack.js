@@ -6,6 +6,8 @@ const lambda = require("aws-cdk-lib/aws-lambda");
 const apigateway = require("aws-cdk-lib/aws-apigateway");
 const cognito = require("aws-cdk-lib/aws-cognito");
 const iam = require("aws-cdk-lib/aws-iam");
+const assets = require("aws-cdk-lib/aws-ecr-assets");
+
 
 class CdkBackendStack extends cdk.Stack {
   /**
@@ -60,6 +62,7 @@ class CdkBackendStack extends cdk.Stack {
     const surveyResponsesTable = new dynamodb.Table(this, "SurveyResponses", {
       tableName: SURVEY_RESPONSES_TABLE_NAME,
       partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST
     });
     new cdk.CfnOutput(this, "SurveyResponses table", {
       value: surveyResponsesTable.tableName,
@@ -76,8 +79,12 @@ class CdkBackendStack extends cdk.Stack {
         "uploadState",
         "responderEmail",
       ],
+
+      
+      // Stuart removed the readCapicty - we want on demand? 
+      //,
       // Only increase RTU for live site
-      readCapacity: environment === "live" ? 10 : 5,
+      //readCapacity: environment === "live" ? 10 : 5,
     });
     new cdk.CfnOutput(this, "SurveyResponseSummaries index", {
       value: "SummaryIndex",
@@ -154,7 +161,7 @@ class CdkBackendStack extends cdk.Stack {
     );
 
     const addSurveyLambda = new NodejsFunction(this, "AddSurveyLambda", {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_22_X,
       entry: "resources/addSurveyLambda/index.js",
       handler: "handler",
       environment: {
@@ -187,10 +194,14 @@ class CdkBackendStack extends cdk.Stack {
       {
         code: lambda.DockerImageCode.fromImageAsset(
           "./resources/emailSurveyLambda",
-          {}
+          {
+            platform: assets.Platform.LINUX_AMD64
+          }
         ),
+
         timeout: cdk.Duration.seconds(600),
         memorySize: 512,
+        platform: assets.Platform.LINUX_AMD64,
         environment: {
           REGION: region,
           SURVEY_DB_TABLE: surveyResponsesTable.tableName,
@@ -215,7 +226,7 @@ class CdkBackendStack extends cdk.Stack {
       this,
       "ConfirmSurveyLambda",
       {
-        runtime: lambda.Runtime.NODEJS_14_X,
+        runtime: lambda.Runtime.NODEJS_22_X,
         entry: "resources/confirmSurveyLambda/index.js",
         handler: "handler",
         environment: {

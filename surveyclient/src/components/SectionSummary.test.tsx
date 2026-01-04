@@ -11,7 +11,7 @@ const clone = rfdc();
 
 const handleClick = jest.fn();
 
-const SECTION_ID = "community";
+const SECTION_ID = "pandp";
 const SECTION_NUMBER = 17;
 const SECTION_TITLE = "test section title";
 const SECTION: Section = {
@@ -27,13 +27,13 @@ describe("component SectionSummary", () => {
   beforeEach(() => {
     surveyStore.dispatch({
       type: REFRESH_STATE,
-      state: { ...INPUT_STATE, currentSectionId: "play" },
+      state: { ...INPUT_STATE, currentSectionId: "nature" },
     });
   });
 
   it("unanswered section", () => {
     const inputState = clone(EMPTY_STATE);
-    inputState.answerCounts.community.answer = 0;
+    inputState.answerCounts.pandp.answer = 0;
 
     surveyStore.dispatch({ type: REFRESH_STATE, state: inputState });
     const { container } = renderWithStore(
@@ -51,7 +51,7 @@ describe("component SectionSummary", () => {
 
   it("answered section", () => {
     const inputState = clone(INPUT_STATE);
-    inputState.answerCounts.community.answer = 5;
+    inputState.answerCounts.pandp.answer = 5;
 
     surveyStore.dispatch({ type: REFRESH_STATE, state: inputState });
     const { container } = renderWithStore(
@@ -69,7 +69,7 @@ describe("component SectionSummary", () => {
 
   it("incomplete section", () => {
     const inputState = clone(INPUT_STATE);
-    inputState.answerCounts.community.answer = 4;
+    inputState.answerCounts.pandp.answer = 4;
 
     surveyStore.dispatch({ type: REFRESH_STATE, state: inputState });
     const { container } = renderWithStore(

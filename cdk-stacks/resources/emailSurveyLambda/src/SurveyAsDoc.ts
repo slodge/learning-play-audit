@@ -1,5 +1,5 @@
 import {
-  sectionsContent,
+  get_survey_version,
   SCALE_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
@@ -8,6 +8,8 @@ import {
   Section,
   Markup,
   Question,
+  PERCENTAGE_TYPE_WITH_COMMENT,
+  SurveyVersion,
 } from "learning-play-audit-survey";
 import {
   Document,
@@ -29,12 +31,14 @@ import {
   Table,
   WidthType,
   BorderStyle,
+  HorizontalPositionAlign,
+  PageBreakBefore,
 } from "docx";
 import {
   REPORT_FOOTER_BASE64,
   REPORT_HEADER_BASE64,
 } from "./reportImagesBase64";
-import { getCharts } from "./SurveyCharts";
+import { getCharts, SurveyChart } from "./SurveyCharts";
 import {
   DatedQuestionAnswer,
   PhotoDetails,
@@ -47,9 +51,9 @@ import {
 const IMAGE_NOT_FOUND = "[Image not found]";
 
 const PAGE_MARGINS = {
-  top: convertInchesToTwip(1.6),
+  top: convertInchesToTwip(2.4),
   right: convertInchesToTwip(1),
-  bottom: convertInchesToTwip(0.5),
+  bottom: convertInchesToTwip(1.0),
   left: convertInchesToTwip(1),
 };
 
@@ -70,11 +74,12 @@ const PHOTO_TABLE_CELL_OPTIONS = {
 };
 
 export async function exportSurveyAsDocx(
+  surveyVersion: SurveyVersion,
   surveyResponse: SurveyAnswers,
   photosDetails: PhotoDetails[],
   photosData: PhotosData
 ) {
-  const surveyQuestionParagraphs = sectionsContent
+  const surveyQuestionParagraphs = surveyVersion.sections
     .map((section) => {
       return renderSection(section, surveyResponse[section.id]);
     })
@@ -99,46 +104,75 @@ export async function exportSurveyAsDocx(
     ];
   }
 
-  const charts = await getCharts(surveyResponse);
-  const chartsParagraphs = [
-    new Paragraph({
-      text: "How Good Is Our Outdoor Space?",
-      heading: HeadingLevel.HEADING_2,
-      pageBreakBefore: true,
-    }),
-    new Paragraph({
-      children: [
-        new ImageRun({
-          data: charts.learningChart,
-          transformation: { height: 300, width: 600 },
-        }),
-      ],
-    }),
-    new Paragraph({
-      text: "How Good Is Our Local Greenspace?",
-      heading: HeadingLevel.HEADING_2,
-    }),
-    new Paragraph({
-      children: [
-        new ImageRun({
-          data: charts.greenspaceChart,
-          transformation: { height: 300, width: 600 },
-        }),
-      ],
-    }),
-    new Paragraph({
-      text: "How Good Is Our Outdoor Practice?",
-      heading: HeadingLevel.HEADING_2,
-    }),
-    new Paragraph({
-      children: [
-        new ImageRun({
-          data: charts.practiceChart,
-          transformation: { height: 150, width: 600 },
-        }),
-      ],
-    }),
-  ];
+  const charts = await getCharts(surveyVersion, surveyResponse);
+
+  // group charts by title for easy access
+  const chartsByTitle: { [key: string]: SurveyChart[] } = {};
+  charts.forEach((chart) => {
+    if (!chartsByTitle[chart.title]) {
+      chartsByTitle[chart.title] = [];
+    }
+    chartsByTitle[chart.title].push(chart);
+  });
+
+  const chartsParagraphs = [];
+  
+  // iterate over chartsByTitle
+  for (const title in chartsByTitle) {
+    chartsParagraphs.push(
+      new Paragraph({
+        text: title,
+        heading: HeadingLevel.HEADING_2,
+        pageBreakBefore: true,
+      })
+    );
+
+    chartsByTitle[title].forEach((chart) => { 
+      chartsParagraphs.push(
+        new Paragraph({
+          children: [
+            new ImageRun({
+              data: chart.chart,
+              transformation: { height: 300, width: 600 },
+            }),
+          ],
+        })
+      );
+
+      if (!chart.explodeResults) {
+        return;
+      }
+
+      chart.labels.forEach((label, index) => {
+        chartsParagraphs.push(
+          new Paragraph({
+            // color from resultColours
+            style: "Normal",
+            children: [
+              new TextRun({
+                // round result to nearest integer
+                text: `${label}: `,
+                color: chart.resultColours[index].replace("#", ""),
+              }),
+              new TextRun({
+                // round result to nearest integer
+                text: `${Math.round(chart.results[index])}%`,
+                color: chart.resultColours[index].replace("#", ""),
+                bold: true
+              }),
+              new TextRun({
+                // round result to nearest integer
+                text: ` - ${chart.statements[index]}`,
+                color: chart.resultColours[index].replace("#", ""),
+              }),
+              
+            ],
+            spacing: { after: 200 },
+          })
+        );
+      });
+    })
+  }
 
   const headers = {
     default: new Header({
@@ -152,11 +186,11 @@ export async function exportSurveyAsDocx(
               floating: {
                 horizontalPosition: {
                   relative: HorizontalPositionRelativeFrom.PAGE,
-                  offset: 0,
+                  align: HorizontalPositionAlign.LEFT
                 },
                 verticalPosition: {
                   relative: VerticalPositionRelativeFrom.PAGE,
-                  offset: 0,
+                  align: VerticalPositionAlign.TOP
                 },
               },
             }),
@@ -169,26 +203,6 @@ export async function exportSurveyAsDocx(
   const footers = {
     default: new Footer({
       children: [
-        new Paragraph({
-          children: [
-            new ImageRun({
-              // data: fs.readFileSync("./reportFooter.png"),
-              data: Buffer.from(REPORT_FOOTER_BASE64, "base64"),
-              transformation: { height: 54, width: 794 },
-              floating: {
-                horizontalPosition: {
-                  relative: HorizontalPositionRelativeFrom.PAGE,
-                  offset: 0,
-                },
-                verticalPosition: {
-                  relative: VerticalPositionRelativeFrom.PAGE,
-                  offset: 0,
-                  align: VerticalPositionAlign.BOTTOM,
-                },
-              },
-            }),
-          ],
-        }),
 
         new Paragraph({
           alignment: AlignmentType.CENTER,
@@ -201,6 +215,27 @@ export async function exportSurveyAsDocx(
           style: "FooterText",
           text: "Registered charity no. in England and Wales 803270 and in Scotland SCO38890",
         }),
+
+        new Paragraph({
+          children: [
+            new ImageRun({
+              // data: fs.readFileSync("./reportFooter.png"),
+              data: Buffer.from(REPORT_FOOTER_BASE64, "base64"),
+              transformation: { height: 54, width: 794 },
+              floating: {
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.PAGE,
+                  align: HorizontalPositionAlign.LEFT,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.PAGE,
+                  align: VerticalPositionAlign.BOTTOM,
+                },
+              },
+            }),
+          ],
+       }),
+
       ],
     }),
   };
@@ -255,7 +290,13 @@ export async function exportSurveyAsDocx(
     });
   }
 
+  // TODO: tweak position of the header and footer
+  // TODO: can we improve the text on the pie chart?
+
   return new Document({
+    background: {
+      color: 'FFFFFF',
+    },
     styles: {
       paragraphStyles: [
         {
@@ -334,34 +375,50 @@ export function renderQuestionText(
       }),
       ...getTextRuns(nodes),
     ],
-    tabStops: [{ type: TabStopType.LEFT, position: 500 }],
-    indent: { start: 500, hanging: 500 },
+    // removed this indent - it didn't seem to be very pretty
+    //tabStops: [{ type: TabStopType.LEFT, position: 500 }],
+    //indent: { start: 500, hanging: 500 },
     shading: { type: ShadingType.CLEAR, fill: "D0D0D0" },
     spacing: { before: 200, after: 50 },
+    keepNext: true
   });
 }
 
-function renderSubsectionParagraph(markup: Markup) {
+function renderSubsectionParagraph(markup: Markup, pageBreakBefore: boolean) {
   if (typeof markup === "string") {
-    return new Paragraph({ text: markup });
+    return [ new Paragraph({ text: markup, pageBreakBefore: pageBreakBefore })];
   }
 
   const { tag, content } = markup;
   if (tag === "h2" && typeof content === "string") {
-    return new Paragraph({ text: content, heading: HeadingLevel.HEADING_2 });
+    return [
+      new Paragraph({ 
+        text: content, 
+        heading: HeadingLevel.HEADING_2, 
+        pageBreakBefore: pageBreakBefore 
+      })
+    ];
   }
 
   if (tag === "p") {
     const nodes = content instanceof Array ? content : [content];
 
-    return new Paragraph({ children: getTextRuns(nodes) });
+    const rendered = nodes.map((n, i) => {
+      return new Paragraph({ 
+        children: getTextRuns([n]), 
+        pageBreakBefore: i==0 ? pageBreakBefore : false,
+        spacing: { after: 120 }
+      });
+    })
+
+    return rendered;
   }
 }
 
-export function renderSubsectionTitle(title: Markup | Markup[]) {
+export function renderSubsectionTitle(title: Markup | Markup[], pageBreakBefore: boolean) {
   return title instanceof Array
-    ? title.map(renderSubsectionParagraph)
-    : [renderSubsectionParagraph(title)];
+    ? title.flatMap((r, i) => renderSubsectionParagraph(r, i == 0 ? pageBreakBefore : false))
+    : renderSubsectionParagraph(title, pageBreakBefore);
 }
 
 function renderAnswerWithComment(answer: string, comment: string) {
@@ -378,8 +435,9 @@ function renderAnswerWithComment(answer: string, comment: string) {
 
   return new Paragraph({
     text,
-    tabStops: [{ type: TabStopType.LEFT, position: 1500 }],
-    indent: { start: 1500, hanging: 1500 },
+    // this didn't seem to be working... so removed:
+    //tabStops: [{ type: TabStopType.LEFT, position: 1500 }],
+    //indent: { start: 1500, hanging: 1500 },
   });
 }
 
@@ -398,6 +456,37 @@ function renderQuestionTypeSelectWithComment(
         return "Tend to disagree";
       case "d":
         return "Strongly disagree";
+      default:
+        return "Unknown: " + value;
+    }
+  }
+
+  const answer = response?.answer ? getAnswer(response.answer) : "";
+  const comment = response?.comments || "";
+
+  return [
+    renderQuestionText(questionNumber, question.text),
+    renderAnswerWithComment(answer, comment),
+  ];
+}
+
+function renderQuestionTypePercentageSelect(
+  question: Question,
+  questionNumber: number,
+  response: QuestionAnswer
+) {
+  function getAnswer(value: string) {
+    switch (value) {
+      case "a":
+        return "none";
+      case "b":
+        return "a little (<5%)";
+      case "c":
+        return "some (5% to 20%)";
+      case "d":
+        return "lots (20% to 50%)";
+      case "e":
+        return "most (>50%)";
       default:
         return "Unknown: " + value;
     }
@@ -539,6 +628,16 @@ function renderQuestion(
         response as QuestionAnswer
       )
     );
+  } else if (PERCENTAGE_TYPE_WITH_COMMENT === type) {
+    paragraphs.splice(
+      paragraphs.length,
+      0,
+      ...renderQuestionTypePercentageSelect(
+        question,
+        questionIndex,
+        response as QuestionAnswer
+      )
+    );
   } else if (TEXT_AREA === type || TEXT_FIELD === type) {
     paragraphs.splice(
       paragraphs.length,
@@ -569,14 +668,16 @@ function renderSection(section: Section, sectionResponses: SectionAnswers) {
     new Paragraph({
       text: "Section " + section.number + " - " + section.title,
       heading: HeadingLevel.HEADING_2,
+      pageBreakBefore: true,
     }),
   ];
 
   var questionIndex = 0;
 
-  section.subsections.forEach((subsection) => {
+  section.subsections.forEach((subsection, index) => {
+    const addPageBreak: boolean = index > 0;
     subsection.title &&
-      renderSubsectionTitle(subsection.title).forEach(
+      renderSubsectionTitle(subsection.title, addPageBreak)?.forEach(
         (paragraph) => paragraph && docQuestions.push(paragraph)
       );
     subsection.questions.forEach((question) => {

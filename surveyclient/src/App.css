@@ -3,7 +3,9 @@
   --colour-ltl-loader-grey: #f3f3f3;
   --colour-ltl-blue: #2d6a89;
   --colour-ltl-orange: #f6a85c;
+  --colour-ltl-darkorange: #b96109;
   --colour-ltl-green: #afcd4b;
+  --colour-ltl-darkgreen: #0d633f;
   --colour-ltl-purple: #7e354f;
   --colour-ltl-red: #830415;
   --font-family-ltl-heading: "Special Elite", Times, serif;
@@ -546,6 +548,17 @@ textarea {
 .section.results .small-chart {
   display: none !important;
 }
+
+.section.results .text-good {
+  color: var(--colour-ltl-darkgreen);
+}
+.section.results .text-bad {
+  color: var(--colour-ltl-red);
+}
+.section.results .text-ok {
+  color: var(--colour-ltl-darkorange);
+}
+
 
 /** Submit section **/
 
@@ -1411,4 +1424,9 @@ textarea {
   .app-bar.main .title {
     font-size: 18px;
   }
+}
+
+/* Hide add photos button in all sections */
+.add-photos-button {
+  display: none;
 }

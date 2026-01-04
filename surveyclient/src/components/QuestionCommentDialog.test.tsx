@@ -10,8 +10,8 @@ const closeDialog = jest.fn();
 
 describe("component QuestionCommentDialog", () => {
 
-  const SECTION_ID = "learning";
-  const QUESTION_ID = "classroom";
+  const SECTION_ID = "pandp";
+  const QUESTION_ID = "P01";
   const QUESTION_NUMBER = 17;
   const QUESTION_TEXT = "test question text";
 
@@ -85,8 +85,8 @@ describe("component QuestionCommentDialog", () => {
   it("clear comment", async () => {
     surveyStore.dispatch({
       type: SET_ANSWER,
-      sectionId: "learning",
-      questionId: "classroom",
+      sectionId: "pandp",
+      questionId: "P01",
       field: "comments",
       value: "test value",
     });

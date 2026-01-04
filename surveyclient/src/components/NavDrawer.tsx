@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Section,
   sectionQuestions,
-  sectionsContent,
+  current_survey_version,
 } from "learning-play-audit-survey";
 import SectionSummary from "./SectionSummary";
 import Modal from "@material-ui/core/Modal";
@@ -36,7 +36,7 @@ export default function NavDrawer({
 
   useEffect(() => {
     var result = new Map();
-    sectionsContent.forEach((section) => {
+    current_survey_version().sections.forEach((section) => {
       result.set(section.id, sectionQuestions(section).length);
     });
     setTotalQuestionsMap(result);
@@ -45,9 +45,9 @@ export default function NavDrawer({
   const drawer = (
     <div className="nav-menu">
       {createMenuItem("Introduction", INTRODUCTION)}
-      {sectionsContent.map(createSectionMenuItem)}
+      {current_survey_version().sections.map(createSectionMenuItem)}
       {createMenuItem("Results", RESULTS)}
-      {createMenuItem("Photos", GALLERY)}
+      {/*createMenuItem("Photos", GALLERY)*/}
       {createMenuItem("Submit survey", SUBMIT)}
     </div>
   );

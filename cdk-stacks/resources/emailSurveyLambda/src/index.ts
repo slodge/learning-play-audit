@@ -1,10 +1,14 @@
+//console.log("starting");
+
 import { PhotoDetails, PhotosData, SurveyResponse } from "./SurveyModel";
+
+//console.log("two");
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { GetItemCommand } from "@aws-sdk/client-dynamodb";
-import { SendRawEmailCommand } from "@aws-sdk/client-ses";
+import { SendRawEmailCommand, SendRawEmailCommandInput } from "@aws-sdk/client-ses";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { Packer } from "docx";
 import mimemessage from "mimemessage";
@@ -12,6 +16,9 @@ import { s3Client, dynamodbClient, emailClient } from "./aws";
 import { exportSurveyAsDocx } from "./SurveyAsDoc";
 import sharp from "sharp";
 import { Readable } from "stream";
+import { get_survey_version } from "learning-play-audit-survey";
+
+//console.log("three");
 
 const MAX_DOCUMENT_SIZE = 9 * 1024 * 1024; // 9Mb
 
@@ -90,7 +97,11 @@ async function getPhotos(survey: SurveyResponse) {
 
 async function sendSurveyConfirmationEmail(survey: SurveyResponse) {
   const photosData = await getPhotos(survey);
+  
+  const surveyVersion = get_survey_version(survey.surveyVersion);
+
   let surveyResultsDoc = await exportSurveyAsDocx(
+    surveyVersion,
     survey.surveyResponse,
     survey.photos,
     photosData
@@ -99,7 +110,7 @@ async function sendSurveyConfirmationEmail(survey: SurveyResponse) {
 
   if (surveyResultsDocBase64.length > MAX_DOCUMENT_SIZE) {
     // Report including photos is too large to email - create one without photos
-    surveyResultsDoc = await exportSurveyAsDocx(survey.surveyResponse, [], {});
+    surveyResultsDoc = await exportSurveyAsDocx(surveyVersion, survey.surveyResponse, [], {});
     surveyResultsDocBase64 = await Packer.toBase64String(surveyResultsDoc);
   }
 
@@ -186,15 +197,21 @@ to scan attachments (if any). Thank you.</font></p>`,
   mailContent.header("To", survey.responderEmail);
   mailContent.header("Subject", "Survey complete");
 
-  const emailInput = {
+  console.log("Prepared email content")
+  console.log("From " + process.env.SURVEY_EMAIL_FROM);
+  console.log("Bcc " + process.env.SURVEY_EMAIL_BCC);
+  console.log("To " + survey.responderEmail);
+
+  const emailInput: SendRawEmailCommandInput = {
     RawMessage: { Data: Buffer.from(mailContent.toString()) },
   };
 
-  console.log("Send email");
   const sendEmailCommand = new SendRawEmailCommand(emailInput);
   const sendEmailResponse = await emailClient.send(sendEmailCommand);
   console.log("Send email result", sendEmailResponse);
 }
+
+//console.log("four");
 
 export async function handler(event: { surveyId: string }) {
   console.log("Incoming request", event);
@@ -213,3 +230,5 @@ export async function handler(event: { surveyId: string }) {
     body: JSON.stringify({ result: "Survey email sent" }),
   };
 }
+
+//console.log("end");

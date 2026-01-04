@@ -1,6 +1,6 @@
 import {
   sectionQuestions,
-  sectionsContent,
+  get_survey_version,
   SCALE_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
@@ -8,6 +8,7 @@ import {
   USER_TYPE_WITH_COMMENT,
   Question,
   Section,
+  PERCENTAGE_TYPE_WITH_COMMENT,
 } from "learning-play-audit-survey";
 import { saveAs } from "file-saver";
 import {
@@ -17,33 +18,54 @@ import {
   SurveyResponse,
 } from "./model/SurveyModel";
 
-const headerRows = [[""], [""], ["Id"]];
+const headerRows = [["", "", ""], ["", "", ""], ["Id", "Name", "Email"]];
 
 export function exportSurveysAsCsv(surveys: SurveyResponse[] = []) {
   if (surveys.length === 0) {
     console.log("No surveys to export");
   }
 
-  // Clone the header rows
-  const data = headerRows.map((row) => [...row]);
+  // group the responses by their version
+  const grouped = surveys.reduce((accumulator, current) => {
+    if (!accumulator[current.surveyVersion]) {
+      accumulator[current.surveyVersion] = [ current ];
+    } else {
+      accumulator[current.surveyVersion].push(current);
+    }
+    return accumulator;
+  }, {} as Record<string, SurveyResponse[]>);  
 
-  sectionsContent.forEach((section) => {
-    renderSectionHeader(data, section);
-  });
+  const masterData: string[][] = [];
 
-  surveys.forEach((survey) => {
-    const response = survey.surveyResponse;
-    console.debug(survey);
-    const rowData = [survey.id];
+  Object.values(grouped).forEach((surveys) => {
+    // Clone the header rows
+    const data = headerRows.map((row) => [...row]);
+    data[0][0] = surveys[0].surveyVersion;
 
-    sectionsContent.forEach((section) => {
-      renderSectionAnswers(rowData, section, response[section.id]);
+    const responses = surveys.map((survey) => survey.surveyResponse);
+
+    const survey_template = get_survey_version(surveys[0].surveyVersion);
+    survey_template.sections.forEach((section) => {
+      renderSectionHeader(data, section);
     });
 
-    data.push(rowData);
+    surveys.forEach((survey) => {
+      const response = survey.surveyResponse;
+      console.debug(survey);
+      const rowData = [survey.id, survey.responderName, survey.responderEmail];
+
+      survey_template.sections.forEach((section) => {
+        renderSectionAnswers(rowData, section, response[section.id]);
+      });
+
+      data.push(rowData);
+    });
+
+    data.push([]);
+    data.forEach(d => masterData.push(d));
   });
 
-  var csvData = data.map((row) => row.join(",")).join("\n");
+  var csvData = masterData.map((row) => row.join(",")).join("\n");
   console.debug(csvData);
 
   var blob = new Blob([csvData], {
@@ -64,6 +86,9 @@ function renderSectionHeader(data: string[][], section: Section) {
     } else if (USER_TYPE_WITH_COMMENT === type) {
       questionData[0].push(id, "");
       questionData[1].push("role", "details");
+    } else if (PERCENTAGE_TYPE_WITH_COMMENT === type) {
+      questionData[0].push(id, "");
+      questionData[1].push("answer", "comment");
     } else if (TEXT_AREA === type || TEXT_FIELD === type) {
       questionData[0].push(id);
       questionData[1].push("answer");
@@ -100,7 +125,7 @@ function renderSectionAnswers(
   function addQuestion({ type, id }: Question) {
     const response = sectionResponse[id] || { answer: "", comments: "" };
 
-    if (SCALE_WITH_COMMENT === type || USER_TYPE_WITH_COMMENT === type) {
+    if (SCALE_WITH_COMMENT === type || USER_TYPE_WITH_COMMENT === type || PERCENTAGE_TYPE_WITH_COMMENT === type) {
       const simpleResponse = response as QuestionAnswer;
       addAnswers(rowData, simpleResponse.answer, simpleResponse.comments);
     } else if (TEXT_AREA === type || TEXT_FIELD === type) {

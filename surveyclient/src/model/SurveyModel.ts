@@ -19,10 +19,9 @@ import {
   AuthStoreState,
 } from "learning-play-audit-shared";
 import {
-  SURVEY_VERSION,
   TEXT_WITH_YEAR,
   sectionQuestions,
-  sectionsContent,
+  current_survey_version,
 } from "learning-play-audit-survey";
 import localforage from "localforage";
 import getPhotoUuid from "./SurveyPhotoUuid";
@@ -99,29 +98,33 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 
 function createEmptyAnswers(): SurveyAnswers {
   const sections: SurveyAnswers = {};
-  sectionsContent.forEach((section) => {
+  current_survey_version().sections.forEach((section) => {
     var questions: SectionAnswers = {};
     sections[section.id] = questions;
     sectionQuestions(section).forEach(({ type, id }) => {
       questions[id] =
-        type === TEXT_WITH_YEAR
-          ? {
-              answer1: "",
-              year1: "",
-              answer2: "",
-              year2: "",
-              answer3: "",
-              year3: "",
-            }
-          : { answer: "", comments: "" };
+        createEmptyAnswerOfType(type);
     });
   });
   return sections;
 }
 
+function createEmptyAnswerOfType(type: string): QuestionAnswer | DatedQuestionAnswer {
+  return type === TEXT_WITH_YEAR
+    ? {
+      answer1: "",
+      year1: "",
+      answer2: "",
+      year2: "",
+      answer3: "",
+      year3: "",
+    }
+    : { answer: "", comments: "" };
+}
+
 function createAnswerCounts(): SurveyAnswerCounts {
   const result: SurveyAnswerCounts = {};
-  sectionsContent.forEach((section) => {
+  current_survey_version().sections.forEach((section) => {
     result[section.id] = { answer: 0, comments: 0 };
   });
   return result;
@@ -140,7 +143,7 @@ function initialState(): SurveyStoreState {
     hasEverLoggedIn: false,
     initialisingState: true,
     currentSectionId: INTRODUCTION,
-    surveyVersion: SURVEY_VERSION,
+    surveyVersion: current_survey_version().version,
   };
 }
 
@@ -330,6 +333,8 @@ export function refreshState(): AppThunk {
         const state = { ...getState(), initialisingState: false };
         if (storedAnswers === null) {
           writeAnswers(state).catch((err) => console.error(err));
+        } else {
+          storedAnswers = checkAndRepairStateAgainstSurvey(storedAnswers);
         }
         if (storedPhotos === null) {
           writePhotos(state).catch((err) => console.error(err));
@@ -383,6 +388,66 @@ const writePhotos = ({ photos, initialisingState }: SurveyStoreState) => {
 };
 const readPhotos = (): Promise<SurveyStoreState | null> =>
   localforage.getItem("photos");
+
+function checkAndRepairStateAgainstSurvey(
+  stored: SurveyStoreState 
+): SurveyStoreState {
+  console.log("Checking survey state against current survey");
+  
+  const sectionsSeen = current_survey_version().sections.map(section => section.id);
+  const current_sections = current_survey_version().sections
+  current_sections.forEach((section) => {
+    if (!stored.answers[section.id]) {
+      console.log("Adding new answer section " + section.id);
+      stored.answers[section.id] = {};
+      stored.answerCounts[section.id] = { answer: 0, comments: 0 };
+    }
+
+    const seenQuestionIds:string[] = [];
+    let currentAnswerCount = 0;
+    let currentCommentsCount = 0;
+    section.subsections.flatMap(s => s.questions).forEach((question) => {
+      seenQuestionIds.push(question.id);
+      if (stored.answers[section.id][question.id]) {
+        // NOTE: WARNING! This next line won't work if any DatedQuestionAnswers get added again
+        const current = (stored.answers[section.id][question.id] as QuestionAnswer);
+        const hasAnswerValue = (current.answer !== null && current.answer.length > 0);
+        const hasCommentValue = (current.comments !== null && current.comments.length > 0);
+        if (hasAnswerValue) currentAnswerCount++;
+        if (hasCommentValue) currentCommentsCount++;
+      } else {
+        console.log(`Adding new answer ${section.id} ${question.id}`);
+        stored.answers[section.id][question.id] = createEmptyAnswerOfType(question.type);
+      }
+    });
+    Object.keys(stored.answers[section.id]).forEach((answerId) => {
+      if (!seenQuestionIds.includes(answerId)) {
+        console.log(`Deleting old answer ${section.id} ${answerId}`);
+        delete stored.answers[section.id][answerId];
+      }
+    });
+
+    stored.answerCounts[section.id]["answer"] = currentAnswerCount;
+    stored.answerCounts[section.id]["comments"] = currentCommentsCount;  
+  });
+
+  Object.keys(stored.answers).forEach(sectionId => {
+    if (!sectionsSeen.includes(sectionId)) {
+      console.log(`Deleting old answer section ${sectionId}`);
+      delete stored.answers[sectionId];
+    }
+  });
+  Object.keys(stored.answerCounts).forEach(sectionId => {
+    if (!sectionsSeen.includes(sectionId)) {
+      console.log(`Deleting old answerCount section ${sectionId}`);
+      delete stored.answerCounts[sectionId];
+    }
+  });
+
+  // TODO - possibly should also prune/correct some photos...
+
+  return stored;
+}
 
 function setAnswer(
   state: SurveyStoreState,

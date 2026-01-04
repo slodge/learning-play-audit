@@ -7,8 +7,8 @@ import { SET_ANSWER } from "../model/ActionTypes";
 import { renderWithStore } from "./ReactTestUtils";
 
 describe("component QuestionAddCommentButton", () => {
-  const SECTION_ID = "learning";
-  const QUESTION_ID = "classroom";
+  const SECTION_ID = "pandp";
+  const QUESTION_ID = "P01";
   const QUESTION_NUMBER = 17;
   const QUESTION_TEXT = "test question text";
 

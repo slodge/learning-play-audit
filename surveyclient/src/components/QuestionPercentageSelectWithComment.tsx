@@ -8,34 +8,24 @@ import { renderMarkup } from "./RenderMarkup";
 import { getAnswers, QuestionAnswer } from "../model/SurveyModel";
 import { Question } from "learning-play-audit-survey";
 
-export interface QuestionSelectWithCommentProps {
+export interface QuestionPercentageSelectProps {
   sectionId: string;
   question: Question;
   questionNumber: number;
 }
 
-export default function QuestionSelectWithComment({
+export default function QuestionPercentageSelectWithComment({
   sectionId,
   question,
   questionNumber,
-}: QuestionSelectWithCommentProps) {
+}: QuestionPercentageSelectProps) {
   const questionId = question.id;
   const id = sectionId + "-" + questionId;
 
   const dispatch = useDispatch();
-  const questionAnswer =  useSelector(getAnswers)[sectionId][
+  const questionAnswer = useSelector(getAnswers)[sectionId][
     questionId
   ] as QuestionAnswer;
-  // var questionAnswerCandidate = useSelector(getAnswers)[sectionId][
-  //   questionId
-  // ] as QuestionAnswer
-  // if (!questionAnswerCandidate) {
-  //   questionAnswerCandidate = {
-  //     answer: "",
-  //     comments: ""
-  //   };
-  // }
-  // const questionAnswer = questionAnswerCandidate;
 
   function handleClick(newValue: string) {
     dispatch({
@@ -68,10 +58,11 @@ export default function QuestionSelectWithComment({
       </div>
       <div className="action-row">
         <div className="toggle-button-group" aria-label={questionId}>
-          {toggleButton("a", "strongly agree")}
-          {toggleButton("b", "tend to agree")}
-          {toggleButton("c", "tend to disagree")}
-          {toggleButton("d", "strongly disagree")}
+          {toggleButton("a", "none")}
+          {toggleButton("b", "a little (<5%)")}
+          {toggleButton("c", "some (5% to 20%)")}
+          {toggleButton("d", "lots (20% to 50%)")}
+          {toggleButton("e", "most (>50%)")}
         </div>
         <div className="action-button-group">
           <QuestionAddCommentButton

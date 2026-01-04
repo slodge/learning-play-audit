@@ -1,8 +1,8 @@
 {
   "name": "learning-play-audit-survey",
-  "version": "0.1.0",
+  "version": "0.10.0",
   "private": true,
-  "main": "dist/survey.js",
+  "main": "dist/index.js",
   "type": "module",
   "devDependencies": {
     "@babel/cli": "^7.12.10",
@@ -22,16 +22,10 @@
   "scripts": {
     "test": "jest",
     "build": "tsc && babel --extensions .ts src --out-dir dist",
-    "postpack": "cp ./learning-play-audit-survey-0.1.0.tgz ../cdk-stacks/resources/emailSurveyLambda/survey/learning-play-audit-survey-0.1.0.tgz"
+    "postpack": "cp ./learning-play-audit-survey-0.10.0.tgz ../cdk-stacks/resources/emailSurveyLambda/survey/learning-play-audit-survey-0.10.0.tgz;cd ../surveyclient/;npm uninstall learning-play-audit-survey;npm install ../survey/learning-play-audit-survey-0.10.0.tgz;cd ../adminclient/;npm uninstall learning-play-audit-survey;npm install ../survey/learning-play-audit-survey-0.10.0.tgz;cd ../survey"
   },
   "babel": {
     "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "modules": false
-        }
-      ],
       [
         "@babel/preset-typescript",
         {

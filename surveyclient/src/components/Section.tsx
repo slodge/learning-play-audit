@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "../App.css";
 import QuestionSelectWithComment from "./QuestionSelectWithComment";
+import QuestionPercentageSelectWithComment from "./QuestionPercentageSelectWithComment";
 import QuestionText from "./QuestionText";
 import QuestionTextWithYear from "./QuestionTextWithYear";
 import QuestionUserSelect from "./QuestionUserSelect";
@@ -13,9 +14,11 @@ import {
   TEXT_WITH_YEAR,
   TEXT_FIELD,
   USER_TYPE_WITH_COMMENT,
+  PERCENTAGE_TYPE_WITH_COMMENT,
   sectionQuestions,
   Question,
   Section as SurveySection,
+  
 } from "learning-play-audit-survey";
 import SectionSummary from "./SectionSummary";
 import { renderMarkup } from "./RenderMarkup";
@@ -66,6 +69,17 @@ function Section({ section }: SectionProps) {
           key={key}
           sectionId={sectionId}
           question={question}
+        />
+      );
+    }
+
+    if (PERCENTAGE_TYPE_WITH_COMMENT === question.type) {
+      return (
+        <QuestionPercentageSelectWithComment
+          key={key}
+          sectionId={sectionId}
+          question={question}
+          questionNumber={questionIndex}
         />
       );
     }

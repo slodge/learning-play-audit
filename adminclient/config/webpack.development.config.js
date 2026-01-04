@@ -99,7 +99,7 @@ module.exports = function () {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              exclude: /node_modules\/(?!(learning-play-audit-shared)).*/,
+              exclude: /node_modules\/(?!(learning-play-audit-*)).*/,
               loader: require.resolve("babel-loader"),
               options: {
                 customize: require.resolve(

@@ -4,138 +4,126 @@ import { useSelector } from "react-redux";
 import {
   BarController,
   BarElement,
+  PieController,
   CategoryScale,
   LinearScale,
   Chart,
   ChartConfiguration,
   ScaleOptions,
+  ArcElement,
+  Legend,
 } from "chart.js";
+//import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {
+  FixedCognitoUser
+} from "learning-play-audit-shared"
 import {
   SCALE_WITH_COMMENT,
   sectionQuestions,
-  sectionsContent,
+  SurveyVersion,
+  current_survey_version,
+  ResultMapping,
+  AllResultMappings,
+  Result,
+  Question
 } from "learning-play-audit-survey";
 import SectionBottomNavigation from "./SectionBottomNavigation";
 import {
   getAnswers,
   QuestionAnswer,
 } from "../model/SurveyModel";
+import { key } from "localforage";
 
 // eslint-disable-next-line jest/require-hook
-Chart.register(BarController, BarElement, CategoryScale, LinearScale);
+Chart.register(
+  BarController, BarElement, CategoryScale, LinearScale, 
+  PieController, ArcElement, 
+  //ChartDataLabels,
+  Legend
+);
 
-const ANSWER_VALUES = { a: 1, b: 0.7, c: 0.3, d: 0 };
-type ANSWER_VALUE_KEY = keyof typeof ANSWER_VALUES;
+const A_ANSWER_VALUES = { a: 3, b: 2, c: 1, d: 0, max: 3 };
+const B_ANSWER_VALUES = { a: 0, b: 1, c: 2, d: 3, max: 3 };
+const GEO_ANSWER_VALUES = { a: 0, b: 3, c: 12, d: 30, e: 60, "": 0 };
+type A_ANSWER_VALUE_KEY = keyof typeof A_ANSWER_VALUES;
+type B_ANSWER_VALUE_KEY = keyof typeof B_ANSWER_VALUES;
+
+type ChartInstanceWrapper = {
+  chartInstance: MutableRefObject<Chart | null>;
+  chartContainer: MutableRefObject<HTMLCanvasElement | null>;
+  smallInstance: MutableRefObject<Chart | null>;
+  smallContainer: MutableRefObject<HTMLCanvasElement | null>;
+  textOutput: MutableRefObject<HTMLDivElement | null>;
+};
 
 function ResultsSection() {
   const answers = useSelector(getAnswers);
-  const chartContainer1small = useRef<HTMLCanvasElement | null>(null);
-  const chartContainer1large = useRef<HTMLCanvasElement | null>(null);
-  const chartContainer2small = useRef<HTMLCanvasElement | null>(null);
-  const chartContainer2large = useRef<HTMLCanvasElement | null>(null);
-  const chartContainer3small = useRef<HTMLCanvasElement | null>(null);
-  const chartContainer3large = useRef<HTMLCanvasElement | null>(null);
-  const chartInstance1small = useRef<Chart | null>(null);
-  const chartInstance1large = useRef<Chart | null>(null);
-  const chartInstance2small = useRef<Chart | null>(null);
-  const chartInstance2large = useRef<Chart | null>(null);
-  const chartInstance3small = useRef<Chart | null>(null);
-  const chartInstance3large = useRef<Chart | null>(null);
+  const chartWrappers: Map<string, ChartInstanceWrapper> = new Map();
+  const GEO_CHART:string = "Geographical Diversity";
 
-  type AnswerWeights = Record<string, Record<string, number>>;
+  // for all the results, which have sections names like "Foo: Bar" group them by Foo
+  const groupedResults = current_survey_version().results.reduce((acc: Record<string, Result[]>, result) => {
+    const sectionParts = result.section.split(":");
+    const groupName = sectionParts[0].trim();
+    if (!acc[groupName]) {
+      acc[groupName] = [];
+    }
+    acc[groupName].push(result);
+    return acc;
+  }, {});   
 
-  const [answerWeights] = useState<AnswerWeights>(createAnswerWeights());
+  Object.keys(groupedResults).forEach(groupName => {
+    const group = groupedResults[groupName];
+    chartWrappers.set(groupName, {
+      chartInstance: useRef<Chart | null>(null),
+      chartContainer: useRef<HTMLCanvasElement | null>(null),
+      smallInstance: useRef<Chart | null>(null),
+      smallContainer: useRef<HTMLCanvasElement | null>(null),
+      textOutput: useRef<HTMLDivElement | null>(null),
+    });
+  });
 
-  function createAnswerWeights() {
-    return sectionsContent.reduce((sections, section) => {
-      var questions: Record<string, number> = {};
-      sections[section.id] = questions;
+  chartWrappers.set(GEO_CHART, {
+    chartInstance: useRef<Chart | null>(null),
+    chartContainer: useRef<HTMLCanvasElement | null>(null),
+    smallInstance: useRef<Chart | null>(null),
+    smallContainer: useRef<HTMLCanvasElement | null>(null),
+    textOutput: useRef<HTMLDivElement | null>(null),
+  });
 
-      sectionQuestions(section).forEach(({ type, id, weight = 1 }) => {
-        questions[id] = type === SCALE_WITH_COMMENT ? weight : 0;
-      });
-
-      return sections;
-    }, {} as AnswerWeights);
-  }
+  const gcQuestionsArray = current_survey_version().sections.find(s => s.id == "nature")?.subsections.flatMap(ss => ss.questions.filter(q => q.id.startsWith("GC"))) || [];
+  const gcQuestions: Map<string, Question> = gcQuestionsArray.reduce((acc: Map<string, Question>, question:Question) => {
+    acc.set(question.id, question);
+    return acc;
+  }, new Map());
 
   useEffect(() => {
-    function getSingleAnswer(sectionId: string, questionId: string) {
+    function getSingleAnswer(sectionId: string, questionId: string, answerValues: Record<string, number>) {
       const answer = answers[sectionId][questionId] as QuestionAnswer;
-      const answerWeight = answerWeights[sectionId][questionId];
       var answerValue = 0;
       if (!answer) {
         throw new Error("Unknown question: " + sectionId + ":" + questionId);
       }
-      if (answer.answer && ANSWER_VALUES.hasOwnProperty(answer.answer)) {
-        answerValue = ANSWER_VALUES[answer.answer as ANSWER_VALUE_KEY];
+      if (answer.answer && answerValues.hasOwnProperty(answer.answer)) {
+        answerValue = answerValues[answer.answer];
       }
-      return { value: answerValue * answerWeight, maxValue: answerWeight };
+      return { value: answerValue, maxValue: answerValues.max };
     }
 
-    function calcMultipleAnswers(sectionId: string, questionIds: string[]) {
+    function chartFrom(resultMapping: ResultMapping) {
       var totalValue = 0;
       var totalMaxValue = 0;
-      questionIds.forEach((questionId) => {
-        const { value, maxValue } = getSingleAnswer(sectionId, questionId);
+      resultMapping.A.forEach((pair) => {
+        const { value, maxValue } = getSingleAnswer(pair.section, pair.question, A_ANSWER_VALUES);
+        totalValue += value;
+        totalMaxValue += maxValue;
+      });
+      resultMapping.B.forEach((pair) => {
+        const { value, maxValue } = getSingleAnswer(pair.section, pair.question, B_ANSWER_VALUES);
         totalValue += value;
         totalMaxValue += maxValue;
       });
       return (totalValue * 100) / totalMaxValue;
-    }
-
-    function calcSectionAnswers(sectionId: string) {
-      const questionIds = Object.keys(answers[sectionId]);
-      return calcMultipleAnswers(sectionId, questionIds);
-    }
-
-    function calcAnswer(sectionId: string, questionId: string) {
-      const { value, maxValue } = getSingleAnswer(sectionId, questionId);
-      return (value * 100) / maxValue;
-    }
-
-    function chartDataGreenspaceAnswers() {
-      return [
-        calcAnswer("greenspace", "accessible"),
-        calcAnswer("greenspace", "frequentuse"),
-        calcAnswer("greenspace", "wildlife"),
-        calcAnswer("greenspace", "teaching"),
-        calcAnswer("greenspace", "changes"),
-      ];
-    }
-
-    function chartDataAnswers() {
-      return [
-        calcSectionAnswers("learning"),
-        calcSectionAnswers("play"),
-        calcSectionAnswers("wellbeing"),
-        calcSectionAnswers("sustainability"),
-        calcSectionAnswers("community"),
-      ];
-    }
-
-    function chartDataPracticeAnswers() {
-      return [
-        calcMultipleAnswers("practice", [
-          "developingcurriculum",
-          "curriculumtopic",
-          "resources",
-          "outcomes",
-          "principles",
-          "growfood",
-        ]),
-        calcMultipleAnswers("practice", [
-          "playpolicy",
-          "playrain",
-          "playsnow",
-          "allages",
-          "outofsight",
-          "typesofplay",
-          "monitoring",
-          "skillstraining",
-          "oldersupervising",
-        ]),
-      ];
     }
 
     function updateChart(
@@ -143,7 +131,7 @@ function ResultsSection() {
       chartInstance: MutableRefObject<Chart | null>,
       labels: (string | string[])[],
       data: number[],
-      barColour: string,
+      barColour: string[],
       small = false
     ) {
       if (chartInstance.current !== null) {
@@ -204,91 +192,197 @@ function ResultsSection() {
       chartInstance.current = new Chart(chartRef!, configuration);
     }
 
-    function updateCharts(
-      chartContainerSmall: MutableRefObject<HTMLCanvasElement | null>,
-      chartInstanceSmall: MutableRefObject<Chart | null>,
-      chartContainerLarge: MutableRefObject<HTMLCanvasElement | null>,
-      chartInstanceLarge: MutableRefObject<Chart | null>,
-      labels: (string | string[])[],
-      data: number[],
-      barColour: string
+    function updatePieChart(
+      chartContainer: MutableRefObject<HTMLCanvasElement | null>,
+      chartInstance: MutableRefObject<Chart | null>,
+      data: any,
+      small = false
     ) {
-      updateChart(
-        chartContainerSmall,
-        chartInstanceSmall,
-        labels,
-        data,
-        barColour,
-        true
-      );
-      updateChart(
-        chartContainerLarge,
-        chartInstanceLarge,
-        labels,
-        data,
-        barColour,
-        false
-      );
+      if (chartInstance.current !== null) {
+        chartInstance.current.destroy();
+      }
+
+      const configuration: ChartConfiguration = {
+        type: "pie",
+        options: {
+          animation: {
+            duration: 0,
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: 10 },
+          plugins: {
+                legend: {
+                  display: true,
+                  position: 'right',
+                },
+                /*
+                removed this as coudn't get the spacing to work nicely
+                datalabels: {
+                  color: '#000',
+                  align: 'end',
+                  anchor: 'end',
+                  formatter: (value, ctx) => ctx.chart.data.labels?.[ctx.dataIndex], // Show labels
+                },
+                */
+          }
+        },
+        data: data
+      };
+
+      const chartRef = chartContainer.current!.getContext("2d");
+      chartInstance.current = new Chart(chartRef!, configuration);
     }
 
-    updateCharts(
-      chartContainer1small,
-      chartInstance1small,
-      chartContainer1large,
-      chartInstance1large,
-      [
-        "For Learning",
-        "For Play",
-        "For Wellbeing",
-        "For Sustainability",
-        ["For Community", "& Participation"],
-      ],
-      chartDataAnswers(),
-      "#2d6a89"
+
+    function updateGeoCharts() {
+      let chartWrapper = chartWrappers.get(GEO_CHART);
+      
+      if (!chartWrapper) {
+        throw new Error("No chart wrapper for key: " + GEO_CHART);
+      }
+
+      let geo_answer_keys = Object.keys(answers.nature).filter(key => key.startsWith("GC"));
+      let resultValues: Map<string, number> = new Map();
+      
+      const data = {
+            datasets: [{
+                data: [] as number[],
+                // not sure about this being fixed size of 8...
+                backgroundColor: [
+                  '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                  '#9966FF', '#FF9F40', '#C9CBCF', '#1A6C9C'
+                ],
+            }],
+            labels: [] as string[]
+        };
+
+      for (let key in geo_answer_keys) {
+        const answer = answers.nature[geo_answer_keys[key]] as QuestionAnswer;
+        const answerValue = GEO_ANSWER_VALUES[answer.answer as keyof typeof GEO_ANSWER_VALUES];
+
+        data.datasets[0].data.push(answerValue);
+        const rawLabel = gcQuestions.get(geo_answer_keys[key])!.text as string;
+        const label = rawLabel.replace("What area of grounds is ", "")
+                          .replace("covered by ", "")
+                          .replace("?", "");
+        data.labels.push(label);
+      }
+      
+      updatePieChart(
+        chartWrapper.smallContainer,
+        chartWrapper.smallInstance,
+        data,
+        true
+      );
+
+      updatePieChart(
+        chartWrapper.chartContainer,
+        chartWrapper.chartInstance,
+        data,
+        false
+      );
+
+      const chartRef =  chartWrapper?.textOutput.current;
+      chartRef?.replaceChildren("");
+      chartRef?.insertAdjacentHTML("beforeend", "<p /><hr /><p />");   
+    }
+
+    function updateCharts(
+      groupName: string,
+      group: Result[]
+    ) {
+      let chartWrapper = chartWrappers.get(groupName);
+
+      if (!chartWrapper) {
+        throw new Error("No chart wrapper for key: " + groupName);
+      }
+
+      let results = group.map(result => chartFrom(current_survey_version().result_mappings[result.section]));
+      let resultColours = results.map(result => {
+        if (result >= 67) {
+          return "#4caf50"; // green
+        } else if (result >= 34) {
+          return "#ff9800"; // orange
+        } else {
+          return "#f44336"; // red
+        }
+      });
+
+      // create the labels as an array of section names without their leading "Key:" text
+      let labels = group.map(result => result.section.split(":")[1].trim());
+
+      updateChart(
+        chartWrapper.smallContainer,
+        chartWrapper.smallInstance,
+        labels,
+        results,
+        resultColours,
+        true
+      );
+
+      updateChart(
+        chartWrapper.chartContainer,
+        chartWrapper.chartInstance,
+        labels,
+        results,
+        resultColours,
+        false
+      );
+
+      const chartRef =  chartWrapper?.textOutput.current;
+       
+      // remove all children from chartRef
+      chartRef?.replaceChildren("");
+
+      group.forEach((result, index) => {
+        const subSectionName = result.section.split(":")[1].trim();
+        const resultText = results[index] >= 67 ? result.good : results[index] >= 34 ? result.ok : result.bad;
+        const className = results[index] >= 67 ? "text-good" : results[index] >= 34 ? "text-ok" : "text-bad";
+        chartRef?.insertAdjacentHTML("beforeend", `<h4>${subSectionName}: <span class="${className}">${results[index].toFixed(1)}%</span></h4>`);
+        chartRef?.insertAdjacentHTML("beforeend", `<p class="${className}">${resultText}</p>`);      
+      });
+   
+      // lazy way to add spacing at the end...
+      chartRef?.insertAdjacentHTML("beforeend", "<p /><hr /><p />");   
+    }
+
+    Object.keys(groupedResults).forEach(groupName => {
+      const group = groupedResults[groupName];
+      updateCharts(groupName, group);
+      updateGeoCharts();
+    });
+
+  }, [answers]);
+
+  function createAreaChartHolder() {
+    return createChartHolder(GEO_CHART);
+  }
+
+  function createChartHolder(groupName: string) {
+    const node: React.ReactNode[] = [];
+    node.push(
+      <h2>{groupName}</h2>
     );
-    updateCharts(
-      chartContainer2small,
-      chartInstance2small,
-      chartContainer2large,
-      chartInstance2large,
-      [
-        "For Accessibility",
-        "For Frequent Use",
-        "For Wildlife",
-        ["For Learning", "& Play"],
-        ["For Ease of", "Change"],
-      ],
-      chartDataGreenspaceAnswers(),
-      "#2d6a89"
-    );
-    updateCharts(
-      chartContainer3small,
-      chartInstance3small,
-      chartContainer3large,
-      chartInstance3large,
-      ["Learning", "Play"],
-      chartDataPracticeAnswers(),
-      "#2d6a89"
-    );
-  }, [answers, answerWeights]);
+    const chartWrapper = chartWrappers.get(groupName);
+    node.push(
+      <div>
+        <div className="results-chart five-bars">
+          <canvas className="small-chart" ref={chartWrapper?.smallContainer} />
+          <canvas className="large-chart" ref={chartWrapper?.chartContainer} />
+        </div>
+        <div>
+          <div ref={chartWrapper?.textOutput} />
+        </div>
+      </div>
+  );
+    return node;
+  }
 
   return (
     <div className="section results">
-      <h2>How Good Is Our Outdoor Space?</h2>
-      <div className="results-chart five-bars">
-        <canvas className="small-chart" ref={chartContainer1small} />
-        <canvas className="large-chart" ref={chartContainer1large} />
-      </div>
-      <h2>How Good Is Our Local Greenspace?</h2>
-      <div className="results-chart five-bars">
-        <canvas className="small-chart" ref={chartContainer2small} />
-        <canvas className="large-chart" ref={chartContainer2large} />
-      </div>
-      <h2>How Good Is Our Outdoor Practice?</h2>
-      <div className="results-chart two-bars">
-        <canvas className="small-chart" ref={chartContainer3small} />
-        <canvas className="large-chart" ref={chartContainer3large} />
-      </div>
+      {createAreaChartHolder()}
+      {Object.keys(groupedResults).map(createChartHolder)}
       <SectionBottomNavigation />
     </div>
   );

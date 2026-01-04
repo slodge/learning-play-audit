@@ -235,7 +235,10 @@ export function signInCurrentUser(): AppThunk {
         dispatch(
           setAuthState(SIGNED_IN, {
             cognitoUser,
-            email: cognitoUser.getUsername(),
+            // Warning: Stuart changed this as cognitoUser.username is NOT always email!
+            // ... but is it safe to assume email is always present in attributes?
+            // I don't know!
+            email: cognitoUser.attributes.email,
           })
         )
       )

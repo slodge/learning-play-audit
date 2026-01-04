@@ -31,13 +31,15 @@ The following tools are needed in the build and deploy process, install them fir
 - Install [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/)
 - Install the [AWS CDK](https://docs.aws.amazon.com/cdk/index.html), described here: https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install
 - Install and start [Docker](https://www.docker.com/get-started) to build the Lambda functions
-- The backend components require Node v14 to build - as the Lambda runtime environment is Node v14 and there are some prebuilt dependencies
+- The backend components require Node v22 to build - as the Lambda runtime environment is Node v22 and there are some prebuilt dependencies
 
 ### Build and deploy the backend components
 
 In the following, `PROJECT_ROOT` is the directory where you have cloned the repo.
 
 #### Install dependencies for node projects
+
+**Warning:** To get these projects to `npm install` or to get the backend to deploy, you might need to `npm install`, `npm run build` and `npm pack` versions of the front end projects first. This is because the these back end lock files and deployments pull-in the built and packaged code from the front end. This is a little weird - as the front end can't really be packaged until the back end has been deployed (because aws paths are needed!)... so you need to go back and rebuild and repack them after back end deployment... This build loop could do with being improved a little (but not an urgent thing!). 
 
 ```
 cd PROJECT_ROOT/cdk-stacks; npm install
@@ -57,6 +59,7 @@ Here `aws://AWS_ACCOUNT_NUMBER/REGION` is the AWS account and region to use for 
 
 Once that's done, the rest of the deploy should go smoothly
 
+
 ```
 cd PROJECT_ROOT/cdk-stacks
 cdk deploy PREFIX-Backend-dev --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS
@@ -64,6 +67,16 @@ cdk deploy PREFIX-Backend-dev --profile AWS_PROFILE --context env=dev --context 
 
 Here `PREFIX` is the resource prefix for your deployment, e.g. '`MySurvey`'. This needs to be unique to your deployment as it is used for resource name generation and S3 resource names must be unique within their AWS region.
 Use `--profile AWS_PROFILE` if necessary to choose the correct [AWS CLI access keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html).
+
+Example as executed by Stuart in his account:
+
+```
+aws sso login --profile Slodge-Admin
+
+cdk bootstrap aws://983641940485/eu-west-1 --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
+
+cdk deploy TESTING-Backend-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
+```
 
 The CDK will create and deploy a CloudFormation stack of the backend AWS components. If it completes successfully, it will return output like:
 
@@ -218,7 +231,15 @@ Stack ARN:
 arn:aws:cloudformation:eu-west-2:ACCOUNT_NUMBER:stack/LTLSurvey2-Frontend-dev/00000000-0000-0000-0000-000000000000
 ```
 
+For example, Stuart ran:
+
+```
+cdk deploy TESTING-Frontend-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
+```
+
 The web client URLs are the endpoints of the two web clients in cloudfront. These can then be set up with DNS, Route53, etc.
+
+If this fails, then one option Stuart found was that the size of the build folders (at `surveyclient/build` and `adminclient/build`) could be too large - causing timeouts - so delete those folders and rebuild.
 
 ### or deploy the frontend components - hosted elsewhere
 

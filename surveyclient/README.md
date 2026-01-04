@@ -34,3 +34,6 @@ Environment specific builds are available, using environment specific `.env.[ENV
 - `npm run build` - for DEV environment
 - `npm run build:ltltest` - for TEST environment
 - `npm run build:ltllive` - for LIVE environment
+
+
+Consider deleting the `build` folder before running build as large build folders can cause cdk deployment to fail (in Stuart's painful debugging experience)
