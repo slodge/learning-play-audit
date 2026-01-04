@@ -40,51 +40,15 @@ export const sectionsContent: Section[] = [
         },
 
         questions: [
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P01",
-            text: "Outdoor learning is an expectation of all our staff, who are trained and supported to deliver learning outdoors.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P02",
-            text: "We have a member of staff or external supplier to deliver all or most of our outdoor learning themselves.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P03",
-            text: "Sustainability, climate change or outdoor learning are all in addition to our current curriculum, or are enrichment, or are for the Eco-Committee to undertake.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P04",
-            text: "Sustainability, climate change or outdoor learning is embedded across all the curriculum and is visible in school life.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P05",
-            text: "All our break supervision staff are trained and feel confident to support great play in the school grounds.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P06",
-            text: "We have an outdoor learning policy",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P07",
-            text: "We have a play policy",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P08",
-            text: "We have a climate change action and mitigation policy, or it is clearly integrated with other policies.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P09",
-            text: "We have appointed a lead or co-ordinator in areas around climate change and sustainability in the curriculum, outdoor learning, and play.",
-          },
+          { type: SCALE_WITH_COMMENT, id: "P01", text: "Outdoor learning is an expectation of all our staff, who are trained and supported to deliver learning outdoors.", },
+          { type: SCALE_WITH_COMMENT, id: "P02", text: "We have a member of staff or external supplier to deliver all or most of our outdoor learning themselves.", },
+          { type: SCALE_WITH_COMMENT, id: "P03", text: "Sustainability, climate change or outdoor learning are all in addition to our current curriculum, or are enrichment, or are for the Eco-Committee to undertake.", },
+          { type: SCALE_WITH_COMMENT, id: "P04", text: "Sustainability, climate change or outdoor learning is embedded across all the curriculum and is visible in school life.", },
+          { type: SCALE_WITH_COMMENT, id: "P05", text: "All our break supervision staff are trained and feel confident to support great play in the school grounds.", },
+          { type: SCALE_WITH_COMMENT, id: "P06", text: "We have an outdoor learning policy", },
+          { type: SCALE_WITH_COMMENT, id: "P07", text: "We have a play policy", },
+          { type: SCALE_WITH_COMMENT, id: "P08", text: "We have a climate change action and mitigation policy, or it is clearly integrated with other policies.", },
+          { type: SCALE_WITH_COMMENT, id: "P09", text: "We have appointed a lead or co-ordinator in areas around climate change and sustainability in the curriculum, outdoor learning, and play.", },
           { type: SCALE_WITH_COMMENT, id: "P10", text: "All our pupils are actively involved in designing and creating school grounds improvements." },
           { type: SCALE_WITH_COMMENT, id: "P11", text: "A range of staff members, both teaching and non-teaching, are actively involved in designing and creating school grounds improvements." },
           { type: SCALE_WITH_COMMENT, id: "P12", text: "We relate our play, learning, and various action plans to the Global Goals for Sustainable Development." },
@@ -128,46 +92,14 @@ export const sectionsContent: Section[] = [
           },
         ],
         questions: [          
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC01",
-            text: "What area of grounds is covered by your buildings?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC02",
-            text: "What area of grounds is sports or play surfaces such as artificial grass, rubber matting or clay pitches?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC03",
-            text: "What area of grounds is solid / hard surfacing such as tarmac?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC04",
-            text: "What area of grounds is mown grass e.g. sports pitches?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC05",
-            text: "What area of grounds is for growing food or formal gardens?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC06",
-            text: "What area of grounds is covered by trees, shrubs, or hedges?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC07",
-            text: "What area of grounds is covered by long grass or meadow?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC08",
-            text: "What area of grounds is covered by something else e.g. beach, bogland, water, stone?",
-          },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC01", text: "What area of grounds is covered by your buildings?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC02", text: "What area of grounds is sports or play surfaces such as artificial grass, rubber matting or clay pitches?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC03", text: "What area of grounds is solid / hard surfacing such as tarmac?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC04", text: "What area of grounds is mown grass e.g. sports pitches?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC05", text: "What area of grounds is for growing food or formal gardens?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC06", text: "What area of grounds is covered by trees, shrubs, or hedges?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC07", text: "What area of grounds is covered by long grass or meadow?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC08", text: "What area of grounds is covered by something else e.g. beach, bogland, water, stone?", },
         ],
       },
       {
