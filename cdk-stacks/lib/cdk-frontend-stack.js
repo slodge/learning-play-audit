@@ -101,9 +101,9 @@ class CdkFrontendStack extends cdk.Stack {
       new s3deploy.BucketDeployment(scope, DEPLOY_NAME, {
         sources: [s3deploy.Source.asset(pathToWebsiteContents)],
         destinationBucket: bucket,
-        destinationKeyPrefix: destinationKeyPrefix,
+        destinationKeyPrefix: "/",
         distribution: distribution,
-        distributionPaths: [ `${destinationKeyPrefix == "/" ? "" : destinationKeyPrefix}/*`], // Invalidates cache on deploy
+        //distributionPaths: [ "/*"` ], // Invalidates cache on deploy
       });
 
       new cdk.CfnOutput(scope, name + " URL", {
