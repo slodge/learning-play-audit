@@ -32,13 +32,8 @@ export const sectionsContent: Section[] = [
       {
         title: {
           tag: "p",
-          content: {
-            tag: "b",
-            content:
-              "This section is for school staff to fill in. Please use a wide selection of staff across age groups and subject specialism, age, gender and experience.",
-          },
+          content: "This section is for school staff to fill in. Please use a wide selection of staff across age groups and subject specialism, age, gender and experience.",
         },
-
         questions: [
           { type: SCALE_WITH_COMMENT, id: "P01", text: "Outdoor learning is an expectation of all our staff, who are trained and supported to deliver learning outdoors.", },
           { type: SCALE_WITH_COMMENT, id: "P02", text: "We have a member of staff or external supplier to deliver all or most of our outdoor learning themselves.", },
@@ -85,11 +80,7 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Ground Cover" },
-          {
-            tag: "p",
-            content:
-              "Using a satellite map, please estimate in percentages. Bing Maps offers the best detail in aerial photo mode. Use all areas of the school, not just where pupils have access, such as car parks.",
-          },
+          { tag: "p", content: "Using a satellite map, please estimate in percentages. Bing Maps offers the best detail in aerial photo mode. Use all areas of the school, not just where pupils have access, such as car parks.", },
         ],
         questions: [          
           { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC01", text: "What area of grounds is covered by your buildings?", },
@@ -164,14 +155,8 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Cold Stress" },
-          {
-            tag: "p",
-            content: "A warming planet puts more energy into our atmosphere. This extra energy is reflected in many ways - one way is greater variation in temperatures. Your site may now experience more 'cold events' in winter and a more persistent wind, cooling the site down." 
-          },
-          {
-            tag: "p",
-            content: "The questions are looking at the whole site. You can use the notes to remind yourself where you can shelter from the wind and areas which remain colder for longer.", 
-          },
+          { tag: "p", content: "A warming planet puts more energy into our atmosphere. This extra energy is reflected in many ways - one way is greater variation in temperatures. Your site may now experience more 'cold events' in winter and a more persistent wind, cooling the site down." },
+          { tag: "p", content: "The questions are looking at the whole site. You can use the notes to remind yourself where you can shelter from the wind and areas which remain colder for longer.",  },
         ],
         questions: [
           { type: SCALE_WITH_COMMENT, id: "T12", text: "We have areas of our grounds which feel colder than the rest of the site." },
@@ -185,18 +170,9 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Wind Stress" },
-          {	
-            tag: "p",
-            content: "A warming planet puts more energy into our atmosphere. This extra energy is apparent in many ways - one way is increased winds around the planet. Your site may now experience more wind, both average wind days and extreme wind events during storms." 
-          },
-          {
-            tag: "p",
-            content: "Use this section to consider both how much wind you have on your site and how much your site shelters you from the winds. You should consider the average wind on your site and extreme wind events due to storms.", 
-          },
-          {
-            tag: "p",
-            content: "The questions are looking at the whole site. You can use the notes to remind yourself where sheltered areas are, where constantly windy areas are or where wind has or does cause problems."
-          },
+          {	tag: "p", content: "A warming planet puts more energy into our atmosphere. This extra energy is apparent in many ways - one way is increased winds around the planet. Your site may now experience more wind, both average wind days and extreme wind events during storms." },
+          { tag: "p", content: "Use this section to consider both how much wind you have on your site and how much your site shelters you from the winds. You should consider the average wind on your site and extreme wind events due to storms.", },
+          { tag: "p", content: "The questions are looking at the whole site. You can use the notes to remind yourself where sheltered areas are, where constantly windy areas are or where wind has or does cause problems." },
         ],
         questions: [
           { type: SCALE_WITH_COMMENT, id: "T19", text: "We have areas of the grounds which are windy on many days through the year." },
