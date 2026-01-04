@@ -39,34 +39,38 @@ function IntroductionSection() {
       <div className="section introduction">
         <h1 className="title">Introduction</h1>
         <p>
-          This audit is intended to assist in understanding the risks that our changing climate brings to your school
-          grounds, and the nature-based adaptations you can make. It is not intended to be exhaustive or dictate your
-          priorities. The intention is to provide an opportunity to reflect on your education practice and how well
-          adapted your spaces are to our changing climate.This audit is intended to assist in understanding the risks
-          that our changing climate brings to your school grounds, and the nature-based adaptations you can make. It
-          is not intended to be exhaustive or dictate your priorities. The intention is to provide an opportunity to
-          reflect on your education practice and how well adapted your spaces are to our changing climate.
+          This audit tool was developed by Learning through Landscapes (LtL) to help you reflect on your
+          outdoor spaces. This is not intended to be exhaustive or dictate your priorities, but rather to
+          provide an opportunity to reflect on your education practice, outdoor learning and play, with a
+          focus on how well adapted your spaces are to cope with the risks our changing climate brings
+          and the nature-based adaptations you can make.
+        </p>
+        <h2>
+          How to use the audit
+        </h2>
+        <p>
+          You should be able to complete the audit in around an hour using your existing knowledge of
+          the site and can be done offline.
         </p>
         <p>
-          How to use the audit: this audit is best undertaken with a group of learners and adults from the school - 
-          different views and experiences are important. Do also undertake the audit with a map in hand and while
-          moving around the school grounds. Pupils often know 'secret' areas, and it can also jog memories around
-          what happens on a windy, wet, or hot day in the grounds.
+          This audit is best undertaken with a group of learners and adults from the school - different
+          views and experiences are important. Pupil insight is valuable as they often know the grounds
+          better than most, including hideaway places and what happens on windy, wet or hot days. Refer
+          to a satellite image of your school, as well as moving around the school grounds to support your
+          responses.
         </p>
         <p>
-          To complete the audit, select the closest matching statement. You can enter your results directly in the
-          digital version of the audit or complete the audit on paper before entering the results back in the classroom.
-          Please note that an incomplete audit will create incomplete results, as the questions interlink with each other.
+          Select the closest matching statement for each question. Ensure you complete the &#39;Policy and
+          Practice&#39; section fully before proceeding to the next section. Please note that an incomplete
+          audit will create incomplete results, as the questions interlink with each other.
         </p>
         <p>
-          On the 'Results' tab you will find a graph of where you are currently with regards to having climate ready
-          school grounds.
+          You will be able to view your audit results straight away. If you wish to save a copy, please
+          make sure you upload your survey response when online.
         </p>
         <p>
-          After completing this audit and gathering the results, do engage with the pupils and other staff about what
-          you have learned, and agree what your priorities and plans are. This audit is as much about your practice as
-          an educator and the learning experience your pupils have as it is about adapting our schools' outdoor spaces
-          to better prepare for a changing climate.
+          After completing this audit and gathering the results, engage with the pupils and other staff
+          about what you have learned, and agree on what your priorities and plans for improvement are.
         </p>
         <p>
           <b>
