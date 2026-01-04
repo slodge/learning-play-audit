@@ -19,6 +19,41 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
+## Updating the survey text...
+
+The source for the app is currently in: https://github.com/slodge/learning-play-audit
+
+This includes the definition of static text in:
+
+- Getting Started text - https://github.com/slodge/learning-play-audit/blob/7a9c4d21e069d61404c91ae57ca89ea197cba5db/surveyclient/src/components/GetStartedScreen.tsx#L23 
+- Introductions text - https://github.com/slodge/learning-play-audit/blob/b4008d357bf896540e2991e1472c04d206f8e5d8/surveyclient/src/components/IntroductionSection.tsx#L36
+- Submit text - https://github.com/slodge/learning-play-audit/blob/7a9c4d21e069d61404c91ae57ca89ea197cba5db/surveyclient/src/components/SubmitSection.tsx#L42 
+- Email text - https://github.com/slodge/learning-play-audit/blob/7a9c4d21e069d61404c91ae57ca89ea197cba5db/cdk-stacks/resources/emailSurveyLambda/src/index.ts#L138 
+
+The text and structure of the questions and of the results charts is defined inside the survey folder.
+
+In order to maintain consistency between surveys and result processing, surveys are versioned.
+
+Within each version, you will find:
+
+- Survey sections and questions - https://github.com/slodge/learning-play-audit/blob/b4008d357bf896540e2991e1472c04d206f8e5d8/survey/src/mappings/v_0_1_10/survey.ts#L10 
+- Results text - https://github.com/slodge/learning-play-audit/blob/master/survey/src/mappings/v_0_1_10/results.ts 
+- Results mappings - https://github.com/slodge/learning-play-audit/blob/master/survey/src/mappings/v_0_1_10/result_mappings.ts 
+
+If you are just editing static question text within a survey, or if you are just playing with results and result mappings, then this can be done inside the existing current survey version - e.g. inside survey/mappings/v_0_1_10
+
+However, once a survey has been published and is in use, then if you are moving questions between sections, or if you are deleting or adding questions or sections, then you must create a new version - you must not edit existing published versions.
+
+The easiest way to create a new version is to:
+
+- copy the current version - e.g. copy https://github.com/slodge/learning-play-audit/tree/master/survey/src/mappings/v_0_1_10 to a v_0_1_11 folder;
+- then modify index.ts to have the new version info - e.g in the v_0_1_11 change index.ts to include v_0_1_11 and 0.1.11;
+- then update the overall mapping list and current version in https://github.com/slodge/learning-play-audit/blob/master/survey/src/mappings/survey.ts to include the new version;
+- then make the actual updates to the questions/results
+- then finally run `npm run build` and `npm pack` to propagate the changes to the /surveyclient /adminclient and /cdk-stacks/resources/emailSurveyLamdba folders.
+- then when happy republish the backend and frontend using the cdk instructions.
+
+
 ## Building and deploying
 
 To build the components of the application and deploy to AWS, follow these instructions after cloning the repo. The instructions are environment specific. In the instructions below, the environment being created is `dev`. Other options are `test` and `live`.
