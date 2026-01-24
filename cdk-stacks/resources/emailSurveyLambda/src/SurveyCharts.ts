@@ -11,16 +11,13 @@ import {
   Legend,
 } from "chart.js";
 import {
-  SCALE_WITH_COMMENT,
-  PERCENTAGE_TYPE_WITH_COMMENT,
   ResultMapping,
   Result,
   Question,
   SurveyVersion
 } from "learning-play-audit-survey";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
-import { AnswerWeights, QuestionAnswer, SurveyAnswers } from "./SurveyModel";
-import { group } from "console";
+import { QuestionAnswer, SurveyAnswers } from "./SurveyModel";
 
 // eslint-disable-next-line jest/require-hook
 Chart.register(BarController, BarElement, CategoryScale, LinearScale);

@@ -70,8 +70,8 @@ exports.handler = async (event) => {
     id: surveyId,
     surveyVersion: inputRequest.surveyVersion,
     surveyResponse: survey,
-    schoolName: survey.background.school.answer,
-    responderName: survey.background.contactname.answer,
+    schoolName: survey.background.organisation.answer,
+    responderName: `${survey.background.firstname.answer} ${survey.background.lastname.answer}`,
     responderEmail: survey.background.email.answer,
     photos,
   };

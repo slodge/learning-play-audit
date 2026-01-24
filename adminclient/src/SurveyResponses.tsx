@@ -4,6 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   get_survey_version,
   SCALE_WITH_COMMENT,
+  AGEGROUP_WITH_COMMENT,
+  MOTIVATED_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
   TEXT_WITH_YEAR,
@@ -99,6 +101,135 @@ function getResponseNumberCell(
     <td className="response-no">{responseNumber}</td>
   ) : (
     <></>
+  );
+}
+
+
+interface QuestionMotivatedWithCommentProps {
+  question: Question;
+  questionNumber: number;
+  responses: QuestionAnswer[];
+}
+
+function QuestionMotivatedWithComment({
+  question,
+  questionNumber,
+  responses,
+}: QuestionMotivatedWithCommentProps) {
+  const classes = useStyles();
+
+  function hasComment(response: QuestionAnswer) {
+    return response.comments !== null && response.comments.length > 0;
+  }
+
+  function getAnswer(response: QuestionAnswer) {
+    switch (response.answer) {
+      case null:
+      case "":
+        return "";
+      case "a":
+        return "extremely";
+      case "b":
+        return "very";
+      case "c":
+        return "moderately";
+      case "d":
+        return "slightly";
+      case "e":
+        return "not at all";
+      default:
+        return "unknown: " + response.answer;
+    }
+  }
+
+  return (
+    <div className={classes.question}>
+      <Box flexDirection="row">
+        <div className={classes.questionText}>
+          {questionNumber}: {renderMarkup(question.text)}
+        </div>
+      </Box>
+      <table className={classes.responsesGrid}>
+        <tbody>
+          {responses.map((response, i) => {
+            return (
+              <tr key={"" + i}>
+                {getResponseNumberCell(responses, i + 1)}
+                <td className="scale-value">
+                  {response ? getAnswer(response) : <></>}
+                </td>
+                <td>
+                  {response && hasComment(response) ? response.comments : <></>}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+interface QuestionAgeGroupWithCommentProps {
+  question: Question;
+  questionNumber: number;
+  responses: QuestionAnswer[];
+}
+
+function QuestionAgeGroupWithComment({
+  question,
+  questionNumber,
+  responses,
+}: QuestionAgeGroupWithCommentProps) {
+  const classes = useStyles();
+
+  function hasComment(response: QuestionAnswer) {
+    return response.comments !== null && response.comments.length > 0;
+  }
+
+  function getAnswer(response: QuestionAnswer) {
+    switch (response.answer) {
+      case null:
+      case "":
+        return "";
+      case "a":
+        return "early years";
+      case "b":
+        return "primary";
+      case "c":
+        return "secondary";
+      case "d":
+        return "other";
+      default:
+        return "unknown: " + response.answer;
+    }
+  }
+
+  return (
+    <div className={classes.question}>
+      <Box flexDirection="row">
+        <div className={classes.questionText}>
+          {questionNumber}: {renderMarkup(question.text)}
+        </div>
+      </Box>
+      <table className={classes.responsesGrid}>
+        <tbody>
+          {responses.map((response, i) => {
+            return (
+              <tr key={"" + i}>
+                {getResponseNumberCell(responses, i + 1)}
+                <td className="scale-value">
+                  {response ? getAnswer(response) : <></>}
+                </td>
+                <td>
+                  {response && hasComment(response) ? response.comments : <></>}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -416,6 +547,28 @@ function Section({ section, sectionResponses }: SectionProps) {
       );
     }
 
+    if (AGEGROUP_WITH_COMMENT === type) {
+      return (
+        <QuestionAgeGroupWithComment
+          key={key}
+          question={question}
+          questionNumber={questionIndex}
+          responses={responses as QuestionAnswer[]}
+        />
+      );
+    }
+
+    if (MOTIVATED_WITH_COMMENT === type) {
+      return (
+        <QuestionMotivatedWithComment
+          key={key}
+          question={question}
+          questionNumber={questionIndex}
+          responses={responses as QuestionAnswer[]}
+        />
+      );
+    }
+    
     if (USER_TYPE_WITH_COMMENT === type) {
       return (
         <QuestionUserSelect

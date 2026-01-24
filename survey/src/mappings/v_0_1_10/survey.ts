@@ -2,7 +2,7 @@
 
 // Update the version when any changes are made to the survey. Use semantic versioning.
 
-import { BACKGROUND } from "../types/types";
+import { AGEGROUP_WITH_COMMENT, BACKGROUND, MOTIVATED_WITH_COMMENT } from "../types/types";
 import { SCALE_WITH_COMMENT, USER_TYPE_WITH_COMMENT, PERCENTAGE_TYPE_WITH_COMMENT, TEXT_AREA, TEXT_FIELD, TEXT_WITH_YEAR } from "../types/types";
 import { QuestionType, Markup, Question, SubSection, Section } from "../types/types";
 
@@ -15,11 +15,15 @@ export const sectionsContent: Section[] = [
     subsections: [
       {
         questions: [
-          { type: TEXT_FIELD, id: "school", text: "School" },
-          { type: TEXT_FIELD, id: "localauthority", text: "Local Authority" },
-          { type: TEXT_FIELD, id: "contactname", text: "Contact Name" },
-          { type: USER_TYPE_WITH_COMMENT, id: "position", text: "Position" },
-          { type: TEXT_FIELD, id: "telephone", text: "Telephone" },
+          { type: TEXT_FIELD, id: "firstname", text: "First Name" },
+          { type: TEXT_FIELD, id: "lastname", text: "Last Name" },
+          { type: TEXT_FIELD, id: "jobtitle", text: "Job Title" },
+          { type: TEXT_FIELD, id: "organisation", text: "Organisation" },
+          { type: TEXT_FIELD, id: "postcode", text: "Postcode" },
+          { type: AGEGROUP_WITH_COMMENT, id: "agegroup", text: "Which age group do you work with?" },
+          { type: MOTIVATED_WITH_COMMENT, id: "motivatedoutdoor", text: "How motivated are you to include outdoor learning and play in your practice?" },
+          { type: MOTIVATED_WITH_COMMENT, id: "confidentoutdoor", text: "How confident do you feel in planning and delivering outdoor learning or play activities?" },
+          { type: MOTIVATED_WITH_COMMENT, id: "supportedoutdoor", text: "How well supported do you feel by your school or setting to use outdoor spaces for learning and play?" },
         ],
       },
     ],

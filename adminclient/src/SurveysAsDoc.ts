@@ -2,6 +2,8 @@ import {
   sectionQuestions,
   get_survey_version,
   SCALE_WITH_COMMENT,
+  AGEGROUP_WITH_COMMENT,
+  MOTIVATED_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
   TEXT_WITH_YEAR,
@@ -258,6 +260,89 @@ function renderQuestionTypePercentageSelect(
   ];
 }
 
+function renderQuestionTypeMotivatedSelect(
+  question: Question,
+  questionNumber: number,
+  responses: QuestionAnswer[]
+) {
+  function getAnswer(response: QuestionAnswer) {
+    switch (response.answer) {
+      case "a":
+        return "extremely";
+      case "b":
+        return "very";
+      case "c":
+        return "moderately";
+      case "d":
+        return "slightly";
+      case "e":
+        return "not at all";
+      case null:
+      case "":
+        return "";
+      default:
+        return "unknown: " + response.answer;
+    }
+  }
+
+  return [
+    renderQuestionText(questionNumber, question.text),
+    new Table({
+      layout: TableLayoutType.FIXED,
+      columnWidths: [300, 1600, 7000],
+      borders: GREY_BORDER,
+      rows: responses.map((response, i) => {
+        return tableRow(
+          "" + (i + 1),
+          response ? getAnswer(response) : "",
+          response ? response.comments : ""
+        );
+      }),
+    }),
+  ];
+}
+
+
+function renderQuestionTypeAgeGroupSelect(
+  question: Question,
+  questionNumber: number,
+  responses: QuestionAnswer[]
+) {
+  function getAnswer(response: QuestionAnswer) {
+    switch (response.answer) {
+      case "a":
+        return "early years";
+      case "b":
+        return "primary";
+      case "c":
+        return "secondary";
+      case "d":
+        return "other";
+      case null:
+      case "":
+        return "";
+      default:
+        return "unknown: " + response.answer;
+    }
+  }
+
+  return [
+    renderQuestionText(questionNumber, question.text),
+    new Table({
+      layout: TableLayoutType.FIXED,
+      columnWidths: [300, 1600, 7000],
+      borders: GREY_BORDER,
+      rows: responses.map((response, i) => {
+        return tableRow(
+          "" + (i + 1),
+          response ? getAnswer(response) : "",
+          response ? response.comments : ""
+        );
+      }),
+    }),
+  ];
+}
+
 function renderQuestionTypeSelectWithComment(
   question: Question,
   questionNumber: number,
@@ -450,6 +535,26 @@ function renderSection(section: Section, sectionResponses: SectionAnswers[]) {
         docQuestions.length,
         0,
         ...renderQuestionTypeSelectWithComment(
+          question,
+          questionIndex,
+          responses as QuestionAnswer[]
+        )
+      );
+    } else if (MOTIVATED_WITH_COMMENT === type) {
+      docQuestions.splice(
+        docQuestions.length,
+        0,
+        ...renderQuestionTypeMotivatedSelect(
+          question,
+          questionIndex,
+          responses as QuestionAnswer[]
+        )
+      );
+    } else if (AGEGROUP_WITH_COMMENT === type) {
+      docQuestions.splice(
+        docQuestions.length,
+        0,
+        ...renderQuestionTypeAgeGroupSelect(
           question,
           questionIndex,
           responses as QuestionAnswer[]
