@@ -36,59 +36,18 @@ export const sectionsContent: Section[] = [
       {
         title: {
           tag: "p",
-          content: {
-            tag: "b",
-            content:
-              "This section is for school staff to fill in. Please use a wide selection of staff across age groups and subject specialism, age, gender and experience.",
-          },
+          content: "This section is for school staff to fill in. Please use a wide selection of staff across age groups and subject specialism, age, gender and experience.",
         },
-
         questions: [
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P01",
-            text: "Outdoor learning is an expectation of all our staff, who are trained and supported to deliver learning outdoors.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P02",
-            text: "We have a member of staff or external supplier to deliver all or most of our outdoor learning themselves.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P03",
-            text: "Sustainability, climate change or outdoor learning are all in addition to our current curriculum, or are enrichment, or are for the Eco-Committee to undertake.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P04",
-            text: "Sustainability, climate change or outdoor learning is embedded across all the curriculum and is visible in school life.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P05",
-            text: "All our break supervision staff are trained and feel confident to support great play in the school grounds.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P06",
-            text: "We have an outdoor learning policy",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P07",
-            text: "We have a play policy",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P08",
-            text: "We have a climate change action and mitigation policy, or it is clearly integrated with other policies.",
-          },
-          {
-            type: SCALE_WITH_COMMENT,
-            id: "P09",
-            text: "We have appointed a lead or co-ordinator in areas around climate change and sustainability in the curriculum, outdoor learning, and play.",
-          },
+          { type: SCALE_WITH_COMMENT, id: "P01", text: "Outdoor learning is an expectation of all our staff, who are trained and supported to deliver learning outdoors.", },
+          { type: SCALE_WITH_COMMENT, id: "P02", text: "We have a member of staff or external supplier to deliver all or most of our outdoor learning themselves.", },
+          { type: SCALE_WITH_COMMENT, id: "P03", text: "Sustainability, climate change or outdoor learning are all in addition to our current curriculum, or are enrichment, or are for the Eco-Committee to undertake.", },
+          { type: SCALE_WITH_COMMENT, id: "P04", text: "Sustainability, climate change or outdoor learning is embedded across all the curriculum and is visible in school life.", },
+          { type: SCALE_WITH_COMMENT, id: "P05", text: "All our break supervision staff are trained and feel confident to support great play in the school grounds.", },
+          { type: SCALE_WITH_COMMENT, id: "P06", text: "We have an outdoor learning policy", },
+          { type: SCALE_WITH_COMMENT, id: "P07", text: "We have a play policy", },
+          { type: SCALE_WITH_COMMENT, id: "P08", text: "We have a climate change action and mitigation policy, or it is clearly integrated with other policies.", },
+          { type: SCALE_WITH_COMMENT, id: "P09", text: "We have appointed a lead or co-ordinator in areas around climate change and sustainability in the curriculum, outdoor learning, and play.", },
           { type: SCALE_WITH_COMMENT, id: "P10", text: "All our pupils are actively involved in designing and creating school grounds improvements." },
           { type: SCALE_WITH_COMMENT, id: "P11", text: "A range of staff members, both teaching and non-teaching, are actively involved in designing and creating school grounds improvements." },
           { type: SCALE_WITH_COMMENT, id: "P12", text: "We relate our play, learning, and various action plans to the Global Goals for Sustainable Development." },
@@ -125,53 +84,17 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Ground Cover" },
-          {
-            tag: "p",
-            content:
-              "Using a satellite map, please estimate in percentages. Bing Maps offers the best detail in aerial photo mode. Use all areas of the school, not just where pupils have access, such as car parks.",
-          },
+          { tag: "p", content: "Using a satellite map, please estimate in percentages. Bing Maps offers the best detail in aerial photo mode. Use all areas of the school, not just where pupils have access, such as car parks.", },
         ],
         questions: [          
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC01",
-            text: "What area of grounds is covered by your buildings?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC02",
-            text: "What area of grounds is sports or play surfaces such as artificial grass, rubber matting or clay pitches?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC03",
-            text: "What area of grounds is solid / hard surfacing such as tarmac?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC04",
-            text: "What area of grounds is mown grass e.g. sports pitches?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC05",
-            text: "What area of grounds is for growing food or formal gardens?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC06",
-            text: "What area of grounds is covered by trees, shrubs, or hedges?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC07",
-            text: "What area of grounds is covered by long grass or meadow?",
-          },
-          {
-            type: PERCENTAGE_TYPE_WITH_COMMENT,
-            id: "GC08",
-            text: "What area of grounds is covered by something else e.g. beach, bogland, water, stone?",
-          },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC01", text: "What area of grounds is covered by your buildings?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC02", text: "What area of grounds is sports or play surfaces such as artificial grass, rubber matting or clay pitches?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC03", text: "What area of grounds is solid / hard surfacing such as tarmac?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC04", text: "What area of grounds is mown grass e.g. sports pitches?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC05", text: "What area of grounds is for growing food or formal gardens?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC06", text: "What area of grounds is covered by trees, shrubs, or hedges?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC07", text: "What area of grounds is covered by long grass or meadow?", },
+          { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC08", text: "What area of grounds is covered by something else e.g. beach, bogland, water, stone?", },
         ],
       },
       {
@@ -236,14 +159,8 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Cold Stress" },
-          {
-            tag: "p",
-            content: "A warming planet puts more energy into our atmosphere. This extra energy is reflected in many ways - one way is greater variation in temperatures. Your site may now experience more 'cold events' in winter and a more persistent wind, cooling the site down." 
-          },
-          {
-            tag: "p",
-            content: "The questions are looking at the whole site. You can use the notes to remind yourself where you can shelter from the wind and areas which remain colder for longer.", 
-          },
+          { tag: "p", content: "A warming planet puts more energy into our atmosphere. This extra energy is reflected in many ways - one way is greater variation in temperatures. Your site may now experience more 'cold events' in winter and a more persistent wind, cooling the site down." },
+          { tag: "p", content: "The questions are looking at the whole site. You can use the notes to remind yourself where you can shelter from the wind and areas which remain colder for longer.",  },
         ],
         questions: [
           { type: SCALE_WITH_COMMENT, id: "T12", text: "We have areas of our grounds which feel colder than the rest of the site." },
@@ -257,18 +174,9 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Wind Stress" },
-          {	
-            tag: "p",
-            content: "A warming planet puts more energy into our atmosphere. This extra energy is apparent in many ways - one way is increased winds around the planet. Your site may now experience more wind, both average wind days and extreme wind events during storms." 
-          },
-          {
-            tag: "p",
-            content: "Use this section to consider both how much wind you have on your site and how much your site shelters you from the winds. You should consider the average wind on your site and extreme wind events due to storms.", 
-          },
-          {
-            tag: "p",
-            content: "The questions are looking at the whole site. You can use the notes to remind yourself where sheltered areas are, where constantly windy areas are or where wind has or does cause problems."
-          },
+          {	tag: "p", content: "A warming planet puts more energy into our atmosphere. This extra energy is apparent in many ways - one way is increased winds around the planet. Your site may now experience more wind, both average wind days and extreme wind events during storms." },
+          { tag: "p", content: "Use this section to consider both how much wind you have on your site and how much your site shelters you from the winds. You should consider the average wind on your site and extreme wind events due to storms.", },
+          { tag: "p", content: "The questions are looking at the whole site. You can use the notes to remind yourself where sheltered areas are, where constantly windy areas are or where wind has or does cause problems." },
         ],
         questions: [
           { type: SCALE_WITH_COMMENT, id: "T19", text: "We have areas of the grounds which are windy on many days through the year." },
