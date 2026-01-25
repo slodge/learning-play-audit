@@ -23,3 +23,5 @@ export function get_survey_version(which: string): SurveyVersion {
 export function current_survey_version(): SurveyVersion {
   return _current_survey_version;
 }
+
+

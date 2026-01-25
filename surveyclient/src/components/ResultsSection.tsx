@@ -18,12 +18,8 @@ import {
   FixedCognitoUser
 } from "learning-play-audit-shared"
 import {
-  SCALE_WITH_COMMENT,
-  sectionQuestions,
-  SurveyVersion,
   current_survey_version,
   ResultMapping,
-  AllResultMappings,
   Result,
   Question
 } from "learning-play-audit-survey";

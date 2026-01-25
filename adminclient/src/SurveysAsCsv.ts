@@ -2,6 +2,8 @@ import {
   sectionQuestions,
   get_survey_version,
   SCALE_WITH_COMMENT,
+  AGEGROUP_WITH_COMMENT,
+  MOTIVATED_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
   TEXT_WITH_YEAR,
@@ -83,6 +85,12 @@ function renderSectionHeader(data: string[][], section: Section) {
     if (SCALE_WITH_COMMENT === type) {
       questionData[0].push(id, "");
       questionData[1].push("answer", "comment");
+    } else if (AGEGROUP_WITH_COMMENT === type) {
+      questionData[0].push(id, "");
+      questionData[1].push("answer", "comment");
+    } else if (MOTIVATED_WITH_COMMENT === type) {
+      questionData[0].push(id, "");
+      questionData[1].push("answer", "comment");
     } else if (USER_TYPE_WITH_COMMENT === type) {
       questionData[0].push(id, "");
       questionData[1].push("role", "details");
@@ -125,7 +133,11 @@ function renderSectionAnswers(
   function addQuestion({ type, id }: Question) {
     const response = sectionResponse[id] || { answer: "", comments: "" };
 
-    if (SCALE_WITH_COMMENT === type || USER_TYPE_WITH_COMMENT === type || PERCENTAGE_TYPE_WITH_COMMENT === type) {
+    if (SCALE_WITH_COMMENT === type || 
+        AGEGROUP_WITH_COMMENT === type ||
+        MOTIVATED_WITH_COMMENT === type ||
+        USER_TYPE_WITH_COMMENT === type || 
+        PERCENTAGE_TYPE_WITH_COMMENT === type) {
       const simpleResponse = response as QuestionAnswer;
       addAnswers(rowData, simpleResponse.answer, simpleResponse.comments);
     } else if (TEXT_AREA === type || TEXT_FIELD === type) {

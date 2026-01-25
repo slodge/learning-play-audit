@@ -24,6 +24,8 @@ export type AllResultMappings = {
 
 export const BACKGROUND = "background";
 export const SCALE_WITH_COMMENT = "scaleWithComment";
+export const MOTIVATED_WITH_COMMENT = "motivatedWithComment";
+export const AGEGROUP_WITH_COMMENT = "ageGroupWithComment";
 export const USER_TYPE_WITH_COMMENT = "userTypeWithComment";
 export const PERCENTAGE_TYPE_WITH_COMMENT = "percentageTypeWithComment";
 export const TEXT_AREA = "textArea";
@@ -32,6 +34,8 @@ export const TEXT_WITH_YEAR = "textWithYear";
 
 export type QuestionType =
   | typeof SCALE_WITH_COMMENT
+  | typeof MOTIVATED_WITH_COMMENT
+  | typeof AGEGROUP_WITH_COMMENT
   | typeof USER_TYPE_WITH_COMMENT
   | typeof PERCENTAGE_TYPE_WITH_COMMENT
   | typeof TEXT_AREA

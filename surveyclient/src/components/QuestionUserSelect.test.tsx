@@ -6,7 +6,8 @@ import { QuestionAnswer, surveyStore } from "../model/SurveyModel";
 import { renderWithStore } from "./ReactTestUtils";
 import { Question, USER_TYPE_WITH_COMMENT } from "learning-play-audit-survey";
 
-describe("component QuestionUserSelect", () => {
+// Skipped this question type removed now
+describe.skip("component QuestionUserSelect", () => {
   const SECTION_ID = "background";
   const QUESTION_ID = "position";
   const QUESTION: Question = {

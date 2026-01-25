@@ -10,6 +10,8 @@ import SectionBottomNavigation from "./SectionBottomNavigation";
 import {
   BACKGROUND,
   SCALE_WITH_COMMENT,
+  AGEGROUP_WITH_COMMENT,
+  MOTIVATED_WITH_COMMENT,
   TEXT_AREA,
   TEXT_WITH_YEAR,
   TEXT_FIELD,
@@ -27,6 +29,8 @@ import {
   getAnswers,
   QuestionAnswer,
 } from "../model/SurveyModel";
+import QuestionMotivatedWithComment from "./QuestionMotivatedWithComment";
+import QuestionAgeGroupWithComment from "./QuestionAgeGroupWithComment";
 
 export interface SectionProps {
   section: SurveySection;
@@ -63,6 +67,28 @@ function Section({ section }: SectionProps) {
       );
     }
 
+     if (MOTIVATED_WITH_COMMENT === question.type) {
+      return (
+        <QuestionMotivatedWithComment
+          key={key}
+          sectionId={sectionId}
+          question={question}
+          questionNumber={questionIndex}
+        />
+      );
+    }
+ 
+    if (AGEGROUP_WITH_COMMENT === question.type) {
+      return (
+        <QuestionAgeGroupWithComment
+          key={key}
+          sectionId={sectionId}
+          question={question}
+          questionNumber={questionIndex}
+        />
+      );
+    }
+  
     if (USER_TYPE_WITH_COMMENT === question.type) {
       return (
         <QuestionUserSelect

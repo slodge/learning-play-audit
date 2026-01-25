@@ -1,6 +1,8 @@
 import {
   get_survey_version,
   SCALE_WITH_COMMENT,
+  AGEGROUP_WITH_COMMENT,
+  MOTIVATED_WITH_COMMENT,
   TEXT_AREA,
   TEXT_FIELD,
   TEXT_WITH_YEAR,
@@ -469,7 +471,6 @@ function renderQuestionTypeSelectWithComment(
     renderAnswerWithComment(answer, comment),
   ];
 }
-
 function renderQuestionTypePercentageSelect(
   question: Question,
   questionNumber: number,
@@ -487,6 +488,66 @@ function renderQuestionTypePercentageSelect(
         return "lots (20% to 50%)";
       case "e":
         return "most (>50%)";
+      default:
+        return "Unknown: " + value;
+    }
+  }
+
+  const answer = response?.answer ? getAnswer(response.answer) : "";
+  const comment = response?.comments || "";
+
+  return [
+    renderQuestionText(questionNumber, question.text),
+    renderAnswerWithComment(answer, comment),
+  ];
+}
+
+function renderQuestionTypeAgeGroupSelect(
+  question: Question,
+  questionNumber: number,
+  response: QuestionAnswer
+) {
+  function getAnswer(value: string) {
+    switch (value) {
+      case "a":
+        return "early years";
+      case "b":
+        return "primary";
+      case "c":
+        return "secondary";
+      case "d":
+        return "other";
+      default:
+        return "Unknown: " + value;
+    }
+  }
+
+  const answer = response?.answer ? getAnswer(response.answer) : "";
+  const comment = response?.comments || "";
+
+  return [
+    renderQuestionText(questionNumber, question.text),
+    renderAnswerWithComment(answer, comment),
+  ];
+}
+
+function renderQuestionTypeMotivatedSelect(
+  question: Question,
+  questionNumber: number,
+  response: QuestionAnswer
+) {
+  function getAnswer(value: string) {
+    switch (value) {
+      case "a":
+        return "extremely";
+      case "b":
+        return "very";
+      case "c":
+        return "moderately";
+      case "d":
+        return "sligthly";
+      case "e":
+        return "not at all";
       default:
         return "Unknown: " + value;
     }
@@ -623,6 +684,26 @@ function renderQuestion(
       paragraphs.length,
       0,
       ...renderQuestionTypeUserSelect(
+        question,
+        questionIndex,
+        response as QuestionAnswer
+      )
+    );
+  } else if (AGEGROUP_WITH_COMMENT === type) {
+    paragraphs.splice(
+      paragraphs.length,
+      0,
+      ...renderQuestionTypeAgeGroupSelect(
+        question,
+        questionIndex,
+        response as QuestionAnswer
+      )
+    );
+  } else if (MOTIVATED_WITH_COMMENT === type) {
+    paragraphs.splice(
+      paragraphs.length,
+      0,
+      ...renderQuestionTypeMotivatedSelect(
         question,
         questionIndex,
         response as QuestionAnswer
