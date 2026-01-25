@@ -22,7 +22,7 @@ describe("component NavDrawer", () => {
 
     const expectedItemContent = [
       "Introduction",
-      "1Background Information5 questions remaining0/5",
+      "1Background Information9 questions remaining0/9",
       "2Policy and Practice30 questions remaining1/31",
       "3Nature and Sustainability24 questions remaining2/26",
       "4Temperature Management19 questions remaining5/24",
@@ -50,7 +50,7 @@ describe("component NavDrawer", () => {
 
     const expectedItemContent = [
       "Introduction",
-      "1Background Information5 questions remaining0/5",
+      "1Background Information9 questions remaining0/9",
       "2Policy and Practice31 questions remaining0/31",
       "3Nature and Sustainability26 questions remaining0/26",
       "4Temperature Management24 questions remaining0/24",
@@ -78,7 +78,7 @@ describe("component NavDrawer", () => {
 
     const expectedItemContent = [
       "Introduction",
-      "1Background Information5 questions remaining0/5",
+      "1Background Information9 questions remaining0/9",
       "2Policy and Practice31 questions remaining0/31",
       "3Nature and Sustainability26 questions remaining0/26",
       "4Temperature Management24 questions remaining0/24",

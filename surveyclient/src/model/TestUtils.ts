@@ -9,11 +9,15 @@ import { INTRODUCTION } from "./SurveySections";
 
 const SURVEY_ANSWERS: SurveyAnswers = {
   background: {
-    contactname: { answer: "", comments: "" },
-    localauthority: { answer: "", comments: "" },
-    position: { answer: "", comments: "" },
-    school: { answer: "", comments: "" },
-    telephone: { answer: "", comments: "" },
+    firstname: { answer: "", comments: "" },
+    lastname: { answer: "", comments: "" },
+    jobtitle: { answer: "", comments: "" },
+    organisation: { answer: "", comments: "" },
+    postcode: { answer: "", comments: "" },
+    agegroup: { answer: "", comments: "" },
+    motivatedoutdoor: { answer: "", comments: "" },
+    confidentoutdoor: { answer: "", comments: "" },
+    supportedoutdoor: { answer: "", comments: "" },
   },
   pandp: {
     P01: { answer: "", comments: "" },
