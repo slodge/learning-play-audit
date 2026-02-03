@@ -39,11 +39,10 @@ function IntroductionSection() {
       <div className="section introduction">
         <h1 className="title">Introduction</h1>
         <p>
-          This audit tool was developed by Learning through Landscapes (LtL) to help you reflect on your
-          outdoor spaces. This is not intended to be exhaustive or dictate your priorities, but rather to
-          provide an opportunity to reflect on your education practice, outdoor learning and play, with a
-          focus on how well adapted your spaces are to cope with the risks our changing climate brings
-          and the nature-based adaptations you can make.
+          Learning through Landscapes (LtL) developed this audit tool to help you reflect on and evaluate 
+          your outdoor space. Rather than being prescriptive, this audit offers a framework for reflection, 
+          encouraging you to consider your education practice, outdoor learning and play, and how well your 
+          spaces are adapted to build climate resilience in response to our changing climate.
         </p>
         <h2>
           How to use the audit
@@ -52,24 +51,46 @@ function IntroductionSection() {
           You should be able to complete the audit in around an hour using your existing knowledge of
           the site and can be done offline.
         </p>
+        <h2>
+          Who should participate?
+        </h2>
         <p>
-          This audit is best undertaken with a group of learners and adults from the school - different
-          views and experiences are important. Pupil insight is valuable as they often know the grounds
-          better than most, including hideaway places and what happens on windy, wet or hot days. Refer
-          to a satellite image of your school, as well as moving around the school grounds to support your
-          responses.
+          We strongly recommend completing this audit as a collaborative activity involving both staff 
+          and learners. Different perspectives enrich the process — pupils often have invaluable insights 
+          about the grounds, from hidden spots to how spaces function during extreme weather. Their 
+          everyday experiences matter.
         </p>
+        <h2>
+          Practical tips:
+        </h2>
+        <ul>
+          <li>
+          Have a satellite image of your school available for reference
+          </li>
+          <li>
+          Walk around the grounds while completing the audit to inform your responses
+          </li>
+          <li>
+          Complete the 'Policy and Practice' section in full before moving to subsequent sections, as 
+          questions are interconnected
+          </li>
+          <li>
+          Note that incomplete audits generate incomplete results due to the interlinked nature of the 
+          questions
+          </li>
+        </ul>
+        <h2>
+          Accessing your results
+        </h2>
         <p>
-          Select the closest matching statement for each question. Ensure you complete the &#39;Policy and
-          Practice&#39; section fully before proceeding to the next section. Please note that an incomplete
-          audit will create incomplete results, as the questions interlink with each other.
+          Your audit results will be available to view upon completing the audit. To save a copy, ensure 
+          you upload your survey response when online. This will be sent to your logged on email address.
         </p>
+        <h2>
+          Next steps
+        </h2>
         <p>
-          You will be able to view your audit results straight away. If you wish to save a copy, please
-          make sure you upload your survey response when online.
-        </p>
-        <p>
-          After completing this audit and gathering the results, engage with the pupils and other staff
+          After completing this audit and gathering the results, engage with the pupils and other staff 
           about what you have learned, and agree on what your priorities and plans for improvement are.
         </p>
         <p>
@@ -79,7 +100,7 @@ function IntroductionSection() {
           </b>
         </p>
         <p>
-          This audit is for non-commercial use only, Copywright Learning through Landscapes 2024
+          This audit is for non-commercial use only. Copyright Learning through Landscapes 2026
         </p>
       </div>
       <div className="section introduction">
@@ -111,37 +132,6 @@ function IntroductionSection() {
         <p>
           It is helpful if you answer as many questions as you are able to,
           however it is not compulsory to complete all questions.
-        </p>
-      </div>
-      <div className="section introduction">
-        <h1 className="title">Unitied Nations Sustainable Development Goals</h1>
-        <p>
-            This School Ground Climate Audit framework aligns with several United Nations Sustainable Development Goals (UNSDGs),
-            demonstrating how school grounds and outdoor learning practices contribute to global sustainability targets. 
-            The framework particularly supports:
-        </p>
-        <ul>
-          <li>
-            <b>Goal 3:</b> <i>Good Health and Well-being</i> through promoting outdoor play and physical activity
-          </li>
-          <li>
-            <b>Goal 4:</b> <i>Quality Education</i> via curriculum integration and outdoor learning opportunities
-          </li>
-          <li>
-            <b>Goal 11:</b> <i>Sustainable Cities and Communities</i> by creating inclusive, safe, and resilient school environments
-          </li>
-          <li>
-            <b>Goal 13:</b> <i>Climate Action</i> through carbon sequestration, climate adaptation features, and climate change education
-          </li>
-          <li>
-            <b>Goal 15:</b> <i>Life on Land</i> by creating and maintaining features for nature, biodiversity, and ecosystem health
-          </li>
-          <li>
-            <b>Goal 17:</b> <i>Partnerships for the Goals</i> by encouraging collaboration with communities and specialist partners
-          </li>
-        </ul>
-        <p>
-          These interconnected goals underscore the holistic approach needed to transform school grounds into educational and sustainable spaces.
         </p>
         <SectionBottomNavigation />
       </div>
