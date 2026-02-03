@@ -56,7 +56,7 @@ function IntroductionSection() {
         </h2>
         <p>
           We strongly recommend completing this audit as a collaborative activity involving both staff 
-          and learners. Different perspectives enrich the process—pupils often have invaluable insights 
+          and learners. Different perspectives enrich the process — pupils often have invaluable insights 
           about the grounds, from hidden spots to how spaces function during extreme weather. Their 
           everyday experiences matter.
         </p>
