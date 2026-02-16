@@ -88,7 +88,7 @@ cd ../emailSurveyLambda; npm install
 If it's the first time CDK use in an environment, the environment needs to be [prepared](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) for the deployment. Run the following first
 
 ```
-cdk bootstrap aws://AWS_ACCOUNT_NUMBER/REGION --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS
+cdk bootstrap aws://AWS_ACCOUNT_NUMBER/REGION --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS --context domainBase=BASE_DOMAIN
 ```
 Here `aws://AWS_ACCOUNT_NUMBER/REGION` is the AWS account and region to use for the deployment, e.g. `aws://1234567890/eu-west-2`.
 
@@ -97,7 +97,7 @@ Once that's done, the rest of the deploy should go smoothly
 
 ```
 cd PROJECT_ROOT/cdk-stacks
-cdk deploy PREFIX-Backend-dev --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS
+cdk deploy PREFIX-Backend-dev --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS --context domainBase=BASE_DOMAIN
 ```
 
 Here `PREFIX` is the resource prefix for your deployment, e.g. '`MySurvey`'. This needs to be unique to your deployment as it is used for resource name generation and S3 resource names must be unique within their AWS region.
@@ -108,9 +108,9 @@ Example as executed by Stuart in his account:
 ```
 aws sso login --profile Slodge-Admin
 
-cdk bootstrap aws://983641940485/eu-west-1 --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
+cdk bootstrap aws://983641940485/eu-west-1 --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com --context domainBase=slodge.com
 
-cdk deploy TESTING-Backend-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
+cdk deploy TESTING-Backend-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com --context domainBase=slodge.com
 ```
 
 The CDK will create and deploy a CloudFormation stack of the backend AWS components. If it completes successfully, it will return output like:
@@ -246,11 +246,28 @@ npm run build
 
 ### Deploy the frontend components - hosted with AWS
 
-As the two web clients are static sites, you can either deploy to AWS and direct incoming traffic to the correct CloudFront distribution, or just host them on your own websites. To deploy to AWS:
+Note: The frontend stack now includes a CloudFront custom domain certificate that must be created in `us-east-1`. You need to bootstrap that region once before deploying the frontend cert stack:
+
+```
+cdk bootstrap aws://AWS_ACCOUNT_NUMBER/us-east-1 --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS --context domainBase=BASE_DOMAIN
+```
+
+Because the frontend stack consumes the certificate from `us-east-1`, it uses CDK cross-region references. Make sure your CDK bootstrap is up to date (re-run `cdk bootstrap` if you see cross-region reference errors).
+
+Cross-region references also require the CDK stacks to have explicit `account` and `region`. This uses `CDK_DEFAULT_ACCOUNT` and `CDK_DEFAULT_REGION` from your AWS profile. If you see errors about missing regions, make sure your AWS profile has a default region configured (for example via `aws configure set region eu-west-1 --profile YOUR_PROFILE`).
+
+As the two web clients are static sites, you can either deploy to AWS and direct incoming traffic to the correct CloudFront distribution, or just host them on your own websites. To deploy to AWS, follow this recommended 3-step flow to allow time for DNS validation:
 
 ```
 cd PROJECT_ROOT/cdk-stacks
-cdk deploy PREFIX-Frontend-dev --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS
+cdk deploy PREFIX-FrontendCert-dev --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS --context domainBase=BASE_DOMAIN
+```
+
+After the cert stack is created, add the ACM DNS validation CNAME records in your DNS (self-hosted). Wait until the certificate status is `ISSUED` in ACM (`us-east-1`). Once issued, deploy the frontend:
+
+```
+cd PROJECT_ROOT/cdk-stacks
+cdk deploy PREFIX-Frontend-dev --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS --context domainBase=BASE_DOMAIN
 ```
 
 Use the same environment and prefix as for the backend above. The CDK will create and deploy a CloudFormation stack of the frontend AWS components. If it completes successfully, it will return output like:
@@ -269,10 +286,15 @@ arn:aws:cloudformation:eu-west-2:ACCOUNT_NUMBER:stack/LTLSurvey2-Frontend-dev/00
 For example, Stuart ran:
 
 ```
-cdk deploy TESTING-Frontend-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com
+cdk deploy TESTING-FrontendCert-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com --context domainBase=slodge.com
+
+# after DNS validation:
+cdk deploy TESTING-Frontend-dev --profile slodge-Admin --context env=dev --context nameprefix=TESTING --context surveyEmailBcc=lodge.stuart@gmail.com --context surveyEmailFrom=lodge.stuart@gmail.com --context domainBase=slodge.com
 ```
 
-The web client URLs are the endpoints of the two web clients in cloudfront. These can then be set up with DNS, Route53, etc.
+The web client URLs are the endpoints of the two web clients in CloudFront. The stack outputs now also include the custom domains and the CloudFront domains to use for DNS CNAME records.
+
+Because DNS is self hosted, ACM certificate validation will require adding CNAME validation records manually. These are shown in the ACM certificate details in the AWS console after deployment. Once validated, point your custom subdomains to the CloudFront domains from the stack outputs.
 
 If this fails, then one option Stuart found was that the size of the build folders (at `surveyclient/build` and `adminclient/build`) could be too large - causing timeouts - so delete those folders and rebuild.
 

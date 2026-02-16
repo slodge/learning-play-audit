@@ -1,0 +1,27 @@
+
+Running dev on LtL account
+
+Outputs:
+dev-Backend-dev.LTLclientAPIendpoint = https://jyvl0t5ycf.execute-api.eu-west-1.amazonaws.com/prod/
+dev-Backend-dev.SurveyClientApiEndpointEBB28C68 = https://jyvl0t5ycf.execute-api.eu-west-1.amazonaws.com/prod/
+dev-Backend-dev.SurveyResourcesbucket = dev-dev-surveyresources
+dev-Backend-dev.SurveyResponseSummariesindex = SummaryIndex
+dev-Backend-dev.SurveyResponsestable = dev-dev-SurveyResponses
+dev-Backend-dev.Surveyadminidentitypoolid = eu-west-1:69b7b4d0-e6e4-4b10-b29e-9dc8c340deff
+dev-Backend-dev.Surveyadminuserpoolid = eu-west-1_7m32rOjz4
+dev-Backend-dev.Surveyadminuserpoolwebclientid = 16je7mjadl8a44k10chjvr5r65
+dev-Backend-dev.Surveyuserpoolid = eu-west-1_d1BWfGA8I
+dev-Backend-dev.Surveyuserpoolwebclientid = 7in0birt67ll0eq3afg2qkuhrs
+Stack ARN:
+arn:aws:cloudformation:eu-west-1:883637895935:stack/dev-Backend-dev/6f666530-0aa1-11f1-93be-06d01b439147
+
+
+Outputs:
+dev-Frontend-dev.AdminWebClientCloudFrontDomain = d1sezcus4d39wd.cloudfront.net
+dev-Frontend-dev.AdminWebClientCustomDomain = admin.dev.slodge.com
+dev-Frontend-dev.AdminWebClientURL = https://d1sezcus4d39wd.cloudfront.net
+dev-Frontend-dev.SurveyWebClientCloudFrontDomain = d9mwze43rhe93.cloudfront.net
+dev-Frontend-dev.SurveyWebClientCustomDomain = survey.dev.slodge.com
+dev-Frontend-dev.SurveyWebClientURL = https://d9mwze43rhe93.cloudfront.net
+Stack ARN:
+arn:aws:cloudformation:eu-west-1:883637895935:stack/dev-Frontend-dev/56a05090-0aa3-11f1-acdb-027621877f75

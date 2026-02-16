@@ -3,6 +3,7 @@ const { Bucket, BlockPublicAccess, CfnBucket } = require("aws-cdk-lib/aws-s3");
 const cloudfront = require("aws-cdk-lib/aws-cloudfront");
 const origins = require("aws-cdk-lib/aws-cloudfront-origins");
 const s3deploy = require("aws-cdk-lib/aws-s3-deployment");
+const acm = require("aws-cdk-lib/aws-certificatemanager");
 
 class CdkFrontendStack extends cdk.Stack {
   /**
@@ -14,13 +15,41 @@ class CdkFrontendStack extends cdk.Stack {
   constructor(scope, stackId, props) {
     super(scope, stackId, props);
 
+    const { surveyDomain, adminDomain, certificateArn } = props;
+    const certificate = acm.Certificate.fromCertificateArn(
+      this,
+      "FrontendCustomDomainCert",
+      certificateArn
+    );
+
     // React website hosting - survey client
-    addHostedWebsite(this, "SurveyWebClient", "../surveyclient/build", "/survey");
+    addHostedWebsite(
+      this,
+      "SurveyWebClient",
+      "../surveyclient/build",
+      "/survey",
+      surveyDomain,
+      certificate
+    );
 
     // React website hosting - admin client
-    addHostedWebsite(this, "AdminWebClient", "../adminclient/build", "/");
+    addHostedWebsite(
+      this,
+      "AdminWebClient",
+      "../adminclient/build",
+      "/",
+      adminDomain,
+      certificate
+    );
 
-    function addHostedWebsite(scope, name, pathToWebsiteContents, destinationKeyPrefix) {
+    function addHostedWebsite(
+      scope,
+      name,
+      pathToWebsiteContents,
+      destinationKeyPrefix,
+      customDomain,
+      customCertificate
+    ) {
       const BUCKET_NAME = name;
       const DISTRIBUTION_NAME = name + "Distribution";
       const DEPLOY_NAME = name + "DeployWithInvalidation";
@@ -95,6 +124,8 @@ class CdkFrontendStack extends cdk.Stack {
           },
           additionalBehaviors: additionalBehaviors,
           defaultRootObject: 'index.html',
+          domainNames: [customDomain],
+          certificate: customCertificate,
         }
       );
 
@@ -111,6 +142,16 @@ class CdkFrontendStack extends cdk.Stack {
       new cdk.CfnOutput(scope, name + " URL", {
         value: "https://" + distribution.domainName,
         description: "External URL for " + name + " website",
+      });
+
+      new cdk.CfnOutput(scope, name + " CloudFront Domain", {
+        value: distribution.domainName,
+        description: "CloudFront domain for " + name + " website",
+      });
+
+      new cdk.CfnOutput(scope, name + " Custom Domain", {
+        value: customDomain,
+        description: "Custom domain for " + name + " website",
       });
     }
   }
