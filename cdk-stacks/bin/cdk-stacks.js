@@ -40,8 +40,8 @@ function buildDomain(envName, baseDomain, label) {
   return `${label}.${normalisedEnv}.${normalisedBase}`;
 }
 
-const surveyDomain = buildDomain(envStageName, domainBase, "survey");
-const adminDomain = buildDomain(envStageName, domainBase, "admin");
+const surveyDomain = buildDomain(envStageName, domainBase, "groundsaudit");
+const adminDomain = buildDomain(envStageName, domainBase, "groundsauditadmin");
 
 const backendStack = new CdkBackendStack(
   app,
