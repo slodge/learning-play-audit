@@ -217,6 +217,12 @@ REACT_APP_AWS_CLIENT_API_ENDPOINT=[PREFIX-Backend-dev.LTLclientAPIendpoint]
 
 #### Build the shared component
 
+Checklist reminder (per environment):
+- Deploy backend
+- Copy backend outputs into `adminclient/.env.local` and `surveyclient/.env.local`
+- Build the frontend clients
+- Deploy the frontend stacks
+
 Create a production build of the [sharedcode](../sharedcode)
 
 ```
@@ -276,6 +282,8 @@ cd PROJECT_ROOT/cdk-stacks
 cdk deploy PREFIX-Frontend-dev --profile AWS_PROFILE --context env=dev --context nameprefix=PREFIX --context surveyEmailBcc=EMAIL_ADDRESS --context surveyEmailFrom=EMAIL_ADDRESS --context domainBase=ltl.org.uk
 ```
 
+If DNS/email validation will take a long time (hours or days), it is safe to stop the `cdk deploy` process (Ctrl+C). The stack will remain pending; you can re-run the same deploy command after validation is complete.
+
 Use the same environment and prefix as for the backend above. The CDK will create and deploy a CloudFormation stack of the frontend AWS components. If it completes successfully, it will return output like:
 
 ```
@@ -301,6 +309,37 @@ cdk deploy TESTING-Frontend-dev --profile slodge-Admin --context env=dev --conte
 The web client URLs are the endpoints of the two web clients in CloudFront. The stack outputs now also include the custom domains and the CloudFront domains to use for DNS CNAME records.
 
 Because DNS is self hosted, ACM certificate validation will require adding CNAME validation records manually. These are shown in the ACM certificate details in the AWS console after deployment. Once validated, point your custom subdomains to the CloudFront domains from the stack outputs.
+
+### Example: TEST environment commands
+
+The following commands show the current TEST environment setup (using the `TEST` prefix and `ltl.org.uk`):
+
+```
+cdk deploy TEST-Backend-test --profile LtlAdmin \
+  --context env=test \
+  --context nameprefix=TEST \
+  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailFrom=groundsaudit@ltl.org.uk \
+  --context domainBase=ltl.org.uk
+```
+
+```
+cdk deploy TEST-FrontendCert-test --profile LtlAdmin \
+  --context env=test \
+  --context nameprefix=TEST \
+  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailFrom=groundsaudit@ltl.org.uk \
+  --context domainBase=ltl.org.uk
+```
+
+```
+cdk deploy TEST-Frontend-test --profile LtlAdmin \
+  --context env=test \
+  --context nameprefix=TEST \
+  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailFrom=groundsaudit@ltl.org.uk \
+  --context domainBase=ltl.org.uk
+```
 
 If this fails, then one option Stuart found was that the size of the build folders (at `surveyclient/build` and `adminclient/build`) could be too large - causing timeouts - so delete those folders and rebuild.
 
