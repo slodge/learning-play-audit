@@ -13,6 +13,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [tcChecked, setTcChecked] = useState(false);
   const [gdprChecked, setGdprChecked] = useState(false);
+  const [cookieChecked, setCookieChecked] = useState(false);
   const [gdprPopup, setGdprPopup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +39,7 @@ for any other purpose.`;
     return (
       tcChecked &&
       gdprChecked &&
+      cookieChecked &&
       email.length > 0 &&
       password.length >= MIN_PASSWORD_LENGTH
     );
@@ -149,6 +151,15 @@ for any other purpose.`;
         <span>I agree to the {policyLink("LtL GDPR Policy")}</span>,
         gdprChecked,
         setGdprChecked
+      )}
+      {checkbox(
+        "cookie-check",
+        <span>
+          I agree to the {policyLink("Cookie Policy")} and allow analytics
+          cookies (Google Analytics).
+        </span>,
+        cookieChecked,
+        setCookieChecked
       )}
 
       <div className="action-row">
