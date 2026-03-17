@@ -168,7 +168,7 @@ export const all_results: Result[] =
   {
     "section": "Campus: Carbon Management",
     "short_title": "Carbon",
-    "statement": "How well does your site manage carbon, particularly sequestering it in into the soil?",
+    "statement": "How well does your site manage carbon, particularly sequestering it into the soil?",
     "bad": "Your site does little to sequester carbon and is likely dominated by hard surfaces. Begin by planting trees, shrubs, and ground cover to improve soil health and carbon storage.",
     "ok": "Your site includes some carbon-sequestering features, but there is room for improvement. Increase vegetation and consider composting to enhance soil carbon storage.",
     "good": "Your site actively supports carbon sequestration through planting and soil management. Maintain and expand these efforts to contribute to climate mitigation.",
