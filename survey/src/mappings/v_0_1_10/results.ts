@@ -4,6 +4,7 @@ export const all_results: Result[] =
 [
   {
     "section": "Culture: Vision & Values",
+    "short_title": "V&V",
     "statement": "Your staff broadly share the same vision and share a responsibility to teach about climate change and sustainability, utilising outdoor learning when appropriate.",
     "bad": "Your school lacks a shared vision for climate change and sustainability education. Begin by engaging staff and pupils to co-create clear values and responsibilities for outdoor learning and sustainability.",
     "ok": "Your school shows some shared vision, but it is not fully embedded. Strengthen collaboration among staff and pupils to ensure climate change and sustainability education is consistent across the curriculum.",
@@ -15,6 +16,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Culture: Policy & Practice",
+    "short_title": "P&P",
     "statement": "You have a range of positive & constructive policies and practice in place across climate change, sustainability, outdoor learning and play (themes which interact with each other).",
     "bad": "Your policies and practices around climate change, sustainability, and outdoor learning are limited. Start by reviewing existing policies and identifying gaps to create a whole-school approach.",
     "ok": "You have some positive policies and practices in place, but they are not fully embedded. Focus on involving all staff and pupils and integrating sustainability across the curriculum and grounds management.",
@@ -25,6 +27,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Culture: Ambition",
+    "short_title": "Ambition",
     "statement": "You have an ambition to improve, and hope for many changes in the future.",
     "bad": "Your ambition for improvement is limited. Begin by setting clear goals for climate change education, sustainability, and outdoor learning, and communicate these to staff and pupils.",
     "ok": "You have some ambition for change, but it is not yet supported by strong policy or practice. Work on translating ambition into actionable plans and measurable progress.",
@@ -35,6 +38,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Culture: Sustainability features",
+    "short_title": "Sustainability",
     "statement": "Your site offers wider sustainability features",
     "bad": "Your site currently offers few sustainability features. Begin by identifying affordable options such as growing areas or active travel initiatives to make progress.",
     "ok": "Your site includes some sustainability features, but there is room for improvement. Consider adding features that support energy efficiency, biodiversity, and sustainable travel.",
@@ -46,6 +50,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Culture: Inclusion",
+    "short_title": "Inclusion",
     "statement": "Your grounds are inclusive.",
     "bad": "Your grounds are not fully inclusive. Start by assessing physical accessibility and cultural barriers to ensure all pupils can learn and play outdoors.",
     "ok": "Your grounds show some inclusive features, but improvements are needed. Focus on creating spaces that welcome diverse needs and promote equity in outdoor learning.",
@@ -57,6 +62,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Curriculum: Climate Change & Sustainability Education",
+    "short_title": "Education",
     "statement": "Themes such as climate change education and sustainability, or the use of outdoor learning, are cross-cutting and embedded in your wider curriculum.",
     "bad": "Climate change and sustainability themes are largely absent from your curriculum. Begin embedding these topics across subjects and link them to outdoor learning opportunities.",
     "ok": "Your curriculum includes some elements of climate change and sustainability education, but they are not fully integrated. Strengthen cross-curricular links and practical experiences.",
@@ -68,6 +74,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Curriculum: Play",
+    "short_title": "Play",
     "statement": "Your policy & practice increases opportunities for play.",
     "bad": "Your policy and practice provide limited opportunities for play. Begin by reviewing break times and before/after school periods to create safe, engaging spaces for pupils to play and socialise.",
     "ok": "Your school offers some opportunities for play, but they are not consistent or well-supported. Focus on improving outdoor spaces and policies to encourage active, inclusive play throughout the day.",
@@ -79,6 +86,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Features for learning and play",
+    "short_title": "Features",
     "statement": "There are features in your grounds created and maintained to facilitate learning and play.",
     "bad": "Your grounds lack features that support outdoor learning and play. Start by adding basic elements such as gathering spaces, nature areas, or play structures to encourage use by all pupils.",
     "ok": "Your grounds include some features for learning and play, but they are limited or underused. Consider improving accessibility and adding resources to support formal and informal outdoor learning.",
@@ -90,6 +98,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Nature",
+    "short_title": "Nature",
     "statement": "How good is your site for nature?",
     "bad": "Your site offers very little for nature, and current management may work against biodiversity. Begin by introducing plants, trees, and habitats to create a more nature-friendly environment.",
     "ok": "Your site supports some nature features, but there is room for improvement. Focus on enhancing biodiversity and using nature-based solutions to address climate challenges like heat and flooding.",
@@ -101,6 +110,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Wind",
+    "short_title": "Wind",
     "statement": "You have features or plan features which will shelter us from the wind",
     "bad": "Your site offers little protection from wind. Begin by identifying exposed areas and introducing natural windbreaks such as trees or hedges to improve shelter.",
     "ok": "Your site has some features that reduce wind impact, but gaps remain. Consider adding more sheltering elements to protect pupils and buildings from increasing wind speeds.",
@@ -112,6 +122,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Heat",
+    "short_title": "Heat",
     "statement": "You have features which reduce heat on your site",
     "bad": "Your site lacks features to reduce heat. Start by creating shaded areas and introducing vegetation to cool outdoor spaces and prevent overheating during heat events.",
     "ok": "Your site includes some cooling features, but they are limited. Expand shade provision and increase greenery to keep temperatures manageable during hot periods.",
@@ -123,6 +134,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Cold",
+    "short_title": "Cold",
     "statement": "Do you currently provide shelter from the cold?",
     "bad": "Your site provides minimal shelter from cold conditions. Begin by adding windbreaks and covered areas to reduce exposure during winter months.",
     "ok": "Your site offers some protection from cold, but improvements are needed. Focus on reducing icy surfaces and creating sheltered spaces for outdoor learning and play.",
@@ -134,6 +146,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Excess Water",
+    "short_title": "Water",
     "statement": "How does your site currently manage excess water?",
     "bad": "Your site does very little to manage excess water, increasing the risk of flooding. Begin by introducing drainage solutions and nature-based features such as rain gardens or permeable surfaces.",
     "ok": "Your site has some measures to manage excess water, but they are not comprehensive. Focus on improving drainage and adding features that absorb and slow water flow during heavy rainfall.",
@@ -142,6 +155,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Drought",
+    "short_title": "Drought",
     "statement": "How well do you manage water on your site to reduce drought risk?",
     "bad": "Your site lacks strategies to manage drought conditions. Start by introducing water-retention features such as mulching, planting drought-tolerant species, and collecting rainwater.",
     "ok": "Your site has some measures to reduce drought risk, but they are limited. Expand efforts to retain water and support vegetation during dry periods.",
@@ -153,6 +167,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Carbon Management",
+    "short_title": "Carbon",
     "statement": "How well does your site manage carbon, particularly sequestering it in into the soil?",
     "bad": "Your site does little to sequester carbon and is likely dominated by hard surfaces. Begin by planting trees, shrubs, and ground cover to improve soil health and carbon storage.",
     "ok": "Your site includes some carbon-sequestering features, but there is room for improvement. Increase vegetation and consider composting to enhance soil carbon storage.",
@@ -163,6 +178,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Campus: Air Quality",
+    "short_title": "Air",
     "statement": "What are you doing to improve air quality on your site?",
     "bad": "Your site does very little to improve air quality. Begin by introducing natural barriers such as trees, hedges, and shrubs to reduce pollution and protect pupils from poor air quality.",
     "ok": "Your site includes some measures to improve air quality, but they are limited. Expand planting and consider strategies to reduce exposure to pollution during peak times.",
@@ -173,6 +189,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Community: Involvement",
+    "short_title": "Involvement",
     "statement": "Your wider community is involved in supporting climate change, sustainability, outdoor learning, play and the use of your school grounds.",
     "bad": "Your wider community is not involved in supporting outdoor learning or sustainability. Begin by engaging parents, local groups, and volunteers to help create and maintain outdoor spaces.",
     "ok": "Your community is somewhat involved, but engagement could be stronger. Focus on building partnerships that support both the creation and use of school grounds beyond school hours.",
@@ -184,6 +201,7 @@ export const all_results: Result[] =
   },
   {
     "section": "Community: Partnerships with specialists",
+    "short_title": "Partnerships",
     "statement": "How well do you partner with specialists to extend learning?",
     "bad": "Your school rarely partners with specialists to extend learning. Start by identifying local experts or organisations who can support climate change and sustainability education.",
     "ok": "Your school has some partnerships with specialists, but they are not fully integrated. Strengthen collaboration to ensure expert input in planning and delivery of outdoor learning.",

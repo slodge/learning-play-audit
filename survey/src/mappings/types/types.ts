@@ -1,6 +1,7 @@
 
 export type Result = {
     section: string;
+    short_title: string;
     statement: string;
     bad: string;
     ok: string;

@@ -307,11 +307,12 @@ function ResultsSection() {
 
       // create the labels as an array of section names without their leading "Key:" text
       let labels = group.map(result => result.section.split(":")[1].trim());
+      let short_labels = group.map(result => result.short_title.trim());
 
       updateChart(
         chartWrapper.smallContainer,
         chartWrapper.smallInstance,
-        labels,
+        short_labels,
         results,
         resultColours,
         true
@@ -377,6 +378,9 @@ function ResultsSection() {
 
   return (
     <div className="section results">
+      <div className="mobile-orientation-hint">
+        For best viewing on mobile, rotate your device to landscape.
+      </div>
       {createAreaChartHolder()}
       {Object.keys(groupedResults).map(createChartHolder)}
       <SectionBottomNavigation />
