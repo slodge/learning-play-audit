@@ -30,6 +30,8 @@
     "start": "npx webpack serve --config config/webpack.development.config.js",
     "build": "npx webpack --config config/webpack.production.config.js",
     "test": "env-cmd -f .env jest",
+    "build:test": "env-cmd -f .env.test npm run build",
+    "build:live": "env-cmd -f .env.live npm run build",
     "build:ltltest": "env-cmd -f .env.ltltest npm run build",
     "build:ltllive": "env-cmd -f .env.ltllive npm run build"
   },

@@ -1,0 +1,12 @@
+{
+  "name": "learning-play-audit-root",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf adminclient/build surveyclient/build",
+    "prep:shared": "npm --prefix sharedcode install && npm --prefix sharedcode run build && (cd sharedcode && npm pack)",
+    "prep:survey": "npm --prefix survey install && npm --prefix survey run build && (cd survey && npm pack)",
+    "prep:emailSurveyLambda": "cp survey/learning-play-audit-survey-0.10.0.tgz cdk-stacks/resources/emailSurveyLambda/survey/learning-play-audit-survey-0.10.0.tgz && npm --prefix cdk-stacks/resources/emailSurveyLambda install && npm --prefix cdk-stacks/resources/emailSurveyLambda run build",
+    "build:test": "npm run clean && npm run prep:shared && npm run prep:survey && npm run prep:emailSurveyLambda && npm --prefix adminclient run build:test && npm --prefix surveyclient run build:test",
+    "build:live": "npm run clean && npm run prep:shared && npm run prep:survey && npm run prep:emailSurveyLambda && npm --prefix adminclient run build:live && npm --prefix surveyclient run build:live"
+  }
+}

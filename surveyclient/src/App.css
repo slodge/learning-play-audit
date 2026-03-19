@@ -377,6 +377,17 @@ textarea {
   display: none;
 }
 
+.section .mobile-orientation-hint {
+  display: none;
+  background: #f5f2ea;
+  border: 1px solid #e0d8c8;
+  color: #4a3b1f;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
 .section .title {
   font-family: var(--font-family-ltl-heading);
   text-align: center;
@@ -1285,6 +1296,10 @@ textarea {
 
   .section .mobile-header .nav-menu-item {
     border: none;
+  }
+
+  .section .mobile-orientation-hint {
+    display: block;
   }
 
   .section.authenticator,

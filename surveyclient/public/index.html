@@ -12,6 +12,22 @@
       name="description"
       content="Learning through Landscapes School Grounds Audit"
     />
+    <!-- Google Analytics (GA4) -->
+    <script>
+      (function () {
+        var measurementId = "%REACT_APP_GA_MEASUREMENT_ID%";
+        if (!measurementId) return;
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + measurementId;
+        document.head.appendChild(s);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag("js", new Date());
+        gtag("config", measurementId);
+      })();
+    </script>
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a

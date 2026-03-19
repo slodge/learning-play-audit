@@ -250,6 +250,22 @@ npm install
 npm run build
 ```
 
+#### Optional: One-command build from repo root
+
+You can also build all required artifacts from the repo root (cleans client builds, builds/packs `sharedcode`, builds/packs `survey`, then builds the clients):
+
+```
+cd PROJECT_ROOT
+npm run build:test
+```
+
+```
+cd PROJECT_ROOT
+npm run build:live
+```
+
+These root scripts also refresh the `emailSurveyLambda` build by copying the packed survey tgz into `cdk-stacks/resources/emailSurveyLambda/survey/` and rebuilding the lambda to ensure updated survey code is picked up.
+
 ### Deploy the frontend components - hosted with AWS
 
 Note: The frontend stack now includes a CloudFront custom domain certificate that must be created in `us-east-1`. You need to bootstrap that region once before deploying the frontend cert stack:
@@ -336,6 +352,37 @@ cdk deploy TEST-FrontendCert-test --profile LtlAdmin \
 cdk deploy TEST-Frontend-test --profile LtlAdmin \
   --context env=test \
   --context nameprefix=TEST \
+  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailFrom=groundsaudit@ltl.org.uk \
+  --context domainBase=ltl.org.uk
+```
+
+### Example: LIVE environment commands
+
+The following commands show the current LIVE environment setup (using the `LIVE` prefix and `ltl.org.uk`):
+
+```
+cdk deploy LIVE-Backend-live --profile LtlAdmin \
+  --context env=live \
+  --context nameprefix=LIVE \
+  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailFrom=groundsaudit@ltl.org.uk \
+  --context domainBase=ltl.org.uk
+```
+
+```
+cdk deploy LIVE-FrontendCert-live --profile LtlAdmin \
+  --context env=live \
+  --context nameprefix=LIVE \
+  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailFrom=groundsaudit@ltl.org.uk \
+  --context domainBase=ltl.org.uk
+```
+
+```
+cdk deploy LIVE-Frontend-live --profile LtlAdmin \
+  --context env=live \
+  --context nameprefix=LIVE \
   --context surveyEmailBcc=climateschool180@ltl.org.uk \
   --context surveyEmailFrom=groundsaudit@ltl.org.uk \
   --context domainBase=ltl.org.uk
