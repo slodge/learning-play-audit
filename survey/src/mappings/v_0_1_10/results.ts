@@ -61,7 +61,7 @@ export const all_results: Result[] =
     ]
   },
   {
-    "section": "Curriculum: Climate Change & Sustainability Education",
+    "section": "Curriculum: Climate Change Education",
     "short_title": "Education",
     "statement": "Themes such as climate change education and sustainability, or the use of outdoor learning, are cross-cutting and embedded in your wider curriculum.",
     "bad": "Climate change and sustainability themes are largely absent from your curriculum. Begin embedding these topics across subjects and link them to outdoor learning opportunities.",

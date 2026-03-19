@@ -285,7 +285,7 @@ export const result_mappings: AllResultMappings = {
       }
     ]
   },
-  "Curriculum: Climate Change & Sustainability Education": {
+  "Curriculum: Climate Change Education": {
     "A": [
       {
         "section": "pandp",
