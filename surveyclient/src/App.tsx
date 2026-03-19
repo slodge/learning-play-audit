@@ -214,14 +214,14 @@ function App() {
           <h1 className="title large">
             Welcome to the Learning through Landscapes
             <br />
-            Learning and Play Audit Survey
+            School Grounds Audit
           </h1>
           <h1 className="title small">
             Welcome to the
             <br />
             <span className="ltl-title">Learning through Landscapes</span>
             <br />
-            Learning and Play Audit Survey
+            School Grounds Audit
           </h1>
         </>
       );
@@ -231,7 +231,7 @@ function App() {
       <h1 className="title">
         Learning through Landscapes
         <br />
-        Learning and Play Audit Survey
+        School Grounds Audit
       </h1>
     );
   }
