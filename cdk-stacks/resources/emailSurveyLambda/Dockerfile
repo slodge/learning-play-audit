@@ -19,6 +19,8 @@ COPY fonts ${LAMBDA_TASK_ROOT}/fonts
 COPY survey ${LAMBDA_TASK_ROOT}/survey
 
 # Install NPM dependencies for function - will also create correct binaries for canvas and sharp
+# Drop lockfile to avoid stale integrity for local tarball, then install dependencies
+RUN rm -f package-lock.json
 RUN npm install
 
 # TODO - this LD_PRELOAD line fails in the logs - but doesn't seem to have any noticeable effect
