@@ -136,18 +136,20 @@ async function sendSurveyConfirmationEmail(survey: SurveyResponse) {
 <p><br/></p>
 
 <p>Thank you for taking the time to complete the school grounds audit. In answering
-the questions we expect that you, your pupils and other adults have
-considered carefully how you should develop and use your outdoor
-space.</p>
+each question we expect that you, your pupils and other adults should now be 
+considering how you could develop your outdoor space for climate change 
+education, adaptation, outdoor learning and play.</p>
 
-<p>Your completed form and images are attached. We hope you find it a useful place to
-start considering what learning and play experiences you would like
-to provide for your children.</p>
+<p><br/></p>
 
-<p>We have collated a resource of useful tools, only available to schools that have
-completed the School Grounds Audit Tool.</p>
+<p>Your completed audit is attached.</p>
 
-<p><a href="https://www.ltl.org.uk/audit-complete/">https://www.ltl.org.uk/audit-complete/</a></p>
+<p><br/></p>
+
+<p>Please visit <a href="https://www.ltl.org.uk/">the LtL website</a> to access further resources 
+to support outdoor learning and making school ground changes.</p>
+
+<p><br/></p>
 
 <p>We are thankful to Scottish Tech Army for creating this resource for Learning through Landscapes.</p>
 
@@ -157,8 +159,8 @@ completed the School Grounds Audit Tool.</p>
 
 <p><br/></p>
 
-<p>The LtL Scotland team</p>
-<p><font color="#7f7f7f"><b>Learning through Landscapes – the UK’s leading outdoor learning and play charity for 30 years.</b></font></p>
+<p>Learning through Landscapes</p>
+<p><font color="#7f7f7f"><b>Learning through Landscapes – the UK’s leading outdoor learning and play charity for over 30 years.</b></font></p>
 <p><font color="#7f7f7f"><b>Phone:&nbsp;</b></font><font color="#afcd4b"><b>01786 465 934 </b></font></p>
 <p><font color="#7f7f7f"><b>Web:</b></font><a href="https://www.ltl.org.uk/"><font color="#afcd4b"><span style="text-decoration: none"><b>https://www.ltl.org.uk</b></span></font></a></p>
 
@@ -168,8 +170,8 @@ and Wales (No. 803270) and in Scotland (No. SCO38890) and a company
 limited by guarantee registered in England (No. 2485660).&nbsp;</font></p>
 
 <p><font color="#7f7f7f" size="1" style="font-size: 7pt"><span lang="en-US">Registered
-office: </span></font></font><font color="#7f7f7f"><font size="1" style="font-size: 7pt">Ground
-Floor, F Block, Clarendon House, Monarch Way, Winchester, Hampshire, SO22 5PW </font></p>
+office: </span></font></font><font color="#7f7f7f"><font size="1" style="font-size: 7pt">The Point
+Leigh Road, Eastleigh SO50 9DE</font></p>
 
 <p><font color="#7f7f7f" size="1" style="font-size: 7pt">Office in Scotland: 1 Beta Centre, Stirling University Innovation Park, Stirling, FK9 4NF</font></p>
 
