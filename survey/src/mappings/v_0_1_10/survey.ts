@@ -36,7 +36,7 @@ export const sectionsContent: Section[] = [
       {
         title: {
           tag: "p",
-          content: "This section is for school staff to fill in. Please use a wide selection of staff across age groups and subject specialism, age, gender and experience.",
+          content: "This section is for school staff to fill in. Consider whole school opinion from staff across different age groups, subject specialism and experience.",
         },
         questions: [
           { type: SCALE_WITH_COMMENT, id: "P01", text: "Outdoor learning is an expectation of all our staff, who are trained and supported to deliver learning outdoors.", },
@@ -84,7 +84,7 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Ground Cover" },
-          { tag: "p", content: "Using a satellite map, please estimate in percentages. Bing Maps offers the best detail in aerial photo mode. Use all areas of the school, not just where pupils have access, such as car parks.", },
+          { tag: "p", content: "Using a satellite map (e.g. Google Maps), please estimate in percentages. Use all areas of the school, not just where pupils have access, such as car parks.", },
         ],
         questions: [          
           { type: PERCENTAGE_TYPE_WITH_COMMENT, id: "GC01", text: "What area of grounds is covered by your buildings?", },
@@ -137,9 +137,7 @@ export const sectionsContent: Section[] = [
     subsections: [
       {
         title: [
-          { tag: "p", content: "A warming planet puts more energy into our atmosphere. This extra energy is apparent in many ways - one way is that both the underlying temperature across the UK will increase and we will also see hotter and more sustained 'heat waves' in many parts of the UK." },
-          { tag: "p", content: "Use this section to consider both how much your site could be  vulnerable to heat and how much your site can reduce the extreme heat. Some sites, which are dominated by buildings and dark, hard surfaces, perhaps facing south and in urban areas, are very vulnerable and heat should be a matter of urgent consideration and action." },
-          { tag: "p", content: "The questions are looking at the whole site. You can use the notes to remind yourself where the hottest areas are or where they are shaded and cool regularly. You can also keep notes on ideas you have for some areas to use trees, shrubs, water, colour or wind to cool the area." },          
+          { tag: "h2", content: "Heat Stress" },
         ],	
         questions: [
           { type: SCALE_WITH_COMMENT, id: "T01", text: "We have areas of the grounds which get very hot in the summer, through being in the full sun." },
@@ -159,8 +157,6 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Cold Stress" },
-          { tag: "p", content: "A warming planet puts more energy into our atmosphere. This extra energy is reflected in many ways - one way is greater variation in temperatures. Your site may now experience more 'cold events' in winter and a more persistent wind, cooling the site down." },
-          { tag: "p", content: "The questions are looking at the whole site. You can use the notes to remind yourself where you can shelter from the wind and areas which remain colder for longer.",  },
         ],
         questions: [
           { type: SCALE_WITH_COMMENT, id: "T12", text: "We have areas of our grounds which feel colder than the rest of the site." },
@@ -174,9 +170,6 @@ export const sectionsContent: Section[] = [
       {
         title: [
           { tag: "h2", content: "Wind Stress" },
-          {	tag: "p", content: "A warming planet puts more energy into our atmosphere. This extra energy is apparent in many ways - one way is increased winds around the planet. Your site may now experience more wind, both average wind days and extreme wind events during storms." },
-          { tag: "p", content: "Use this section to consider both how much wind you have on your site and how much your site shelters you from the winds. You should consider the average wind on your site and extreme wind events due to storms.", },
-          { tag: "p", content: "The questions are looking at the whole site. You can use the notes to remind yourself where sheltered areas are, where constantly windy areas are or where wind has or does cause problems." },
         ],
         questions: [
           { type: SCALE_WITH_COMMENT, id: "T19", text: "We have areas of the grounds which are windy on many days through the year." },
@@ -196,11 +189,6 @@ export const sectionsContent: Section[] = [
     id: "water",
     subsections: [
       {
-        title: [
-          { tag: "p", content: "A warming planet puts more energy into our atmosphere. This extra energy is apparent in many ways - one way is increased water in the atmosphere, which will increase both how often it rains and increase intense rain storms." },
-          { tag: "p", content: "Use this section to consider how much water arrives at your site, how it is managed on site, and how it is released from your site. In the UK it is predicted that there is a significant issue depending on your local geography: the south and south east face long drought periods, the north and west face increases in the number of rainy days, and all areas face more rain storms and surface water flooding. All school sites should look to slow down the movement of water, retaining it for longer to reduce drought periods and also reduce any contribution to flooding down stream of the school site." },
-          { tag: "p", content: "The questions are looking at the whole site. You can use the notes to remind yourself where issues are, and perhaps ideas to help manage water on site." },
-        ],
         questions: [
           { type: SCALE_WITH_COMMENT, id: "WA01", text: "We have a stream or river, or have natural running water on site or on a boundary." },
           { type: SCALE_WITH_COMMENT, id: "WA02", text: "We have area(s) on which water puddles or pools (including a pond) when it rains, but it disappears slowly afterwards, and the water does not cause a problem for us." },
