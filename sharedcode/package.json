@@ -91,7 +91,8 @@
   },
   "scripts": {
     "build": "tsc && babel --extensions .ts,.tsx src --out-dir dist",
-    "test": "jest"
+    "test": "jest",
+    "postpack": "cp ./learning-play-audit-shared-0.1.0.tgz ../surveyclient/; cd ../surveyclient/; npm uninstall learning-play-audit-shared; npm install ../sharedcode/learning-play-audit-shared-0.1.0.tgz; cd ../adminclient/; npm uninstall learning-play-audit-shared; npm install ../sharedcode/learning-play-audit-shared-0.1.0.tgz; cd ../sharedcode"
   },
   "babel": {
     "presets": [
