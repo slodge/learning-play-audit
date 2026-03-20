@@ -44,6 +44,12 @@ function IntroductionSection() {
           encouraging you to consider your education practice, outdoor learning and play, and how well your 
           spaces are adapted to build climate resilience in response to our changing climate.
         </p>
+        <p>
+          Scientific research has informed us that climate change is reshaping our planet, disrupting 
+          ecosystems and communities worldwide. Our school grounds feel these effects directly — but they 
+          also present an opportunity to apply nature-based solutions that manage water, improve air 
+          quality, and support wildlife and children's wellbeing.
+        </p>
         <h2>
           How to use the audit
         </h2>
