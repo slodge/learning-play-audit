@@ -334,7 +334,7 @@ The following commands show the current TEST environment setup (using the `TEST`
 cdk deploy TEST-Backend-test --profile LtlAdmin \
   --context env=test \
   --context nameprefix=TEST \
-  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailBcc=climate180@ltl.org.uk \
   --context surveyEmailFrom=groundsaudit@ltl.org.uk \
   --context domainBase=ltl.org.uk
 ```
@@ -343,7 +343,7 @@ cdk deploy TEST-Backend-test --profile LtlAdmin \
 cdk deploy TEST-FrontendCert-test --profile LtlAdmin \
   --context env=test \
   --context nameprefix=TEST \
-  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailBcc=climate180@ltl.org.uk \
   --context surveyEmailFrom=groundsaudit@ltl.org.uk \
   --context domainBase=ltl.org.uk
 ```
@@ -352,7 +352,7 @@ cdk deploy TEST-FrontendCert-test --profile LtlAdmin \
 cdk deploy TEST-Frontend-test --profile LtlAdmin \
   --context env=test \
   --context nameprefix=TEST \
-  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailBcc=climate180@ltl.org.uk \
   --context surveyEmailFrom=groundsaudit@ltl.org.uk \
   --context domainBase=ltl.org.uk
 ```
@@ -365,7 +365,7 @@ The following commands show the current LIVE environment setup (using the `LIVE`
 cdk deploy LIVE-Backend-live --profile LtlAdmin \
   --context env=live \
   --context nameprefix=LIVE \
-  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailBcc=climate180@ltl.org.uk \
   --context surveyEmailFrom=groundsaudit@ltl.org.uk \
   --context domainBase=ltl.org.uk
 ```
@@ -374,7 +374,7 @@ cdk deploy LIVE-Backend-live --profile LtlAdmin \
 cdk deploy LIVE-FrontendCert-live --profile LtlAdmin \
   --context env=live \
   --context nameprefix=LIVE \
-  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailBcc=climate180@ltl.org.uk \
   --context surveyEmailFrom=groundsaudit@ltl.org.uk \
   --context domainBase=ltl.org.uk
 ```
@@ -383,7 +383,7 @@ cdk deploy LIVE-FrontendCert-live --profile LtlAdmin \
 cdk deploy LIVE-Frontend-live --profile LtlAdmin \
   --context env=live \
   --context nameprefix=LIVE \
-  --context surveyEmailBcc=climateschool180@ltl.org.uk \
+  --context surveyEmailBcc=climate180@ltl.org.uk \
   --context surveyEmailFrom=groundsaudit@ltl.org.uk \
   --context domainBase=ltl.org.uk
 ```
