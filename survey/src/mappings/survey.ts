@@ -2,15 +2,17 @@
 
 import { Question, Section, SurveyVersion } from "./types/types";
 import { v_0_1_10 } from "./v_0_1_10/index";
+import { v_0_1_11 } from "./v_0_1_11/index";
 
 type VersionLookup = {
   [key: string]: SurveyVersion
 }
 
-const _current_survey_version: SurveyVersion = v_0_1_10;
+const _current_survey_version: SurveyVersion = v_0_1_11;
 
 const _all_versions: VersionLookup = {}
 _all_versions[v_0_1_10.version] = v_0_1_10;
+_all_versions[v_0_1_11.version] = v_0_1_11;
 
 export function survey_versions(): string[] {
   return Object.keys(_all_versions);
