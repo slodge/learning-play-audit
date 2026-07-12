@@ -1,5 +1,4 @@
 import client from "../pageobjects/Client";
-import path from "path";
 
 describe("Survey Client", () => {
   const timeSuffix = " " + new Date().toLocaleTimeString();
@@ -87,25 +86,6 @@ describe("Survey Client", () => {
     }
   }
 
-  function addPhoto(filepath) {
-    const fileUpload = client.addPhotoButton;
-    /**
-     * The css class name "upload-data-file-input hidden" is just an example
-     * and you can replace with your app.
-     */
-    browser.execute(
-      // assign style to elem in the browser
-      (el) => (el.style.display = "block"),
-      // pass in element so we don't need to query it again in the browser
-      fileUpload
-    );
-    fileUpload.waitForDisplayed();
-
-    const filePath = path.join(__dirname, filepath);
-    fileUpload.setValue(filePath);
-
-    client.photoDescription.setValue("test photo description" + timeSuffix);
-  }
 
   it("complete survey", () => {
     client.open();
@@ -235,9 +215,6 @@ describe("Survey Client", () => {
     setOptionalScaleWithComment("reflection-CPD");
     setOptionalScaleWithComment("reflection-straightforward");
     setOptionalScaleWithComment("reflection-ideas");
-
-    client.navMenuLink("Photos").click();
-    addPhoto("../testdata/image2.jpeg");
 
     client.navMenuLink("Submit survey").click();
     client.submitSurveyButton.click();

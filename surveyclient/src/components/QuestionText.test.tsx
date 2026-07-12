@@ -16,7 +16,6 @@ describe("component QuestionText", () => {
     text: QUESTION_TEXT,
     type: TEXT_FIELD,
   };
-  const PHOTO_BUTTON_TEXT = "add photoAdd Relevant Photo?";
 
   it("initial empty state - text area", () => {
     renderWithStore(
@@ -29,7 +28,7 @@ describe("component QuestionText", () => {
     );
 
     expect(question()).toHaveTextContent(
-      QUESTION_NUMBER + QUESTION_TEXT + PHOTO_BUTTON_TEXT
+      QUESTION_NUMBER + QUESTION_TEXT
     );
     expect(textarea()).toHaveTextContent("");
   });
@@ -44,7 +43,7 @@ describe("component QuestionText", () => {
     );
 
     expect(question()).toHaveTextContent(
-      QUESTION_NUMBER + QUESTION_TEXT + PHOTO_BUTTON_TEXT
+      QUESTION_NUMBER + QUESTION_TEXT
     );
     expect(textarea()).toHaveTextContent("");
   });

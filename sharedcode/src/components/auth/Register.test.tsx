@@ -33,12 +33,14 @@ describe("component Register", () => {
     const passwordInput = getByLabelText(PASSWORD_LABEL);
     const tncCheck = container.querySelector("#tnc-check")!;
     const gdprCheck = container.querySelector("#gdpr-check")!;
+    const cookieCheck = container.querySelector("#cookie-check")!;
     const registerButton = container.querySelector("#register-button");
 
     expect(emailInput).toHaveDisplayValue("");
     expect(passwordInput).toHaveDisplayValue("");
     expect(tncCheck).not.toHaveClass("checked");
     expect(gdprCheck).not.toHaveClass("checked");
+    expect(cookieCheck).not.toHaveClass("checked");
     expect(registerButton).toBeDisabled();
 
     // Form complete
@@ -46,6 +48,7 @@ describe("component Register", () => {
     await user.type(passwordInput, "12345678");
     await user.click(tncCheck);
     await user.click(gdprCheck);
+    await user.click(cookieCheck);
     expect(registerButton).not.toBeDisabled();
 
     // Email empty
@@ -88,6 +91,14 @@ describe("component Register", () => {
     // Restore
     await user.click(gdprCheck);
     expect(registerButton).not.toBeDisabled();
+
+    // Cookie unchecked
+    await user.click(cookieCheck);
+    expect(registerButton).toBeDisabled();
+
+    // Restore
+    await user.click(cookieCheck);
+    expect(registerButton).not.toBeDisabled();
   });
 
   it("confirm success", async () => {
@@ -97,6 +108,7 @@ describe("component Register", () => {
     await user.type(getByLabelText(PASSWORD_LABEL), "12345678");
     await user.click(container.querySelector("#tnc-check")!);
     await user.click(container.querySelector("#gdpr-check")!);
+    await user.click(container.querySelector("#cookie-check")!);
     await user.click(registerButton);
 
     expect(register).toHaveBeenCalledTimes(1);
@@ -119,6 +131,7 @@ describe("component Register", () => {
     await user.type(getByLabelText(PASSWORD_LABEL), "12345678");
     await user.click(container.querySelector("#tnc-check")!);
     await user.click(container.querySelector("#gdpr-check")!);
+    await user.click(container.querySelector("#cookie-check")!);
     await user.click(registerButton);
 
     expect(registerButton).toBeDisabled();
@@ -138,6 +151,7 @@ describe("component Register", () => {
     await user.type(getByLabelText(PASSWORD_LABEL), "12345678");
     await user.click(container.querySelector("#tnc-check")!);
     await user.click(container.querySelector("#gdpr-check")!);
+    await user.click(container.querySelector("#cookie-check")!);
     await user.click(registerButton);
 
     expect(registerButton).toBeDisabled();

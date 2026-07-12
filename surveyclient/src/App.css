@@ -75,7 +75,6 @@ textarea {
 .submit-survey-button,
 .previous-section-button,
 .next-section-button,
-.add-photos-button,
 .add-note-button {
   border: 0;
   font-family: var(--font-family-ltl-bold);
@@ -84,7 +83,6 @@ textarea {
 
 /* Icon buttons - remove default styling */
 .add-note-button,
-.add-photos-button,
 .previous-section-button,
 .next-section-button,
 .menu-button {
@@ -113,8 +111,6 @@ textarea {
 .question textarea:focus,
 .question input[type="text"]:hover,
 .question input[type="text"]:focus,
-.photo-container textarea:hover,
-.photo-container textarea:focus,
 .toggle-button-group {
   box-shadow: 0px 2px 4px #00000080;
 }
@@ -156,8 +152,7 @@ textarea {
 
 /* Override for non-shadowed links */
 .section.authenticator button.inline-action,
-.section.authenticator button.tooltip.small,
-.dialog .photo-container button.delete-button {
+.section.authenticator button.tooltip.small {
   box-shadow: none;
 }
 
@@ -311,8 +306,7 @@ textarea {
   border-color: black;
 }
 
-.nav-menu-item#results,
-.nav-menu-item#gallery {
+.nav-menu-item#results {
   border-color: var(--colour-ltl-purple);
 }
 
@@ -507,34 +501,6 @@ textarea {
   margin-bottom: 5px;
 }
 
-/** Photo gallery section **/
-
-.section.gallery {
-  align-items: stretch;
-}
-.section.gallery .section-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.section.gallery .section-header label {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.section.gallery .section-header label .label-text {
-  font-family: var(--font-family-ltl-bold);
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.section.gallery .section-header label svg {
-  margin-left: 10px;
-}
-
 /** Results charts section **/
 
 .section.results h2 {
@@ -603,16 +569,9 @@ textarea {
   text-align: center;
 }
 
-.dialog.add-note .question-line,
-.dialog.add-photos .question-line {
+.dialog.add-note .question-line {
   padding: 0;
   margin-bottom: 20px;
-}
-
-/** Confirm add photos dialog **/
-
-.dialog.confirm-add-photos {
-  width: 40%;
 }
 
 /** Add note dialog **/
@@ -625,45 +584,6 @@ textarea {
 .dialog.add-note textarea {
   align-self: stretch;
   margin: 0;
-}
-
-/** Add photo dialog **/
-
-.dialog.add-photos {
-  max-height: 80vh;
-}
-
-.dialog.add-photos .add-photos-scroll {
-  overflow-y: auto;
-  width: 100%;
-}
-
-.dialog.add-photos .photo-container {
-  flex-wrap: nowrap;
-}
-
-.dialog.add-photos .question-line label {
-  position: absolute;
-  right: 0;
-  top: -15px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.dialog.add-photos .question-line label .label-text {
-  font-family: var(--font-family-ltl-bold);
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.dialog.add-photos .question-line label svg {
-  margin-left: 10px;
-}
-
-.dialog.add-photos .question-text {
-  margin-right: 110px;
-  margin-left: 50px;
 }
 
 /** Submit progress dialog **/
@@ -727,41 +647,6 @@ textarea {
   border-right: none; /* Prevent double borders */
 }
 
-/** Photos (in gallery section and add photo dialog) **/
-
-.photo-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: stretch;
-  flex-wrap: nowrap;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-top: grey 2px solid;
-  align-items: flex-start;
-  position: relative;
-}
-
-.photo-container .photo {
-  max-width: 40%;
-  width: 40%;
-  margin: 5px;
-}
-
-.photo-container .delete-button {
-  margin: 5px;
-  border: 0;
-  background-color: transparent;
-  padding: 0;
-}
-
-.photo-container textarea {
-  margin: 5px;
-  width: 100%;
-  min-width: 50px;
-  box-sizing: border-box;
-  align-self: stretch;
-}
-
 .question {
   width: 100%;
   display: flex;
@@ -782,18 +667,10 @@ textarea {
   margin-right: 50px;
 }
 
-.add-note-button,
-.add-photos-button {
+.add-note-button {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.question.dated .question-line .add-photos-button,
-.question.text .question-line .add-photos-button {
-  position: absolute;
-  top: 15px;
-  right: 0;
 }
 
 .question.text .question-line .question-text,
@@ -804,10 +681,6 @@ textarea {
 
 .question.select .add-note-button {
   padding-left: 30px;
-}
-
-.question.select .add-photos-button {
-  margin-left: 10px;
 }
 
 .question-divider {
@@ -828,8 +701,7 @@ textarea {
 }
 
 .dialog textarea,
-.question textarea,
-.photo-container textarea {
+.question textarea {
   resize: none;
   border: solid 1px black;
   padding: 5px 10px;
@@ -1194,15 +1066,13 @@ textarea {
 
   .root,
   .dialog.add-note,
-  .dialog.add-photos,
   .nav-menu-container.popup,
   textarea {
     font-size: 14px;
   }
 
   .toggle-button-group,
-  .action-row .action-button-group,
-  .photo-container {
+  .action-row .action-button-group {
     flex-direction: column;
   }
 
@@ -1350,23 +1220,9 @@ textarea {
   }
 
   .dialog.add-note textarea,
-  .question textarea,
-  .photo-container textarea,
-  .photo-container .photo,
-  .photo-container .delete-button {
+  .question textarea {
     margin-left: 0;
     margin-right: 0;
-  }
-
-  .photo-container .delete-button {
-    position: absolute;
-    top: 25px;
-    right: 15px;
-  }
-
-  .photo-container .photo {
-    max-width: 100%;
-    width: 100%;
   }
 
   .question-text {
@@ -1439,9 +1295,4 @@ textarea {
   .app-bar.main .title {
     font-size: 18px;
   }
-}
-
-/* Hide add photos button in all sections */
-.add-photos-button {
-  display: none;
 }

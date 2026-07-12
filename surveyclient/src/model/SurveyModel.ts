@@ -5,9 +5,6 @@ import {
   REFRESH_STATE,
   RESTART_SURVEY,
   RESET_STATE,
-  ADD_PHOTO,
-  DELETE_PHOTO,
-  UPDATE_PHOTO_DESCRIPTION,
   CONFIRM_WELCOME,
   SET_CURRENT_SECTION,
 } from "./ActionTypes";
@@ -24,9 +21,7 @@ import {
   current_survey_version,
 } from "learning-play-audit-survey";
 import localforage from "localforage";
-import getPhotoUuid from "./SurveyPhotoUuid";
 import { INTRODUCTION } from "./SurveySections";
-import { Buffer } from "buffer/";
 
 // eslint-disable-next-line jest/require-hook
 localforage.config({
@@ -67,21 +62,9 @@ export interface SectionAnswerCount {
 
 export type SurveyAnswerCounts = Record<string, SectionAnswerCount>;
 
-export interface PhotoDetails {
-  description: string;
-  sectionId?: string;
-  questionId?: string;
-}
-
-export interface Photo {
-  imageData: string;
-}
-
 export interface SurveyStoreState extends AuthStoreState {
   answers: SurveyAnswers;
   answerCounts: SurveyAnswerCounts;
-  photos: Record<string, Photo>;
-  photoDetails: Record<string, PhotoDetails>;
   hasSeenSplashPage: boolean;
   hasEverLoggedIn: boolean;
   initialisingState: boolean;
@@ -135,8 +118,6 @@ function initialState(): SurveyStoreState {
   return {
     answers: createEmptyAnswers(),
     answerCounts: createAnswerCounts(),
-    photos: {},
-    photoDetails: {},
     authState: REGISTER,
     errorMessage: "",
     hasSeenSplashPage: false,
@@ -180,7 +161,6 @@ function surveyAnswersReducer(
       console.debug("RESET_STATE");
       newState = { ...initialState(), initialisingState: false };
       writeAnswers(newState);
-      writePhotos(newState);
       return newState;
 
     case RESTART_SURVEY:
@@ -189,38 +169,15 @@ function surveyAnswersReducer(
         ...state,
         answers: createEmptyAnswers(),
         answerCounts: createAnswerCounts(),
-        photos: {},
-        photoDetails: {},
         initialisingState: false,
         currentSectionId: INTRODUCTION,
       };
       writeAnswers(newState);
-      writePhotos(newState);
       return newState;
 
     case REFRESH_STATE:
       console.debug("REFRESH_STATE", action.state);
       return action.state;
-
-    case ADD_PHOTO:
-      console.debug("ADD_PHOTO");
-      newState = addPhoto(state, action);
-      writeAnswers(newState);
-      writePhotos(newState);
-      return newState;
-
-    case DELETE_PHOTO:
-      console.debug("DELETE_PHOTO");
-      newState = deletePhoto(state, action);
-      writeAnswers(newState);
-      writePhotos(newState);
-      return newState;
-
-    case UPDATE_PHOTO_DESCRIPTION:
-      console.debug("UPDATE_PHOTO_DESCRIPTION", action);
-      newState = updatePhotoDescription(state, action);
-      writeAnswers(newState);
-      return newState;
 
     case SET_AUTH_STATE:
       console.debug("SET_AUTH_STATE");
@@ -239,112 +196,21 @@ function surveyAnswersReducer(
   }
 }
 
-function addPhoto(
-  state: SurveyStoreState,
-  action: AnyAction
-): SurveyStoreState {
-  console.debug("addPhoto", action.sectionId, action.questionId);
-  const photoId = getPhotoUuid();
-  return {
-    ...state,
-    photoDetails: {
-      ...state.photoDetails,
-      [photoId]: {
-        description: "",
-        sectionId: action.sectionId,
-        questionId: action.questionId,
-      },
-    },
-    photos: { ...state.photos, [photoId]: { imageData: action.imageData } },
-  };
-}
-
-export function loadPhotos(
-  files: Blob[],
-  sectionId?: string,
-  questionId?: string
-): AppThunk {
-  console.debug("loadPhoto", sectionId, questionId);
-  return function (dispatch) {
-    return Promise.allSettled(
-      files.map((file) =>
-        readFileAsync(file).then((data) =>
-          dispatch({
-            type: ADD_PHOTO,
-            imageData: Buffer.from(data).toString("base64"),
-            sectionId,
-            questionId,
-          })
-        )
-      )
-    );
-  };
-}
-
-function readFileAsync(file: Blob): Promise<ArrayBuffer> {
-  return new Promise((resolve, reject) => {
-    let reader = new FileReader();
-
-    reader.onload = () => {
-      console.debug("photo loaded");
-      resolve(reader.result as ArrayBuffer);
-    };
-    reader.onerror = reject;
-
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-function deletePhoto(
-  state: SurveyStoreState,
-  action: AnyAction
-): SurveyStoreState {
-  console.debug("deletePhoto", action);
-  const result: SurveyStoreState = { ...state };
-  result.photoDetails = { ...state.photoDetails };
-  delete result.photoDetails[action.photoId];
-  result.photos = { ...state.photos };
-  delete result.photos[action.photoId];
-  return result;
-}
-
-function updatePhotoDescription(
-  state: SurveyStoreState,
-  action: AnyAction
-): SurveyStoreState {
-  const photoId = action.photoId;
-  const photo = state.photoDetails[photoId];
-  if (photo === undefined) {
-    return state;
-  }
-  return {
-    ...state,
-    photoDetails: {
-      ...state.photoDetails,
-      [photoId]: { ...photo, description: action.description },
-    },
-  };
-}
-
 export function refreshState(): AppThunk {
   return function (dispatch, getState) {
-    return Promise.all([readAnswers(), readPhotos()])
-      .then(([storedAnswers, storedPhotos]) => {
+    return readAnswers()
+      .then(storedAnswers => {
         const state = { ...getState(), initialisingState: false };
         if (storedAnswers === null) {
           writeAnswers(state).catch((err) => console.error(err));
         } else {
           storedAnswers = checkAndRepairStateAgainstSurvey(storedAnswers);
         }
-        if (storedPhotos === null) {
-          writePhotos(state).catch((err) => console.error(err));
-        }
         dispatch({
           type: REFRESH_STATE,
           state: {
             ...state,
             ...(storedAnswers !== null ? storedAnswers : {}),
-            ...(storedPhotos !== null ? storedPhotos : {}),
           },
         });
       })
@@ -355,7 +221,6 @@ export function refreshState(): AppThunk {
 const writeAnswers = ({
   answers,
   answerCounts,
-  photoDetails,
   hasSeenSplashPage,
   hasEverLoggedIn,
   initialisingState,
@@ -369,7 +234,6 @@ const writeAnswers = ({
   return localforage.setItem("answers", {
     answers,
     answerCounts,
-    photoDetails,
     hasSeenSplashPage,
     hasEverLoggedIn,
     surveyVersion,
@@ -377,17 +241,6 @@ const writeAnswers = ({
 };
 const readAnswers = (): Promise<SurveyStoreState | null> =>
   localforage.getItem("answers");
-
-const writePhotos = ({ photos, initialisingState }: SurveyStoreState) => {
-  console.debug("writePhotos");
-  if (initialisingState) {
-    console.debug("Still initialisingState, skipping writePhotos");
-    return Promise.resolve();
-  }
-  return localforage.setItem("photos", { photos });
-};
-const readPhotos = (): Promise<SurveyStoreState | null> =>
-  localforage.getItem("photos");
 
 function checkAndRepairStateAgainstSurvey(
   stored: SurveyStoreState 
@@ -443,8 +296,6 @@ function checkAndRepairStateAgainstSurvey(
       delete stored.answerCounts[sectionId];
     }
   });
-
-  // TODO - possibly should also prune/correct some photos...
 
   return stored;
 }
@@ -549,17 +400,11 @@ export function surveyReducer(
 
 export const surveyStore = createStore(surveyReducer, applyMiddleware(thunk));
 
-export function getPhotoDetails(state: SurveyStoreState) {
-  return state.photoDetails;
-}
 export function getAnswers(state: SurveyStoreState) {
   return state.answers;
 }
 export function getAnswerCounts(state: SurveyStoreState) {
   return state.answerCounts;
-}
-export function getPhotos(state: SurveyStoreState) {
-  return state.photos;
 }
 export function getHasEverLoggedIn(state: SurveyStoreState) {
   return state.hasEverLoggedIn;

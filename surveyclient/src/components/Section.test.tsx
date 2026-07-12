@@ -45,7 +45,6 @@ const SECTION_CONTENT: SurveySection = {
 let sectionContent: SurveySection;
 
 const NOTE_BUTTON_TEXT = "Add Additional Information?";
-const PHOTO_BUTTON_TEXT = "add photoAdd Relevant Photo?";
 
 describe("component Section", () => {
   beforeEach(() => {
@@ -70,13 +69,10 @@ describe("component Section", () => {
     ).toStrictEqual([
       "I am ateacherparentpupilother Details",
       "2question 2strongly agreetend to agreetend to disagreestrongly disagree" +
-        NOTE_BUTTON_TEXT +
-        PHOTO_BUTTON_TEXT,
+        NOTE_BUTTON_TEXT,
       "3question 3" +
-        PHOTO_BUTTON_TEXT +
         "Improvement 1YearImprovement 2YearImprovement 3Year",
       "4question 4" + 
-        PHOTO_BUTTON_TEXT + 
         "test P04",
     ]);
     expect(section().getAttribute("class")).not.toContain("background");

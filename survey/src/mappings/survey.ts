@@ -19,6 +19,10 @@ export function survey_versions(): string[] {
 }
 
 export function get_survey_version(which: string): SurveyVersion {
+  const result = _all_versions[which];
+  if (!result) {
+    throw new Error(`Survey version not found: ${which}`)
+  }
   return _all_versions[which];
 }
 

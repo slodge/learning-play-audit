@@ -4,11 +4,6 @@ FROM public.ecr.aws/lambda/nodejs:22
 RUN dnf remove -y microdnf-dnf && \
   microdnf install -y dnf
 
-# Libraries needed for sharp
-RUN dnf -y update \
-&& dnf -y groupinstall "Development Tools" \
-&& dnf install -y gcc-c++ cairo-devel libjpeg-turbo-devel pango-devel giflib-devel zlib-devel librsvg2-devel
-
 # File structure to run build within docker image
 RUN mkdir ${LAMBDA_TASK_ROOT}/fonts
 RUN mkdir ${LAMBDA_TASK_ROOT}/src
@@ -18,7 +13,7 @@ COPY src ${LAMBDA_TASK_ROOT}/src
 COPY fonts ${LAMBDA_TASK_ROOT}/fonts
 COPY survey ${LAMBDA_TASK_ROOT}/survey
 
-# Install NPM dependencies for function - will also create correct binaries for canvas and sharp
+# Install NPM dependencies for function - will also create correct binaries for canvas
 # Drop lockfile to avoid stale integrity for local tarball, then install dependencies
 RUN rm -f package-lock.json
 RUN npm install

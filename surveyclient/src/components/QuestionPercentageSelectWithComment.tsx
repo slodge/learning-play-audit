@@ -3,7 +3,6 @@ import "../App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_ANSWER } from "../model/ActionTypes";
 import QuestionAddCommentButton from "./QuestionAddCommentButton";
-import QuestionAddPhotosButton from "./QuestionAddPhotosButton";
 import { renderMarkup } from "./RenderMarkup";
 import { getAnswers, QuestionAnswer } from "../model/SurveyModel";
 import { Question } from "learning-play-audit-survey";
@@ -66,12 +65,6 @@ export default function QuestionPercentageSelectWithComment({
         </div>
         <div className="action-button-group">
           <QuestionAddCommentButton
-            sectionId={sectionId}
-            questionId={questionId}
-            questionNumber={questionNumber}
-            questionText={question.text}
-          />
-          <QuestionAddPhotosButton
             sectionId={sectionId}
             questionId={questionId}
             questionNumber={questionNumber}

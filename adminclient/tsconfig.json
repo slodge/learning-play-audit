@@ -6,6 +6,10 @@
     "isolatedModules": true,
     "outDir": "dist",
     "esModuleInterop": true,
-    "jsx": "react"
+    "jsx": "react",
+    "types": [
+      "node",
+      "jest"
+    ]
   }
 }

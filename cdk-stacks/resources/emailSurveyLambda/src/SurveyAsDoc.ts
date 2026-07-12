@@ -1,5 +1,4 @@
 import {
-  get_survey_version,
   SCALE_WITH_COMMENT,
   AGEGROUP_WITH_COMMENT,
   MOTIVATED_WITH_COMMENT,
@@ -28,13 +27,7 @@ import {
   VerticalPositionAlign,
   AlignmentType,
   VerticalPositionRelativeFrom,
-  TableCell,
-  TableRow,
-  Table,
-  WidthType,
-  BorderStyle,
   HorizontalPositionAlign,
-  PageBreakBefore,
 } from "docx";
 import {
   REPORT_FOOTER_BASE64,
@@ -43,14 +36,10 @@ import {
 import { getCharts, SurveyChart } from "./SurveyCharts";
 import {
   DatedQuestionAnswer,
-  PhotoDetails,
-  PhotosData,
   QuestionAnswer,
   SectionAnswers,
   SurveyAnswers,
 } from "./SurveyModel";
-
-const IMAGE_NOT_FOUND = "[Image not found]";
 
 const PAGE_MARGINS = {
   top: convertInchesToTwip(2.4),
@@ -59,52 +48,15 @@ const PAGE_MARGINS = {
   left: convertInchesToTwip(1),
 };
 
-const PHOTO_TABLE_CELL_OPTIONS = {
-  borders: {
-    top: { style: BorderStyle.NONE },
-    bottom: { style: BorderStyle.NONE },
-    left: { style: BorderStyle.NONE },
-    right: { style: BorderStyle.NONE },
-  },
-  margins: {
-    marginUnitType: WidthType.DXA,
-    top: 100,
-    bottom: 100,
-    left: 100,
-    right: 100,
-  },
-};
-
 export async function exportSurveyAsDocx(
   surveyVersion: SurveyVersion,
   surveyResponse: SurveyAnswers,
-  photosDetails: PhotoDetails[],
-  photosData: PhotosData
 ) {
   const surveyQuestionParagraphs = surveyVersion.sections
     .map((section) => {
       return renderSection(section, surveyResponse[section.id]);
     })
     .flat();
-
-  let photosParagraphs: (Paragraph | Table)[] = [];
-  if (photosDetails?.length > 0) {
-    const photosTable = new Table({
-      rows: photosDetails.map((photoRef) =>
-        renderPhotoRow(photoRef.fullsize.key, photoRef.description)
-      ),
-      width: { size: 100, type: WidthType.PERCENTAGE },
-    });
-
-    photosParagraphs = [
-      new Paragraph({
-        text: "Survey Photos",
-        heading: HeadingLevel.HEADING_1,
-        pageBreakBefore: true,
-      }),
-      photosTable,
-    ];
-  }
 
   const charts = await getCharts(surveyVersion, surveyResponse);
 
@@ -221,7 +173,6 @@ export async function exportSurveyAsDocx(
         new Paragraph({
           children: [
             new ImageRun({
-              // data: fs.readFileSync("./reportFooter.png"),
               data: Buffer.from(REPORT_FOOTER_BASE64, "base64"),
               transformation: { height: 54, width: 794 },
               floating: {
@@ -241,56 +192,6 @@ export async function exportSurveyAsDocx(
       ],
     }),
   };
-
-  function getScaledPhotoDimensions(height: number, width: number) {
-    const MAX_PHOTO_WIDTH = 290;
-    const scaledHeight = (height * MAX_PHOTO_WIDTH) / width;
-    return { height: scaledHeight, width: MAX_PHOTO_WIDTH };
-  }
-
-  function renderPhotoRow(photoKey: string, description: string) {
-    console.log("renderPhoto params", photoKey, description);
-    const photoData = photosData?.[photoKey];
-    if (photoData?.data) {
-      const { height, width } = photoData.info;
-      console.log("renderPhoto dimensions", height, width);
-
-      return new TableRow({
-        children: [
-          new TableCell({
-            children: [
-              new Paragraph({
-                children: [
-                  new ImageRun({
-                    data: photoData.data,
-                    transformation: getScaledPhotoDimensions(height, width),
-                  }),
-                ],
-              }),
-            ],
-            ...PHOTO_TABLE_CELL_OPTIONS,
-          }),
-          new TableCell({
-            children: [new Paragraph({ text: description })],
-            ...PHOTO_TABLE_CELL_OPTIONS,
-          }),
-        ],
-      });
-    }
-
-    return new TableRow({
-      children: [
-        new TableCell({
-          children: [new Paragraph({ text: IMAGE_NOT_FOUND })],
-          ...PHOTO_TABLE_CELL_OPTIONS,
-        }),
-        new TableCell({
-          children: [new Paragraph({ text: description })],
-          ...PHOTO_TABLE_CELL_OPTIONS,
-        }),
-      ],
-    });
-  }
 
   // TODO: tweak position of the header and footer
   // TODO: can we improve the text on the pie chart?
@@ -341,7 +242,6 @@ export async function exportSurveyAsDocx(
             heading: HeadingLevel.HEADING_1,
           }),
           ...surveyQuestionParagraphs,
-          ...photosParagraphs,
           ...chartsParagraphs,
         ],
       },
@@ -377,9 +277,6 @@ export function renderQuestionText(
       }),
       ...getTextRuns(nodes),
     ],
-    // removed this indent - it didn't seem to be very pretty
-    //tabStops: [{ type: TabStopType.LEFT, position: 500 }],
-    //indent: { start: 500, hanging: 500 },
     shading: { type: ShadingType.CLEAR, fill: "D0D0D0" },
     spacing: { before: 200, after: 50 },
     keepNext: true

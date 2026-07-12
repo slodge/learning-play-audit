@@ -2,7 +2,7 @@ import { BACKGROUND } from "learning-play-audit-survey";
 import React from "react";
 import { SET_CURRENT_SECTION } from "../model/ActionTypes";
 import { surveyStore } from "../model/SurveyModel";
-import { GALLERY, INTRODUCTION, RESULTS, SUBMIT } from "../model/SurveySections";
+import { INTRODUCTION, RESULTS, SUBMIT } from "../model/SurveySections";
 import { renderWithStore } from "./ReactTestUtils";
 import SectionBottomNavigation from "./SectionBottomNavigation";
 
