@@ -1,5 +1,5 @@
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "checkSubmitStateCalls"] }] */
-import { uploadResults } from "./SubmitAction";
+import { submitSurvey } from "./SubmitAction";
 import { Auth } from "@aws-amplify/auth";
 import axios from "axios";
 import { INPUT_STATE } from "../model/TestUtils";
@@ -26,7 +26,7 @@ const setProgressValue = jest.fn();
 const mockPost = axios.post as jest.Mock;
 const mockPut = axios.put as jest.Mock;
 
-describe("uploadResults", () => {
+describe("submitSurvey", () => {
   beforeEach(() => {
     (Auth.currentSession as jest.Mock).mockImplementation(() => {
       return Promise.resolve({
@@ -38,24 +38,24 @@ describe("uploadResults", () => {
     mockPut.mockImplementation(() => Promise.resolve({ status: 200 }));
   });
 
-  it("upload", async () => {
+  it("submit", async () => {
     const inputState = { ...INPUT_STATE };
 
     mockPost
       .mockImplementationOnce(() =>
         Promise.resolve({
-          data: UPLOAD_SURVEY_RESPONSE,
+          data: SUBMIT_SURVEY_RESPONSE,
           status: 200,
         })
       );
 
-    await uploadResults(
+    await submitSurvey(
       setSubmitState,
       setProgressValue,
       inputState,
       TEST_ENDPOINT
     );
-    checkUploadSurveyCalled(inputState, "test@example.com");
+    checkSubmitSurveyCalled(inputState, "test@example.com");
     checkSubmitStateCalls(
       SUBMITTING_START,
       SUBMIT_COMPLETE
@@ -70,7 +70,7 @@ describe("uploadResults", () => {
     };
     surveyStore.dispatch({ type: REFRESH_STATE, state: inputState });
 
-    await uploadResults(
+    await submitSurvey(
       setSubmitState,
       setProgressValue,
       inputState,
@@ -81,7 +81,7 @@ describe("uploadResults", () => {
     checkProgressValueCalls(0);
   });
 
-  it("fail initial upload - non 200 response", async () => {
+  it("fail initial submit - non 200 response", async () => {
     mockPost.mockImplementationOnce(() =>
       Promise.resolve({
         data: { message: "Failure in test" },
@@ -89,18 +89,18 @@ describe("uploadResults", () => {
       })
     );
 
-    await uploadResults(
+    await submitSurvey(
       setSubmitState,
       setProgressValue,
       INPUT_STATE,
       TEST_ENDPOINT
     );
-    checkUploadSurveyCalled(INPUT_STATE, "test@example.com");
+    checkSubmitSurveyCalled(INPUT_STATE, "test@example.com");
     checkSubmitStateCalls(SUBMITTING_START, SUBMIT_FAILED);
     checkProgressValueCalls(0);
   });
 
-  it("fail initial upload - axios error", async () => {
+  it("fail initial submit - axios error", async () => {
     mockPost.mockImplementationOnce(() =>
       Promise.reject(
         new Error(
@@ -112,18 +112,18 @@ describe("uploadResults", () => {
       )
     );
 
-    await uploadResults(
+    await submitSurvey(
       setSubmitState,
       setProgressValue,
       INPUT_STATE,
       TEST_ENDPOINT
     );
-    checkUploadSurveyCalled(INPUT_STATE, "test@example.com");
+    checkSubmitSurveyCalled(INPUT_STATE, "test@example.com");
     checkSubmitStateCalls(SUBMITTING_START, SUBMIT_FAILED);
     checkProgressValueCalls(0);
   });
 
-  function checkUploadSurveyCalled({ answers, surveyVersion }: SurveyStoreState, email: string) {
+  function checkSubmitSurveyCalled({ answers, surveyVersion }: SurveyStoreState, email: string) {
     // Email is added to answers
     const expectedAnswers = { ...answers };
     expectedAnswers.background = { ...answers.background, email: { answer: email, comments: "" } };
@@ -160,5 +160,5 @@ describe("uploadResults", () => {
     });
   }
 
-  const UPLOAD_SURVEY_RESPONSE = { result: "Submission complete" };
+  const SUBMIT_SURVEY_RESPONSE = { result: "Submission complete" };
 });

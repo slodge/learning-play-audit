@@ -25,7 +25,7 @@ describe("exportSurveyAsDocx", () => {
     createdAt: "2022-02-11T08:53:54.350Z",
     surveyVersion: "0.9.0",
     id: "5909e7e2-84ab-4ce3-9446-ceaefcd672cc",
-    state: "Upload complete"
+    state: "Complete"
   };
 
   it("render document", async () => {
