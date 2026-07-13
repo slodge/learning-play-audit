@@ -3,7 +3,7 @@ import "../App.css";
 import { useSelector, useDispatch } from "react-redux";
 import SectionBottomNavigation from "./SectionBottomNavigation";
 import Modal from "@material-ui/core/Modal";
-import { uploadResults } from "../model/SubmitAction";
+import { submitSurvey } from "../model/SubmitAction";
 import { RESET_STATE } from "../model/ActionTypes";
 import { SIGNED_IN, signOut, getAuthState } from "learning-play-audit-shared";
 import { SUBMIT_COMPLETE, SUBMIT_FAILED } from "../model/SubmitStates";
@@ -23,8 +23,8 @@ function SubmitSection({ endpoint }: SubmitSectionProps) {
   const [submitState, setSubmitState] = useState<string | null>(null);
   const [progressValue, setProgressValue] = useState(0);
 
-  function handleUploadResults() {
-    uploadResults(setSubmitState, setProgressValue, allState, endpoint);
+  function handleSubmit() {
+    submitSurvey(setSubmitState, setProgressValue, allState, endpoint);
   }
 
   function handleCloseDialog() {
@@ -37,14 +37,13 @@ function SubmitSection({ endpoint }: SubmitSectionProps) {
 
   return (
     <div className="section submit">
-      <h1 className="title">Upload survey response</h1>
+      <h1 className="title">Submit survey</h1>
       <p>
-        Upload your completed survey to send your answers to Learning through
-        Landscapes.
+        Submit your completed survey to receive an email copy of your results and send your answers to Learning through Landscapes.
       </p>
       <p>
         You will not be able to access or make changes to your survey responses
-        once your survey has been uploaded.
+        once your survey has been submitted, but you will be able to do the survey again.
       </p>
       <div className="submit-content">
         {authState !== SIGNED_IN ? (
@@ -55,21 +54,20 @@ function SubmitSection({ endpoint }: SubmitSectionProps) {
               className="submit-survey-button"
               onClick={() => setShowConfirmDialog(true)}
             >
-              <span>UPLOAD…</span>
+              <span>SUBMIT</span>
             </button>
             {showConfirmDialog && (
               <ConfirmDialog
-                yesText="Upload Survey"
+                yesText="Submit Survey"
                 noText="Cancel"
                 closeDialog={(closeConfirmed) => {
-                  closeConfirmed && handleUploadResults();
+                  closeConfirmed && handleSubmit();
                   setShowConfirmDialog(false);
                 }}
               >
-                <p>Are you sure you want to Upload your survey?</p>
+                <p>Are you sure you want to submit your survey?</p>
                 <p>
-                  You will not be able to access or make changes to your survey
-                  once it has been uploaded.
+                  You will not be able to make changes to your survey responses once your survey has been submitted.
                 </p>
               </ConfirmDialog>
             )}
@@ -89,7 +87,7 @@ function SubmitSection({ endpoint }: SubmitSectionProps) {
           open={submitState !== null}
         >
           <div className="dialog submit">
-            <h2 className="title">Uploading Survey Response</h2>
+            <h2 className="title">Submitting Survey Response</h2>
             {submitState !== SUBMIT_COMPLETE &&
               submitState !== SUBMIT_FAILED && <p>Please wait...</p>}
             {submitState === SUBMIT_COMPLETE && (

@@ -89,7 +89,7 @@ function IntroductionSection() {
         </h2>
         <p>
           Your audit results will be available to view upon completing the audit. To save a copy, ensure 
-          you upload your survey response when online. This will be sent to your logged on email address.
+          you submit your survey response when online. This will be sent to your logged on email address.
         </p>
         <h2>
           Next steps

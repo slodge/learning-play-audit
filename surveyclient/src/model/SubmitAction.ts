@@ -17,7 +17,7 @@ interface SubmitSurveyBody {
   survey: SurveyAnswers;
 }
 
-function submitSurvey(
+function submitSurveyAxios(
   endpoint: string,
   headers: AxiosRequestHeaders,
   body: SubmitSurveyBody
@@ -34,7 +34,7 @@ function submitSurvey(
     });
 }
 
-export function uploadResults(
+export function submitSurvey(
   setSubmitState: (state: string) => void,
   setProgressValue: (value: number) => void,
   state: SurveyStoreState,
@@ -79,7 +79,7 @@ export function uploadResults(
         comments: "",
       };
 
-      return submitSurvey(endpoint, headers, submitRequest);
+      return submitSurveyAxios(endpoint, headers, submitRequest);
     })
     .then((response) => {
       console.debug("submitSurvey complete", response);

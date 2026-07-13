@@ -1,5 +1,5 @@
 import React from "react";
-import { uploadResults } from "../model/SubmitAction";
+import { submitSurvey } from "../model/SubmitAction";
 import SubmitSection from "./SubmitSection";
 import { surveyStore, SurveyStoreState } from "../model/SurveyModel";
 import { REFRESH_STATE } from "../model/ActionTypes";
@@ -46,7 +46,7 @@ describe("component SubmitSection", () => {
   it("initial state logged in", () => {
     renderWithStore(<SubmitSection endpoint={TEST_ENDPOINT} />);
 
-    expect(sectionContent()).toHaveTextContent("UPLOAD…");
+    expect(sectionContent()).toHaveTextContent("SUBMIT");
   });
 
   it("initial state not logged in", () => {
@@ -81,27 +81,27 @@ describe("component SubmitSection", () => {
     );
     expect(confirmYesButton()).toBeNull();
 
-    await user.click(uploadButton());
+    await user.click(submitButton());
     expect(confirmYesButton()).not.toBeNull();
   });
 
-  it("confirm upload cancel", async () => {
+  it("confirm submit cancel", async () => {
     const { user } = renderWithStore(
       <SubmitSection endpoint={TEST_ENDPOINT} />
     );
-    await user.click(uploadButton());
+    await user.click(submitButton());
 
     await user.click(confirmNoButton()!);
 
     expect(confirmYesButton()).toBeNull();
-    expect(uploadResults).not.toHaveBeenCalled();
+    expect(submitSurvey).not.toHaveBeenCalled();
   });
 
-  it("confirm upload cancel click background", async () => {
+  it("confirm submit cancel click background", async () => {
     const { user } = renderWithStore(
       <SubmitSection endpoint={TEST_ENDPOINT} />
     );
-    await user.click(uploadButton());
+    await user.click(submitButton());
 
     const backdrop = document.querySelector(
       "#dialog-container div:first-child"
@@ -109,18 +109,18 @@ describe("component SubmitSection", () => {
     await user.click(backdrop);
 
     expect(confirmYesButton()).toBeNull();
-    expect(uploadResults).not.toHaveBeenCalled();
+    expect(submitSurvey).not.toHaveBeenCalled();
   });
 
-  it("upload success and close", async () => {
+  it("submit success and close", async () => {
     const { user } = renderWithStore(
       <SubmitSection endpoint={TEST_ENDPOINT} />
     );
-    expect(uploadResults).toHaveBeenCalledTimes(0);
-    await user.click(uploadButton());
+    expect(submitSurvey).toHaveBeenCalledTimes(0);
+    await user.click(submitButton());
     await user.click(confirmYesButton()!);
 
-    const { setSubmitState, setProgressValue } = checkUploadAndGetCallbacks(
+    const { setSubmitState, setProgressValue } = checkSubmitAndGetCallbacks(
       TEST_STATE,
       TEST_ENDPOINT
     );
@@ -139,15 +139,15 @@ describe("component SubmitSection", () => {
     });
   });
 
-  it("upload failure and close", async () => {
+  it("submit failure and close", async () => {
     const { user } = renderWithStore(
       <SubmitSection endpoint={TEST_ENDPOINT} />
     );
-    expect(uploadResults).toHaveBeenCalledTimes(0);
-    await user.click(uploadButton());
+    expect(submitSurvey).toHaveBeenCalledTimes(0);
+    await user.click(submitButton());
     await user.click(confirmYesButton()!);
 
-    const { setSubmitState, setProgressValue } = checkUploadAndGetCallbacks(
+    const { setSubmitState, setProgressValue } = checkSubmitAndGetCallbacks(
       TEST_STATE,
       TEST_ENDPOINT
     );
@@ -163,15 +163,15 @@ describe("component SubmitSection", () => {
     expect(surveyStore.getState()).toStrictEqual(TEST_STATE);
   });
 
-  it("progress changes during upload", async () => {
+  it("progress changes during submit", async () => {
     const { user } = renderWithStore(
       <SubmitSection endpoint={TEST_ENDPOINT} />
     );
-    expect(uploadResults).toHaveBeenCalledTimes(0);
-    await user.click(uploadButton());
+    expect(submitSurvey).toHaveBeenCalledTimes(0);
+    await user.click(submitButton());
     await user.click(confirmYesButton()!);
 
-    const { setSubmitState, setProgressValue } = checkUploadAndGetCallbacks(
+    const { setSubmitState, setProgressValue } = checkSubmitAndGetCallbacks(
       TEST_STATE,
       TEST_ENDPOINT
     );
@@ -179,24 +179,24 @@ describe("component SubmitSection", () => {
     // Test progress updates
     setSubmitState(SUBMITTING_START);
     setProgressValue(0);
-    await checkDialogInProgress("0%", "Uploading survey response");
+    await checkDialogInProgress("0%", "Submitting survey response");
 
     setSubmitState(SUBMIT_COMPLETE);
     setProgressValue(100);
     await checkDialogComplete();
   });
 
-  interface UploadCallbacks {
+  interface SubmitCallbacks {
     setSubmitState: (state: string) => void;
     setProgressValue: (value: number) => void;
   }
 
-  function checkUploadAndGetCallbacks(
+  function checkSubmitAndGetCallbacks(
     expectedState: SurveyStoreState,
     expectedEndpoint: string
-  ): UploadCallbacks {
-    expect(uploadResults).toHaveBeenCalledTimes(1);
-    const calls = (uploadResults as jest.Mock).mock.calls;
+  ): SubmitCallbacks {
+    expect(submitSurvey).toHaveBeenCalledTimes(1);
+    const calls = (submitSurvey as jest.Mock).mock.calls;
     expect(calls[0]).toHaveLength(4);
     expect(calls[0][2]).toStrictEqual(expectedState);
     expect(calls[0][3]).toStrictEqual(expectedEndpoint);
@@ -225,7 +225,7 @@ describe("component SubmitSection", () => {
     );
     await waitFor(() => expect(progressBarValue()).toBe("100%"));
     await waitFor(() =>
-      expect(dialogStatus()).toHaveTextContent("Upload complete")
+      expect(dialogStatus()).toHaveTextContent("Submission complete")
     );
     await waitFor(() => expect(closeButton()).not.toBeNull());
   }
@@ -236,7 +236,7 @@ describe("component SubmitSection", () => {
     await waitFor(() => expect(progressBarValue()).toStrictEqual(progress));
     await waitFor(() =>
       expect(dialogStatus()).toHaveTextContent(
-        "Upload failed - please try again"
+        "Submission failed - please try again"
       )
     );
     await waitFor(() => expect(closeButton()).not.toBeNull());
@@ -244,7 +244,7 @@ describe("component SubmitSection", () => {
 
   const sectionContent = () =>
     document.querySelector(".section .submit-content");
-  const uploadButton = () =>
+  const submitButton = () =>
     document.querySelector(".section .submit-survey-button")!;
   const dialog = () => document.querySelector(".dialog");
   const dialogMessage = () => document.querySelector(".dialog p");
