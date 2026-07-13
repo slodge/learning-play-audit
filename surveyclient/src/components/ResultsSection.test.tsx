@@ -6,7 +6,7 @@ import { INPUT_STATE } from "../model/TestUtils";
 import Chart from "chart.js";
 import rfdc from "rfdc";
 import { renderWithStore } from "./ReactTestUtils";
-import { GALLERY, RESULTS, SUBMIT } from "../model/SurveySections";
+import { RESULTS, SUBMIT } from "../model/SurveySections";
 
 jest.mock("chart.js");
 

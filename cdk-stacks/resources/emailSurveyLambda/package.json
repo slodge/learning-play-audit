@@ -7,11 +7,10 @@
   "scripts": {
     "test": "jest",
     "tsc": "tsc",
-    "build": "esbuild src/index.ts --bundle --platform=node --target=node14 --outfile=dist/index.js --external:canvas --external:sharp --external:chartjs-node-canvas --external:./node_modules/chartjs"
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node14 --outfile=dist/index.js --external:canvas --external:chartjs-node-canvas --external:./node_modules/chartjs"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.48.0",
-    "@aws-sdk/client-s3": "^3.48.0",
     "@aws-sdk/client-ses": "^3.50.0",
     "@aws-sdk/util-dynamodb": "^3.48.0",
     "@babel/runtime": "^7.17.2",
@@ -22,8 +21,7 @@
     "es6-promise": "^4.2.8",
     "isomorphic-fetch": "^3.0.0",
     "learning-play-audit-survey": "file:survey/learning-play-audit-survey-0.10.0.tgz",
-    "mimemessage": "^1.0.5",
-    "sharp": "^0.30.3"
+    "mimemessage": "^1.0.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
@@ -33,7 +31,6 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
     "@types/jest": "^27.5.0",
-    "@types/sharp": "^0.30.2",
     "babel-jest": "^27.5.1",
     "esbuild": "^0.14.29",
     "eslint": "^8.14.0",

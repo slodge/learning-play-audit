@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import "./App.css";
 import { makeStyles } from "@material-ui/core/styles";
-import PhotoGallery from "./PhotoGallery";
 import SurveyResponses from "./SurveyResponses";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -10,18 +9,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import { exportSurveysAsDocx } from "./SurveysAsDoc";
-import Tab from "@material-ui/core/Tab";
-import TabPanel from "@material-ui/lab/TabPanel";
-import TabContext from "@material-ui/lab/TabContext";
-import TabList from "@material-ui/lab/TabList";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import CloseIcon from "@material-ui/icons/Close";
 import {
-  getPhotoKeysForSurveys,
-  retrievePhotosForSurveys,
   allSurveysRetrieved,
   getFullSurveyResponses,
-  getPhotos,
   SurveyResponse,
 } from "./model/SurveyModel";
 
@@ -49,9 +41,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  photo: {
-    height: "50px",
-  },
   scrollPaper: {
     alignItems: "start",
   },
@@ -68,14 +57,11 @@ function SurveyResponsesDialog({
 }: SurveyResponsesDialogProps) {
   const classes = useStyles();
 
-  const dispatch = useDispatch();
   const fullSurveyResponses = useSelector(getFullSurveyResponses);
-  const photos = useSelector(getPhotos);
 
   const [selectedResponses, setSelectedResponses] = useState<SurveyResponse[]>(
     []
   );
-  const [selectedTab, setSelectedTab] = useState("1");
   const [exportDocxRequested, setExportDocxRequested] = useState(false);
 
   useEffect(() => {
@@ -90,7 +76,6 @@ function SurveyResponsesDialog({
       surveyIds.length === selectedResponses.length
     ) {
       setExportDocxRequested(true);
-      dispatch(retrievePhotosForSurveys(selectedResponses));
     }
   };
 
@@ -102,22 +87,11 @@ function SurveyResponsesDialog({
   }
 
   useEffect(() => {
-    function allPhotosRetrieved() {
-      return (
-        allSurveysRetrieved(surveyIds, fullSurveyResponses) &&
-        surveyIds.length === selectedResponses.length &&
-        !getPhotoKeysForSurveys(selectedResponses).find(
-          (photoKey) => !photos.hasOwnProperty(photoKey)
-        )
-      );
-    }
-
-    if (exportDocxRequested && allPhotosRetrieved()) {
+    if (exportDocxRequested) {
       setExportDocxRequested(false);
-      exportSurveysAsDocx(selectedResponses, photos);
+      exportSurveysAsDocx(selectedResponses);
     }
   }, [
-    photos,
     selectedResponses,
     exportDocxRequested,
     surveyIds,
@@ -138,22 +112,11 @@ function SurveyResponsesDialog({
       fullWidth={true}
     >
       <DialogContent dividers={true}>
-        <TabContext value={selectedTab}>
-          <TabList onChange={(_, newValue) => setSelectedTab(newValue)}>
-            <DialogTitle id="scroll-dialog-title">Survey Responses</DialogTitle>
-            <Tab label="Responses" value="1" />
-            <Tab label="Photos" value="2" />
-          </TabList>
-          <TabPanel value="1">
-            <SurveyResponses
-              id="scroll-dialog-description"
-              surveys={selectedResponses}
-            />
-          </TabPanel>
-          <TabPanel value="2">
-            <PhotoGallery surveys={selectedResponses} />
-          </TabPanel>
-        </TabContext>
+        <DialogTitle id="scroll-dialog-title">Survey Responses</DialogTitle>
+        <SurveyResponses
+          id="scroll-dialog-description"
+          surveys={selectedResponses}
+        />
       </DialogContent>
       <DialogActions>
         <Button

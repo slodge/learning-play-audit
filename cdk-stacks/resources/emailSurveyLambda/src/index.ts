@@ -1,26 +1,15 @@
-//console.log("starting");
-
-import { PhotoDetails, PhotosData, SurveyResponse } from "./SurveyModel";
-
-//console.log("two");
+import { SurveyResponse } from "./SurveyModel";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
-import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { SendRawEmailCommand, SendRawEmailCommandInput } from "@aws-sdk/client-ses";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { Packer } from "docx";
 import mimemessage from "mimemessage";
-import { s3Client, dynamodbClient, emailClient } from "./aws";
+import { dynamodbClient, emailClient } from "./aws";
 import { exportSurveyAsDocx } from "./SurveyAsDoc";
-import sharp from "sharp";
-import { Readable } from "stream";
 import { get_survey_version } from "learning-play-audit-survey";
-
-//console.log("three");
-
-const MAX_DOCUMENT_SIZE = 9 * 1024 * 1024; // 9Mb
 
 function getSurveyResponse(surveyId: string): Promise<SurveyResponse> {
   console.log("getSurveyResponse", surveyId);
@@ -38,81 +27,14 @@ function getSurveyResponse(surveyId: string): Promise<SurveyResponse> {
   });
 }
 
-function getPhoto(photo: PhotoDetails): Promise<Readable> {
-  console.log("getPhoto", photo);
-
-  const key = photo.fullsize.key;
-  if (!key) {
-    console.log("No photo to get");
-    return Promise.reject("No photo to get");
-  }
-
-  return s3Client
-    .send(new GetObjectCommand({ Bucket: photo.bucket, Key: key }))
-    .then((result) => {
-      console.log("get result", result);
-      return Promise.resolve(result.Body! as Readable);
-    });
-}
-
-function resizePhoto(photoData: Readable) {
-  console.log("resizePhoto", photoData);
-  try {
-    const pipeline = sharp()
-      .resize({
-        width: 1024,
-        height: 1024,
-        fit: "inside",
-        withoutEnlargement: true,
-      })
-      .withMetadata()
-      .jpeg({ quality: 90 });
-    return photoData?.pipe(pipeline);
-  } catch (err) {
-    console.log("resizePhoto error", err);
-    return undefined;
-  }
-}
-
-async function getPhotos(survey: SurveyResponse) {
-  const result: PhotosData = {};
-  await Promise.allSettled(
-    survey.photos.map((photo) =>
-      getPhoto(photo)
-        .then((photoData) =>
-          resizePhoto(photoData)?.toBuffer({ resolveWithObject: true })
-        )
-        .then((resizedPhoto) => {
-          console.log("resizedPhoto", resizedPhoto);
-          if (resizedPhoto) {
-            result[photo.fullsize.key] = resizedPhoto;
-          }
-          return Promise.resolve();
-        })
-    )
-  );
-  console.log("all photos retrieved", result);
-  return result;
-}
-
 async function sendSurveyConfirmationEmail(survey: SurveyResponse) {
-  const photosData = await getPhotos(survey);
-  
   const surveyVersion = get_survey_version(survey.surveyVersion);
 
   let surveyResultsDoc = await exportSurveyAsDocx(
     surveyVersion,
     survey.surveyResponse,
-    survey.photos,
-    photosData
   );
   let surveyResultsDocBase64 = await Packer.toBase64String(surveyResultsDoc);
-
-  if (surveyResultsDocBase64.length > MAX_DOCUMENT_SIZE) {
-    // Report including photos is too large to email - create one without photos
-    surveyResultsDoc = await exportSurveyAsDocx(surveyVersion, survey.surveyResponse, [], {});
-    surveyResultsDocBase64 = await Packer.toBase64String(surveyResultsDoc);
-  }
 
   var attachmentEntity = mimemessage.factory({
     contentType:
@@ -213,8 +135,6 @@ to scan attachments (if any). Thank you.</font></p>`,
   console.log("Send email result", sendEmailResponse);
 }
 
-//console.log("four");
-
 export async function handler(event: { surveyId: string }) {
   console.log("Incoming request", event);
 
@@ -232,5 +152,3 @@ export async function handler(event: { surveyId: string }) {
     body: JSON.stringify({ result: "Survey email sent" }),
   };
 }
-
-//console.log("end");

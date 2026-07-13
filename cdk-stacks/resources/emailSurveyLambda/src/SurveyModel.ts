@@ -1,5 +1,3 @@
-import { OutputInfo } from "sharp";
-
 export type QuestionAnswer = {
   answer: string;
   comments: string;
@@ -31,36 +29,12 @@ export interface SectionAnswerCount {
 
 export type SurveyAnswerCounts = Record<string, SectionAnswerCount>;
 
-export interface PhotoDetails {
-  description: string;
-  sectionId?: string;
-  questionId?: string;
-}
-
-export interface Photo {
-  imageData: string;
-}
-
-export interface PhotoDetails {
-  bucket: string;
-  description: string;
-  fullsize: {
-    height: number;
-    key: string;
-    uploadKey: string | null;
-    width: number;
-  };
-}
-
-export type PhotosData = Record<string, { data: Buffer; info: OutputInfo }>
-
 export type AnswerWeights = Record<string, Record<string, number>>;
 
 export interface SurveyResponse {
   __typename: "SurveyResponse";
   createdAt: string;
   id: string;
-  photos: PhotoDetails[];
   responderEmail: string;
   responderName: string;
   schoolName: string;

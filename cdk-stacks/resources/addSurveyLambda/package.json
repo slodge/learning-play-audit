@@ -6,13 +6,53 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.48.0",
-    "@aws-sdk/client-s3": "^3.48.0",
-    "@aws-sdk/s3-request-presigner": "^3.48.0",
-    "@aws-sdk/util-create-request": "^3.47.2",
+    "@aws-sdk/client-lambda": "^3.54.1",
     "@aws-sdk/util-dynamodb": "^3.48.0",
-    "@aws-sdk/util-format-url": "^3.47.2",
     "es6-promise": "^4.2.8",
     "isomorphic-fetch": "^3.0.0",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.1",
+    "@babel/runtime": "^7.17.2",
+    "install": "^0.13.0",
+    "npm": "^8.5.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": [
+        "babel-jest",
+        {
+          "plugins": [
+            "@babel/plugin-transform-runtime"
+          ],
+          "presets": [
+            "@babel/preset-env"
+          ]
+        }
+      ]
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(learning-play-audit-survey)/)"
+    ],
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "json",
+      "node"
+    ],
+    "maxWorkers": "50%",
+    "setupFiles": [
+      "./jest/setEnvVars.js"
+    ]
   }
 }

@@ -13,8 +13,6 @@ import { surveyStore } from "./model/SurveyModel";
 // Mock local storage
 jest.mock("localforage");
 
-jest.mock("./model/SurveyPhotoUuid");
-
 /*
 This wasn't working... so I replaced it with a simple mock class below
 window.ResizeObserver =

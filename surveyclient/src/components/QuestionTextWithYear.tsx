@@ -2,7 +2,6 @@ import React from "react";
 import "../App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_ANSWER } from "../model/ActionTypes";
-import QuestionAddPhotosButton from "./QuestionAddPhotosButton";
 import { renderMarkup } from "./RenderMarkup";
 import {
   DatedQuestionAnswer,
@@ -71,12 +70,6 @@ function QuestionTextWithYear({
       <div className="question-line">
         <div className="question-number">{questionNumber}</div>
         <div className="question-text">{renderMarkup(question.text)}</div>
-        <QuestionAddPhotosButton
-          sectionId={sectionId}
-          questionId={questionId}
-          questionNumber={questionNumber}
-          questionText={question.text}
-        />
       </div>
       {yearAnswerRow("answer1", "year1", "Improvement 1")}
       {yearAnswerRow("answer2", "year2", "Improvement 2")}

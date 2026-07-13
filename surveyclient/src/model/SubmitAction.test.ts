@@ -5,12 +5,9 @@ import axios from "axios";
 import { INPUT_STATE } from "../model/TestUtils";
 import {
   SUBMITTING_START,
-  SUBMITTING_PHOTOS,
-  SUBMITTING_CONFIRM,
   SUBMIT_COMPLETE,
   SUBMIT_FAILED,
 } from "./SubmitStates";
-import { Buffer } from "buffer/";
 import { surveyStore, SurveyStoreState } from "./SurveyModel";
 import { REFRESH_STATE } from "./ActionTypes";
 import { SurveyUser } from "learning-play-audit-shared";
@@ -41,23 +38,13 @@ describe("uploadResults", () => {
     mockPut.mockImplementation(() => Promise.resolve({ status: 200 }));
   });
 
-  it("upload without photos", async () => {
-    const inputState = { ...INPUT_STATE, photos: {}, photoDetails: {} };
+  it("upload", async () => {
+    const inputState = { ...INPUT_STATE };
 
     mockPost
       .mockImplementationOnce(() =>
         Promise.resolve({
-          data: {
-            result: "Pending upload",
-            confirmId: "confirmId1",
-            uploadUrls: {},
-          },
-          status: 200,
-        })
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          data: CONFIRM_SURVEY_RESPONSE,
+          data: UPLOAD_SURVEY_RESPONSE,
           status: 200,
         })
       );
@@ -68,49 +55,12 @@ describe("uploadResults", () => {
       inputState,
       TEST_ENDPOINT
     );
-    checkUploadSurveyCalled(inputState);
-    checkConfirmSurveyCalled();
-    checkPhotoUploadNotCalled();
+    checkUploadSurveyCalled(inputState, "test@example.com");
     checkSubmitStateCalls(
       SUBMITTING_START,
-      SUBMITTING_PHOTOS,
-      SUBMITTING_CONFIRM,
       SUBMIT_COMPLETE
     );
-    checkProgressValueCalls(0, 50, 100);
-  });
-
-  it("upload with photos", async () => {
-    mockPost
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          data: UPLOAD_SURVEY_RESPONSE_WITH_PHOTOS,
-          status: 200,
-        })
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          data: CONFIRM_SURVEY_RESPONSE,
-          status: 200,
-        })
-      );
-
-    await uploadResults(
-      setSubmitState,
-      setProgressValue,
-      INPUT_STATE,
-      TEST_ENDPOINT
-    );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkConfirmSurveyCalled();
-    checkPhotosUploaded();
-    checkSubmitStateCalls(
-      SUBMITTING_START,
-      SUBMITTING_PHOTOS,
-      SUBMITTING_CONFIRM,
-      SUBMIT_COMPLETE
-    );
-    checkProgressValueCalls(0, 20, 40, 60, 80, 100);
+    checkProgressValueCalls(0, 100);
   });
 
   it("user.email not set", async () => {
@@ -145,8 +95,7 @@ describe("uploadResults", () => {
       INPUT_STATE,
       TEST_ENDPOINT
     );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkPhotoUploadNotCalled();
+    checkUploadSurveyCalled(INPUT_STATE, "test@example.com");
     checkSubmitStateCalls(SUBMITTING_START, SUBMIT_FAILED);
     checkProgressValueCalls(0);
   });
@@ -169,264 +118,31 @@ describe("uploadResults", () => {
       INPUT_STATE,
       TEST_ENDPOINT
     );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkPhotoUploadNotCalled();
+    checkUploadSurveyCalled(INPUT_STATE, "test@example.com");
     checkSubmitStateCalls(SUBMITTING_START, SUBMIT_FAILED);
     checkProgressValueCalls(0);
   });
 
-  it("fail photo upload - non 200 response", async () => {
-    mockPost.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: UPLOAD_SURVEY_RESPONSE_WITH_PHOTOS,
-        status: 200,
-      })
-    );
-    mockPut.mockImplementation(() => Promise.resolve({ status: 401 }));
+  function checkUploadSurveyCalled({ answers, surveyVersion }: SurveyStoreState, email: string) {
+    // Email is added to answers
+    const expectedAnswers = { ...answers };
+    expectedAnswers.background = { ...answers.background, email: { answer: email, comments: "" } };
 
-    await uploadResults(
-      setSubmitState,
-      setProgressValue,
-      INPUT_STATE,
-      TEST_ENDPOINT
-    );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkPhotosUploaded();
-    checkSubmitStateCalls(SUBMITTING_START, SUBMITTING_PHOTOS, SUBMIT_FAILED);
-    checkProgressValueCalls(0, 20);
-  });
-
-  it("fail photo upload - put error", async () => {
-    mockPost.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: UPLOAD_SURVEY_RESPONSE_WITH_PHOTOS,
-        status: 200,
-      })
-    );
-    mockPut.mockImplementation(() =>
-      Promise.reject(new Error("fake error message"))
-    );
-
-    await uploadResults(
-      setSubmitState,
-      setProgressValue,
-      INPUT_STATE,
-      TEST_ENDPOINT
-    );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkPhotosUploaded();
-    checkSubmitStateCalls(SUBMITTING_START, SUBMITTING_PHOTOS, SUBMIT_FAILED);
-    checkProgressValueCalls(0, 20);
-  });
-
-  it("fail confirm upload - non 200 response", async () => {
-    mockPost
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          data: UPLOAD_SURVEY_RESPONSE_WITH_PHOTOS,
-          status: 200,
-        })
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          data: CONFIRM_SURVEY_RESPONSE,
-          status: 502,
-        })
-      );
-
-    await uploadResults(
-      setSubmitState,
-      setProgressValue,
-      INPUT_STATE,
-      TEST_ENDPOINT
-    );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkConfirmSurveyCalled();
-    checkPhotosUploaded();
-    checkSubmitStateCalls(
-      SUBMITTING_START,
-      SUBMITTING_PHOTOS,
-      SUBMITTING_CONFIRM,
-      SUBMIT_FAILED
-    );
-    checkProgressValueCalls(0, 20, 40, 60, 80);
-  });
-
-  it("fail confirm upload - axios error", async () => {
-    mockPost
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          data: UPLOAD_SURVEY_RESPONSE_WITH_PHOTOS,
-          status: 200,
-        })
-      )
-      .mockImplementationOnce(() =>
-        Promise.reject(
-          new Error(
-            JSON.stringify({
-              data: { message: "Failure in test" },
-              status: 403,
-            })
-          )
-        )
-      );
-
-    await uploadResults(
-      setSubmitState,
-      setProgressValue,
-      INPUT_STATE,
-      TEST_ENDPOINT
-    );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkConfirmSurveyCalled();
-    checkPhotosUploaded();
-    checkSubmitStateCalls(
-      SUBMITTING_START,
-      SUBMITTING_PHOTOS,
-      SUBMITTING_CONFIRM,
-      SUBMIT_FAILED
-    );
-    checkProgressValueCalls(0, 20, 40, 60, 80);
-  });
-
-  it("fail photo url missing", async () => {
-    mockPost.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: {
-          result: "Pending upload",
-          confirmId: "confirmId1",
-          uploadUrls: {
-            testPhotoId1: "http://localhost:9999/uploadUrl1",
-            // testPhotoId2 missing
-            testPhotoId3: "http://localhost:9999/uploadUrl3",
-          },
-        },
-        status: 200,
-      })
-    );
-
-    await uploadResults(
-      setSubmitState,
-      setProgressValue,
-      INPUT_STATE,
-      TEST_ENDPOINT
-    );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkPhotoUploadNotCalled();
-    checkSubmitStateCalls(SUBMITTING_START, SUBMIT_FAILED);
-    checkProgressValueCalls(0);
-  });
-
-  it("fail photo urls block missing", async () => {
-    mockPost.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: {
-          result: "Pending upload",
-          confirmId: "confirmId1",
-        },
-        status: 200,
-      })
-    );
-
-    await uploadResults(
-      setSubmitState,
-      setProgressValue,
-      INPUT_STATE,
-      TEST_ENDPOINT
-    );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkPhotoUploadNotCalled();
-    checkSubmitStateCalls(SUBMITTING_START, SUBMIT_FAILED);
-    checkProgressValueCalls(0);
-  });
-
-  it("fail confirmId missing", async () => {
-    mockPost.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: {
-          result: "Pending upload",
-          uploadUrls: {
-            testPhotoId1: "http://localhost:9999/uploadUrl1",
-            testPhotoId2: "http://localhost:9999/uploadUrl2",
-            testPhotoId3: "http://localhost:9999/uploadUrl3",
-          },
-        },
-        status: 200,
-      })
-    );
-
-    await uploadResults(
-      setSubmitState,
-      setProgressValue,
-      INPUT_STATE,
-      TEST_ENDPOINT
-    );
-    checkUploadSurveyCalled(INPUT_STATE);
-    checkPhotoUploadNotCalled();
-    checkSubmitStateCalls(SUBMITTING_START, SUBMIT_FAILED);
-    checkProgressValueCalls(0);
-  });
-
-  function checkUploadSurveyCalled({
-    answers,
-    photoDetails,
-    surveyVersion,
-  }: SurveyStoreState) {
     expect(axios.post).toHaveBeenNthCalledWith(
       1,
-      TEST_ENDPOINT + "/survey",
+      "/survey",
       JSON.stringify({
         uuid: FIXED_UUID,
-        survey: answers,
-        photoDetails,
+        survey: expectedAnswers,
         surveyVersion,
       }),
       {
+        "baseURL": "http://localhost:9999/testEndpoint",
         headers: {
           "Content-Type": "application/json; charset=UTF-8",
           Authorization: "Bearer test jwt token",
         },
       }
-    );
-  }
-
-  function checkConfirmSurveyCalled() {
-    expect(axios.post).toHaveBeenNthCalledWith(
-      2,
-      TEST_ENDPOINT + "/confirmsurvey",
-      JSON.stringify({ uuid: FIXED_UUID, confirmId: "confirmId1" }),
-      {
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-          Authorization: "Bearer test jwt token",
-        },
-      }
-    );
-  }
-
-  function checkPhotoUploadNotCalled() {
-    expect(axios.put).not.toHaveBeenCalled();
-  }
-
-  function checkPhotosUploaded() {
-    expect(axios.put).toHaveBeenCalledTimes(3);
-    expect(axios.put).toHaveBeenNthCalledWith(
-      1,
-      "http://localhost:9999/uploadUrl1",
-      Buffer.from("image data1"),
-      { headers: { "Content-Type": "image" } }
-    );
-    expect(axios.put).toHaveBeenNthCalledWith(
-      2,
-      "http://localhost:9999/uploadUrl2",
-      Buffer.from("image data2"),
-      { headers: { "Content-Type": "image" } }
-    );
-    expect(axios.put).toHaveBeenNthCalledWith(
-      3,
-      "http://localhost:9999/uploadUrl3",
-      Buffer.from("image data3"),
-      { headers: { "Content-Type": "image" } }
     );
   }
 
@@ -444,15 +160,5 @@ describe("uploadResults", () => {
     });
   }
 
-  const UPLOAD_SURVEY_RESPONSE_WITH_PHOTOS = {
-    result: "Pending upload",
-    confirmId: "confirmId1",
-    uploadUrls: {
-      testPhotoId1: "http://localhost:9999/uploadUrl1",
-      testPhotoId2: "http://localhost:9999/uploadUrl2",
-      testPhotoId3: "http://localhost:9999/uploadUrl3",
-    },
-  };
-
-  const CONFIRM_SURVEY_RESPONSE = { result: "Submission complete" };
+  const UPLOAD_SURVEY_RESPONSE = { result: "Submission complete" };
 });

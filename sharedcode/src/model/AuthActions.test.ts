@@ -52,6 +52,9 @@ const TEST_PASSWORD = "test password";
 
 const TEST_COGNITO_USER = {
   getUsername: () => TEST_EMAIL,
+  attributes: {
+    email: TEST_EMAIL
+  }
 } as unknown as CognitoUser;
 
 const TEST_USER: SurveyUser = {

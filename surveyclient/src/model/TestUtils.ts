@@ -15,9 +15,6 @@ const SURVEY_ANSWERS: SurveyAnswers = {
     organisation: { answer: "", comments: "" },
     postcode: { answer: "", comments: "" },
     agegroup: { answer: "", comments: "" },
-    motivatedoutdoor: { answer: "", comments: "" },
-    confidentoutdoor: { answer: "", comments: "" },
-    supportedoutdoor: { answer: "", comments: "" },
   },
   pandp: {
     P01: { answer: "", comments: "" },
@@ -166,10 +163,8 @@ export const EMPTY_STATE: SurveyStoreState = {
   hasEverLoggedIn: false,
   hasSeenSplashPage: false,
   initialisingState: true,
-  photoDetails: {},
-  photos: {},
   currentSectionId: INTRODUCTION,
-  surveyVersion: "0.10.0",
+  surveyVersion: "0.1.11",
 };
 
 export const INITIALISED_EMPTY_STATE = {
@@ -229,32 +224,6 @@ function createTestState(): SurveyStoreState {
     authState: SIGNED_IN,
     errorMessage: "",
     surveyUser: { email: "test@example.com" },
-    photos: {
-      testPhotoId1: {
-        imageData: Buffer.from("image data1").toString("base64"),
-      },
-      testPhotoId2: {
-        imageData: Buffer.from("image data2").toString("base64"),
-      },
-      testPhotoId3: {
-        imageData: Buffer.from("image data3").toString("base64"),
-      },
-    },
-    photoDetails: {
-      testPhotoId1: {
-        description: "test photo1",
-        sectionId: "pandp",
-        questionId: "P01",
-      },
-      testPhotoId2: {
-        description: "test photo2",
-        sectionId: "pandp",
-        questionId: "P02",
-      },
-      testPhotoId3: {
-        description: "test photo3",
-      },
-    },
   };
 }
 

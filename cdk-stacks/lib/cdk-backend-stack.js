@@ -1,5 +1,4 @@
 const cdk = require("aws-cdk-lib");
-const { HttpMethods, Bucket } = require("aws-cdk-lib/aws-s3");
 const dynamodb = require("aws-cdk-lib/aws-dynamodb");
 const { NodejsFunction } = require("aws-cdk-lib/aws-lambda-nodejs");
 const lambda = require("aws-cdk-lib/aws-lambda");
@@ -27,37 +26,9 @@ class CdkBackendStack extends cdk.Stack {
 
     // The following are fixed resource names with environment stage suffixes
     // These resources will not be replaced during updates
-    const SURVEY_RESOURCES_BUCKET_NAME =
-      resourcePrefix.toLowerCase() + "-surveyresources";
     const SURVEY_RESPONSES_TABLE_NAME = resourcePrefix + "-SurveyResponses";
     const SURVEY_CLIENT_USERPOOL_ID = resourcePrefix + "-SurveyUserPool";
     const SURVEY_ADMIN_USERPOOL_ID = resourcePrefix + "-SurveyAdminPool";
-
-    const surveyResourcesBucket = new Bucket(this, "SurveyResources", {
-      bucketName: SURVEY_RESOURCES_BUCKET_NAME,
-    });
-    surveyResourcesBucket.addCorsRule({
-      allowedHeaders: ["*"],
-      allowedMethods: [
-        HttpMethods.GET,
-        HttpMethods.HEAD,
-        HttpMethods.PUT,
-        HttpMethods.POST,
-        HttpMethods.DELETE,
-      ],
-      allowedOrigins: ["*"],
-      exposeHeaders: [
-        "x-amz-server-side-encryption",
-        "x-amz-request-id",
-        "x-amz-id-2",
-        "ETag",
-      ],
-      maxAge: 3000,
-    });
-    new cdk.CfnOutput(this, "SurveyResources bucket", {
-      value: surveyResourcesBucket.bucketName,
-      description: "S3 bucket containing uploaded survey resources",
-    });
 
     const surveyResponsesTable = new dynamodb.Table(this, "SurveyResponses", {
       tableName: SURVEY_RESPONSES_TABLE_NAME,
@@ -80,7 +51,7 @@ class CdkBackendStack extends cdk.Stack {
         "responderEmail",
       ],
 
-      
+
       // Stuart removed the readCapicty - we want on demand? 
       //,
       // Only increase RTU for live site
@@ -160,34 +131,6 @@ class CdkBackendStack extends cdk.Stack {
       }
     );
 
-    const addSurveyLambda = new NodejsFunction(this, "AddSurveyLambda", {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      entry: "resources/addSurveyLambda/index.js",
-      handler: "handler",
-      environment: {
-        REGION: region,
-        SURVEY_DB_TABLE: surveyResponsesTable.tableName,
-        SURVEY_RESOURCES_BUCKET: surveyResourcesBucket.bucketName,
-      },
-      timeout: cdk.Duration.seconds(30),
-      commandHooks: {
-        beforeBundling(inputDir) {
-          return [`cd ${inputDir} && npm install`];
-        },
-      },
-    });
-
-    surveyResponsesTable.grant(addSurveyLambda, "dynamodb:PutItem");
-    surveyResourcesBucket.grantPut(addSurveyLambda);
-
-    addApiGatewayMethod(
-      restApi,
-      "survey",
-      "POST",
-      addSurveyLambda,
-      apiAuthoriser
-    );
-
     const emailSurveyLambda = new lambda.DockerImageFunction(
       this,
       "EmailSurveyLambdaDocker",
@@ -212,7 +155,6 @@ class CdkBackendStack extends cdk.Stack {
     );
 
     surveyResponsesTable.grant(emailSurveyLambda, "dynamodb:GetItem");
-    surveyResourcesBucket.grantRead(emailSurveyLambda);
 
     emailSurveyLambda.addToRolePolicy(
       new iam.PolicyStatement({
@@ -222,38 +164,34 @@ class CdkBackendStack extends cdk.Stack {
       })
     );
 
-    const confirmSurveyLambda = new NodejsFunction(
-      this,
-      "ConfirmSurveyLambda",
-      {
-        runtime: lambda.Runtime.NODEJS_22_X,
-        entry: "resources/confirmSurveyLambda/index.js",
-        handler: "handler",
-        environment: {
-          REGION: region,
-          SURVEY_DB_TABLE: surveyResponsesTable.tableName,
-          EMAIL_FUNCTION: emailSurveyLambda.functionName,
+    const addSurveyLambda = new NodejsFunction(this, "AddSurveyLambda", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      entry: "resources/addSurveyLambda/index.js",
+      handler: "handler",
+      environment: {
+        REGION: region,
+        SURVEY_DB_TABLE: surveyResponsesTable.tableName,
+        EMAIL_FUNCTION: emailSurveyLambda.functionName,
+      },
+      timeout: cdk.Duration.seconds(30),
+      commandHooks: {
+        beforeBundling(inputDir) {
+          return [`cd ${inputDir} && npm install`];
         },
-        timeout: cdk.Duration.seconds(30),
-      }
-    );
+      },
+    });
 
-    surveyResponsesTable.grant(
-      confirmSurveyLambda,
-      "dynamodb:GetItem",
-      "dynamodb:PutItem"
-    );
-    surveyResourcesBucket.grantReadWrite(confirmSurveyLambda);
+    surveyResponsesTable.grant(addSurveyLambda, "dynamodb:PutItem");
 
     addApiGatewayMethod(
       restApi,
-      "confirmsurvey",
+      "survey",
       "POST",
-      confirmSurveyLambda,
+      addSurveyLambda,
       apiAuthoriser
     );
 
-    emailSurveyLambda.grantInvoke(confirmSurveyLambda);
+    emailSurveyLambda.grantInvoke(addSurveyLambda);
 
     // Admin client
 
@@ -361,8 +299,6 @@ class CdkBackendStack extends cdk.Stack {
       "dynamodb:GetItem",
       "dynamodb:Scan"
     );
-
-    surveyResourcesBucket.grantRead(adminClientAuthenticatedRole);
 
     function addApiGatewayMethod(
       restApi,

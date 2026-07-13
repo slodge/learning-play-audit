@@ -4,13 +4,13 @@ import { surveyStore, SurveyStoreState } from "../model/SurveyModel";
 import { REFRESH_STATE } from "../model/ActionTypes";
 import { EMPTY_STATE, INPUT_STATE } from "../model/TestUtils";
 import { renderWithStore } from "./ReactTestUtils";
-import { GALLERY, INTRODUCTION } from "../model/SurveySections";
+import { RESULTS, INTRODUCTION } from "../model/SurveySections";
 import { SIGNED_IN } from "learning-play-audit-shared";
 
 describe("component RestartButton", () => {
   const TEST_STATE: SurveyStoreState = {
     ...INPUT_STATE,
-    currentSectionId: GALLERY,
+    currentSectionId: RESULTS,
   };
 
   beforeEach(() => {
@@ -58,8 +58,6 @@ describe("component RestartButton", () => {
     expect(surveyStore.getState()).toStrictEqual({
       ...EMPTY_STATE,
       initialisingState: false,
-      photoDetails: {},
-      photos: {},
       currentSectionId: INTRODUCTION,
       authState: SIGNED_IN,
       hasEverLoggedIn: true,

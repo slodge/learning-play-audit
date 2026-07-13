@@ -19,104 +19,37 @@ import {
   Packer,
   Paragraph,
   TextRun,
-  ImageRun,
   HeadingLevel,
   Table,
   TableRow,
   TableCell,
   TableLayoutType,
   BorderStyle,
-  ISectionOptions,
 } from "docx";
 import {
   DatedQuestionAnswer,
   DatedQuestionAnswerKey,
-  Photo,
   QuestionAnswer,
   SectionAnswers,
   SurveyResponse,
 } from "./model/SurveyModel";
-import { Children } from "react";
 
-const IMAGE_NOT_FOUND = "[Image not found]";
-
-function renderPhoto(
-  photos: Record<string, Photo>,
-  photoKey: string,
-  description: string,
-  height: number,
-  width: number
-) {
-  const photoData = photos[photoKey];
-  if (photoData.data !== undefined) {
-    const scaledWidth = (width * 200) / height;
-    return [
-      new Paragraph({
-        children: [
-          new ImageRun({
-            data: photoData.data,
-            transformation: { height: 200, width: scaledWidth },
-          }),
-        ],
-      }),
-      new Paragraph({ children: [new TextRun({ text: description })] }),
-    ];
-  }
-
-  return [
-    new Paragraph({ children: [new TextRun({ text: IMAGE_NOT_FOUND })] }),
-    new Paragraph({ children: [new TextRun({ text: description })] }),
-  ];
-}
-
-function renderSurveyPhotos(
-  photos: Record<string, Photo>,
-  survey: SurveyResponse) {
-  const response = survey.surveyResponse;
-
-  return [
-    new Paragraph({
-      children: [
-        new TextRun({
-          text:
-            "Images from " +
-            (response.background.contactname as QuestionAnswer).answer,
-        }),
-      ],
-    }),
-    ...survey.photos
-      .map((photoRef) =>
-        renderPhoto(
-          photos,
-          photoRef.fullsize.key,
-          photoRef.description,
-          photoRef.fullsize.height,
-          photoRef.fullsize.width
-        )
-      )
-      .flat(),
-  ];
-}
-
-export function exportSurveysAsDocx(
-  surveys: SurveyResponse[],
-  photos: Record<string, Photo>
-) {
+export function exportSurveysAsDocx(surveys: SurveyResponse[]) {
   if (surveys.length === 0) {
     console.log("No surveys to export");
   }
 
-  console.log("exportSurveysAsDocx", surveys, photos);
+  console.log("exportSurveysAsDocx", surveys);
 
   // group the responses by their version
   const grouped = surveys.reduce((accumulator, current) => {
     if (!accumulator[current.surveyVersion]) {
-      accumulator[current.surveyVersion] = [ current ];
+      accumulator[current.surveyVersion] = [current];
     } else {
       accumulator[current.surveyVersion].push(current);
     }
     return accumulator;
-  }, {} as Record<string, SurveyResponse[]>);  
+  }, {} as Record<string, SurveyResponse[]>);
 
   const sections: any[] = [];
 
@@ -144,21 +77,6 @@ export function exportSurveysAsDocx(
         ...paragraphs,
       ],
     });
-
-    const photoSections = surveys
-      .filter((survey) => survey.photos.length > 0)
-      .map(p => renderSurveyPhotos(photos, p));
-
-    sections.push({
-      children: [
-        new Paragraph({
-          text: "Survey Photos",
-          heading: HeadingLevel.HEADING_1,
-        }),
-        ...photoSections.flat(),
-      ],
-    });
-
   });
 
   const doc = new Document({ sections });
@@ -223,23 +141,23 @@ function renderQuestionTypePercentageSelect(
   questionNumber: number,
   responses: QuestionAnswer[]
 ) {
-    function getAnswer(response: QuestionAnswer) {
-      switch (response.answer) {
-        case "a":
-          return "none";
-        case "b":
-          return "a little (<5%)";
-        case "c":
-          return "some (5% to 20%)";
-        case "d":
-          return "lots (20% to 50%)";
-        case "e":
-          return "most (>50%)";
-        case null:
-        case "":
-          return "";
-        default:
-          return "unknown: " + response.answer;
+  function getAnswer(response: QuestionAnswer) {
+    switch (response.answer) {
+      case "a":
+        return "none";
+      case "b":
+        return "a little (<5%)";
+      case "c":
+        return "some (5% to 20%)";
+      case "d":
+        return "lots (20% to 50%)";
+      case "e":
+        return "most (>50%)";
+      case null:
+      case "":
+        return "";
+      default:
+        return "unknown: " + response.answer;
     }
   }
 

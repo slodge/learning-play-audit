@@ -6,7 +6,7 @@ import { surveyStore } from "./model/SurveyModel";
 import { REFRESH_STATE } from "./model/ActionTypes";
 import { SIGNED_IN, REGISTER } from "learning-play-audit-shared";
 import { INPUT_STATE } from "./model/TestUtils";
-import { INTRODUCTION, RESULTS, GALLERY, SUBMIT } from "./model/SurveySections";
+import { INTRODUCTION, RESULTS, SUBMIT } from "./model/SurveySections";
 import { renderWithStore } from "./components/ReactTestUtils";
 
 jest.mock("@aws-amplify/core");
@@ -86,9 +86,6 @@ describe("main App", () => {
 
     await user.click(fixedMenuItem(RESULTS));
     checkSelectedSection(RESULTS);
-
-    //await user.click(fixedMenuItem(GALLERY));
-    //checkSelectedSection(GALLERY);
 
     await user.click(fixedMenuItem(SUBMIT));
     checkSelectedSection(SUBMIT);

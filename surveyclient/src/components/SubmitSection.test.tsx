@@ -12,13 +12,11 @@ import {
 import { INPUT_STATE, EMPTY_STATE } from "../model/TestUtils";
 import {
   SUBMITTING_START,
-  SUBMITTING_PHOTOS,
-  SUBMITTING_CONFIRM,
   SUBMIT_COMPLETE,
   SUBMIT_FAILED,
 } from "../model/SubmitStates";
 import { renderWithStore } from "./ReactTestUtils";
-import { GALLERY, RESULTS, SUBMIT } from "../model/SurveySections";
+import { RESULTS, SUBMIT } from "../model/SurveySections";
 import { waitFor } from "@testing-library/dom";
 
 const TEST_ENDPOINT = "http://localhost:9999/testEndpoint";
@@ -74,7 +72,6 @@ describe("component SubmitSection", () => {
     );
 
     await user.click(getByRole("button", { name: "previous section" }));
-    //expect(surveyStore.getState().currentSectionId).toBe(GALLERY);
     expect(surveyStore.getState().currentSectionId).toBe(RESULTS);
   });
 
@@ -183,20 +180,6 @@ describe("component SubmitSection", () => {
     setSubmitState(SUBMITTING_START);
     setProgressValue(0);
     await checkDialogInProgress("0%", "Uploading survey response");
-
-    setSubmitState(SUBMITTING_PHOTOS);
-    setProgressValue(20);
-    await checkDialogInProgress("20%", "Uploading photos");
-
-    setProgressValue(40);
-    await checkDialogInProgress("40%", "Uploading photos");
-
-    setProgressValue(60);
-    await checkDialogInProgress("60%", "Uploading photos");
-
-    setSubmitState(SUBMITTING_CONFIRM);
-    setProgressValue(80);
-    await checkDialogInProgress("80%", "Confirming upload");
 
     setSubmitState(SUBMIT_COMPLETE);
     setProgressValue(100);

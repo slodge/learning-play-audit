@@ -25,8 +25,8 @@ export default function GetStartedScreen({
       <p>
         The Learning through Landscapes School Grounds Audit can be
         filled in offline outdoors. We strongly suggest that you undertake the
-        survey while walking around your outdoor space. You can add notes, offer
-        opinion and upload photographs as you go.
+        survey while walking around your outdoor space. You can add notes and offer
+        opinion as you go.
       </p>
       <p>
         However you will need to have access to a reliable internet connection

@@ -8,7 +8,6 @@ import {
 import { current_survey_version } from "learning-play-audit-survey";
 import IntroductionSection from "./components/IntroductionSection";
 import ResultsSection from "./components/ResultsSection";
-import GallerySection from "./components/GallerySection";
 import SubmitSection from "./components/SubmitSection";
 import NavDrawer from "./components/NavDrawer";
 import Section from "./components/Section";
@@ -23,7 +22,7 @@ import {
 } from "./model/SurveyModel";
 import { Amplify } from "@aws-amplify/core";
 import { menuButtonSvg } from "./components/SvgUtils";
-import { GALLERY, INTRODUCTION, RESULTS, SUBMIT } from "./model/SurveySections";
+import { INTRODUCTION, RESULTS, SUBMIT } from "./model/SurveySections";
 import "./App.css";
 
 // Configure these properties in .env.local
@@ -186,9 +185,6 @@ function App() {
     }
     if (currentSectionId === RESULTS) {
       return <ResultsSection />;
-    }
-    if (currentSectionId === GALLERY) {
-      return <GallerySection />;
     }
     if (currentSectionId === SUBMIT) {
       return <SubmitSection endpoint={AWS_CLIENT_API_ENDPOINT} />;

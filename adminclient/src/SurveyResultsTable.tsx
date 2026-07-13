@@ -42,9 +42,6 @@ const useStyles = makeStyles({
   title: {
     marginRight: "25px",
   },
-  galleryButton: {
-    margin: "5px",
-  },
 });
 
 const useToolbarStyles = makeStyles(() => ({

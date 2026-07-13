@@ -23,14 +23,6 @@ class Client {
     return $$('div[id="' + id + '"] div.text-year')[index - 1].$("input");
   }
 
-  get addPhotoButton() {
-     return $('#icon-button-add-photo');
-  }
-
-  get photoDescription() {
-     return $('div.photo-description textarea');
-  }
-
   get submitSurveyButton() {
      return $('button.submit-survey');
   }

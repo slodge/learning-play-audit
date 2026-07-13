@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "../App.css";
-import { addPhotoSvg } from "./SvgUtils";
 import SectionBottomNavigation from "./SectionBottomNavigation";
 
 function ExampleQuestion() {
@@ -126,14 +125,6 @@ function IntroductionSection() {
             Use the note icon to add any notes or comments that you want to
             make.
           </div>
-          {
-            /*
-              <div className="icon-description">
-                  {addPhotoSvg()}
-                  Use the camera icon to attach any photos you would like to add.
-              </div>
-            */
-          }
         </div>
         <p>
           It is helpful if you answer as many questions as you are able to,

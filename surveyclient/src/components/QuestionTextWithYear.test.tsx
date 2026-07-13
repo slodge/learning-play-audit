@@ -22,7 +22,6 @@ describe("component QuestionTextWithYear", () => {
     id: QUESTION_ID,
     text: QUESTION_TEXT,
   };
-  const PHOTO_BUTTON_TEXT = "add photoAdd Relevant Photo?";
 
   it("initial empty state", () => {
     const { container } = renderWithStore(
@@ -34,7 +33,7 @@ describe("component QuestionTextWithYear", () => {
     );
 
     expect(container.querySelector(".question-line")).toHaveTextContent(
-      QUESTION_NUMBER + QUESTION_TEXT + PHOTO_BUTTON_TEXT
+      QUESTION_NUMBER + QUESTION_TEXT
     );
     checkTextValues("", "", "", "", "", "");
   });

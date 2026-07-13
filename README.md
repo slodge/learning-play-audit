@@ -79,7 +79,6 @@ In the following, `PROJECT_ROOT` is the directory where you have cloned the repo
 ```
 cd PROJECT_ROOT/cdk-stacks; npm install
 cd resources/addSurveyLambda; npm install
-cd ../confirmSurveyLambda; npm install
 cd ../emailSurveyLambda; npm install
 ```
 
@@ -170,9 +169,6 @@ REACT_APP_AWS_IDENTITY_POOL_ID=[PREFIX-Backend-dev.Surveyadminidentitypoolid]
 REACT_APP_AWS_USER_POOL_ID=[PREFIX-Backend-dev.Surveyadminuserpoolid]
 REACT_APP_AWS_USER_POOL_WEB_CLIENT_ID=[PREFIX-Backend-dev.Surveyadminuserpoolwebclientid]
 
-# Photo Storage
-REACT_APP_AWS_SURVEY_RESOURCES_S3_BUCKET=[PREFIX-Backend-dev.SurveyResourcesbucket]
-
 # Dynamo DB Table
 REACT_APP_AWS_SURVEY_RESPONSES_TABLE=[PREFIX-Backend-dev.SurveyResponsestable]
 REACT_APP_AWS_SURVEY_RESPONSES_SUMMARY_INDEX=SummaryIndex
@@ -190,9 +186,6 @@ REACT_APP_AWS_REGION=eu-west-2
 REACT_APP_AWS_IDENTITY_POOL_ID=eu-west-2:00000000-0000-0000-0000-000000000000
 REACT_APP_AWS_USER_POOL_ID=eu-west-2_000000000
 REACT_APP_AWS_USER_POOL_WEB_CLIENT_ID=00000000000000000000000000
-
-# Photo Storage
-REACT_APP_AWS_SURVEY_RESOURCES_S3_BUCKET=PREFIX-dev-surveyresources
 
 # Dynamo DB Table
 REACT_APP_AWS_SURVEY_RESPONSES_TABLE=PREFIX-dev-SurveyResponses
